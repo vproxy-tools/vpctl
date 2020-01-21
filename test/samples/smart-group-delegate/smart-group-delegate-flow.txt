@@ -1,0 +1,3 @@
+get sgd
+NAME   SERVICE   ZONE   HANDLED-GROUP
+***********

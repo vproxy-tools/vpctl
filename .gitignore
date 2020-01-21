@@ -1,1 +1,4 @@
 .idea
+/vpctl
+/vpctl_test
+darwin_amd64

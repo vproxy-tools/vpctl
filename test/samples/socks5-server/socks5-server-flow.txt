@@ -1,0 +1,3 @@
+get socks5
+NAME   ADDRESS   BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+***********
