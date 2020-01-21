@@ -1,0 +1,3 @@
+get dns
+NAME   ADDRESS   RRSETS   TTL   SECURITY-GROUP
+***********

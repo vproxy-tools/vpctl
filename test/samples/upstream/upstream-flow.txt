@@ -1,0 +1,3 @@
+get ups
+NAME   SERVER-GROUPS
+***********
