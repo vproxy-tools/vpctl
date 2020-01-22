@@ -617,7 +617,7 @@ func applySmartGroupDelegate(sgd *SmartGroupDelegate, client *client.Vproxy) ([]
 	ref := fmt.Sprintf("%s:%s", "SmartGroupDelegate", sgd.Metadata.Name)
 	old, err := GetSmartGroupDelegate(sgd.Metadata.Name)
 	if err != nil {
-		if _, ok := err.(*dns_server.GetDNSServerNotFound); ok {
+		if _, ok := err.(*smart_group_delegate.GetSmartGroupDelegateNotFound); ok {
 			// should create
 			return []*Todo{
 				{

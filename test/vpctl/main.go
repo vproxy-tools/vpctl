@@ -45,6 +45,7 @@ func main() {
 		}
 		str := string(byteArray)
 		lines := strings.Split(str, "\n")
+		lines = append(lines, Separator)
 		cmd := ""
 		stdout := ""
 		state := 0
