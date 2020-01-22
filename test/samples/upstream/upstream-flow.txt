@@ -1,3 +1,170 @@
 get ups
 NAME   SERVER-GROUPS
 ***********
+apply -f server-group/sg001-002.yaml
+ServerGroup:sg001 created
+ServerGroup/Server:sg001/svr1 created
+ServerGroup/Server:sg001/svr2 created
+ServerGroup:sg002 created
+ServerGroup/Server:sg002/svr1 created
+ServerGroup/Server:sg002/svr2 created
+***********
+apply -f upstream/ups001.yaml
+Upstream:ups001 created
+Upstream/ServerGroup:ups001/sg001 created
+***********
+get ups
+NAME     SERVER-GROUPS
+ups001   1
+***********
+get ups ups001
+NAME     SERVER-GROUPS
+ups001   1
+***********
+get ups ups001 -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: Upstream
+metadata:
+  name: ups001
+  annotations: {}
+spec:
+  serverGroups:
+  - name: sg001
+    weight: 10
+    annotations: {}
+***********
+delete ups ups001
+Upstream:ups001 deleted
+***********
+get ups
+NAME   SERVER-GROUPS
+***********
+apply -f upstream/ups002.yaml
+Upstream:ups002 created
+Upstream/ServerGroup:ups002/sg001 created
+Upstream/ServerGroup:ups002/sg002 created
+***********
+get ups ups002
+NAME     SERVER-GROUPS
+ups002   2
+***********
+get ups ups002 -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: Upstream
+metadata:
+  name: ups002
+  annotations: {}
+spec:
+  serverGroups:
+  - name: sg001
+    weight: 10
+    annotations: {}
+  - name: sg002
+    weight: 10
+    annotations: {}
+***********
+apply -f upstream/ups002-update-sg.yaml
+Upstream/ServerGroup:ups002/sg001 configured
+Upstream/ServerGroup:ups002/sg002 configured
+***********
+get ups ups002 -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: Upstream
+metadata:
+  name: ups002
+  annotations: {}
+spec:
+  serverGroups:
+  - name: sg001
+    weight: 5
+    annotations: {}
+  - name: sg002
+    weight: 10
+    annotations:
+      host: example2.com
+***********
+apply -f upstream/ups002-update-sg.yaml
+Upstream:ups002 unchanged (text)
+***********
+delete ups ups002
+Upstream:ups002 deleted
+***********
+apply -f upstream/ups002.yaml
+Upstream:ups002 created
+Upstream/ServerGroup:ups002/sg001 created
+Upstream/ServerGroup:ups002/sg002 created
+***********
+apply -f upstream/ups002-remove-sg.yaml
+Upstream/ServerGroup:ups002/sg002 deleted
+***********
+apply -f upstream/ups002.yaml
+Upstream/ServerGroup:ups002/sg002 created
+***********
+delete ups ups002
+Upstream:ups002 deleted
+***********
+apply -f upstream/ups001-002.yaml
+Upstream:ups001 created
+Upstream/ServerGroup:ups001/sg001 created
+Upstream:ups002 created
+Upstream/ServerGroup:ups002/sg001 created
+Upstream/ServerGroup:ups002/sg002 created
+***********
+apply -f upstream/ups001-002.yaml
+Upstream:ups001 unchanged (text)
+Upstream:ups002 unchanged (text)
+***********
+get ups
+NAME     SERVER-GROUPS
+ups002   2
+ups001   1
+***********
+get ups -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: Upstream
+metadata:
+  name: ups002
+  annotations: {}
+spec:
+  serverGroups:
+  - name: sg001
+    weight: 10
+    annotations: {}
+  - name: sg002
+    weight: 10
+    annotations: {}
+
+---
+apiVersion: vproxy/v1alpha1
+kind: Upstream
+metadata:
+  name: ups001
+  annotations: {}
+spec:
+  serverGroups:
+  - name: sg001
+    weight: 10
+    annotations: {}
+***********
+get ups ups002
+NAME     SERVER-GROUPS
+ups002   2
+***********
+delete -f upstream/ups001-002.yaml
+Upstream:ups001 deleted
+Upstream:ups002 deleted
+***********
+delete -f upstream/ups001-002.yaml
+Upstream:ups001 not found
+Upstream:ups002 not found
+***********
+get ups
+NAME   SERVER-GROUPS
+***********
+delete -f server-group/sg001-002.yaml
+ServerGroup:sg001 deleted
+ServerGroup:sg002 deleted

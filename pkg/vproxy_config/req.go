@@ -145,8 +145,8 @@ func deleteUpstream(todo *Todo) error {
 }
 
 func createServerGroupInUpstream(todo *Todo) error {
-	ups := todo.object.(*Upstream)
-	sg := todo.parent.(*ServerGroupInUpstream)
+	ups := todo.parent.(*Upstream)
+	sg := todo.object.(*ServerGroupInUpstream)
 	params := server_group.NewAddServerGroupInUpstreamParams()
 	params.SetBody(&vproxy_client_model.ServerGroupInUpstreamCreate{
 		Annotations: sg.Annotations,
@@ -159,8 +159,8 @@ func createServerGroupInUpstream(todo *Todo) error {
 }
 
 func updateServerGroupInUpstream(todo *Todo) error {
-	ups := todo.object.(*Upstream)
-	sg := todo.parent.(*ServerGroupInUpstream)
+	ups := todo.parent.(*Upstream)
+	sg := todo.object.(*ServerGroupInUpstream)
 	params := server_group.NewUpdateServerGroupInUpstreamParams()
 	params.SetBody(&vproxy_client_model.ServerGroupInUpstreamUpdate{
 		Annotations: sg.Annotations,
@@ -173,8 +173,8 @@ func updateServerGroupInUpstream(todo *Todo) error {
 }
 
 func deleteServerGroupInUpstream(todo *Todo) error {
-	ups := todo.object.(*Upstream)
-	sg := todo.parent.(*ServerGroupInUpstream)
+	ups := todo.parent.(*Upstream)
+	sg := todo.object.(*ServerGroupInUpstream)
 	params := server_group.NewRemoveServerGroupInUpstreamParams()
 	params.SetSg(sg.Name)
 	params.SetUps(ups.Metadata.Name)
