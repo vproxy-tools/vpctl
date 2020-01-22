@@ -1,0 +1,10 @@
+---
+apiVersion: vproxy/v1alpha1
+kind: DnsServer
+metadata:
+  name: dns001
+spec:
+  address: 127.0.0.1:23353
+  rrsets: ups001
+  ttl: 600
+  securityGroup: secg001
