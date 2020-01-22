@@ -19,7 +19,7 @@ type DNSServerUpdate struct {
 	SecurityGroup string `json:"securityGroup,omitempty"`
 
 	// ttl of answer records
-	TTL int64 `json:"ttl,omitempty"`
+	TTL *int64 `json:"ttl,omitempty"`
 }
 
 // Validate validates this Dns server update

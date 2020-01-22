@@ -16,7 +16,7 @@ import (
 type ServerUpdate struct {
 
 	// weight of the server in the server group
-	Weight int64 `json:"weight,omitempty"`
+	Weight *int64 `json:"weight,omitempty"`
 }
 
 // Validate validates this server update

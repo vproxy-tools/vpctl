@@ -25,7 +25,7 @@ type Socks5ServerCreate struct {
 	Address *string `json:"address"`
 
 	// allow or disallow to proxy to non-backend endpoints
-	AllowNonBackend bool `json:"allowNonBackend,omitempty"`
+	AllowNonBackend *bool `json:"allowNonBackend,omitempty"`
 
 	// upstream reference for backend servers
 	// Required: true
