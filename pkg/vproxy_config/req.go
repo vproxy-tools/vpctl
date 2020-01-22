@@ -71,7 +71,7 @@ func updateSocks5Server(todo *Todo) error {
 	socks5 := todo.object.(*Socks5Server)
 	params := socks5_server.NewUpdateSocks5ServerParams()
 	params.SetBody(&vproxy_client_model.Socks5ServerUpdate{
-		AllowNonBackend: socks5.Spec.AllowNonBackend,
+		AllowNonBackend: &socks5.Spec.AllowNonBackend,
 		SecurityGroup:   socks5.Spec.SecurityGroup,
 	})
 	params.SetSocks5(socks5.Metadata.Name)
