@@ -1,0 +1,7 @@
+---
+apiVersion: vproxy/v1alpha1
+kind: Upstream
+metadata:
+  name: ups001
+spec:
+  serverGroups: []

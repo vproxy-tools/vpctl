@@ -1,0 +1,8 @@
+---
+apiVersion: vproxy/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: secg001
+spec:
+  defaultRule: allow
+  rules: []
