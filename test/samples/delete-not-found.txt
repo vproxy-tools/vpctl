@@ -1,0 +1,23 @@
+delete tl lkwjfklawjelf
+TcpLb:lkwjfklawjelf not found
+***********
+delete socks5 lkwjfklawjelf
+Socks5Server:lkwjfklawjelf not found
+***********
+delete dns lkwjfklawjelf
+DnsServer:lkwjfklawjelf not found
+***********
+delete ups lkwjfklawjelf
+Upstream:lkwjfklawjelf not found
+***********
+delete sg lkwjfklawjelf
+ServerGroup:lkwjfklawjelf not found
+***********
+delete secg lkwjfklawjelf
+SecurityGroup:lkwjfklawjelf not found
+***********
+delete ck lkwjfklawjelf
+CertKey:lkwjfklawjelf not found
+***********
+delete sgd lkwjfklawjelf
+SmartGroupDelegate:lkwjfklawjelf not found

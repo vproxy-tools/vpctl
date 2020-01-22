@@ -875,7 +875,7 @@ func checkDeleteCertKey(config Config, client *client.Vproxy) ([]*Todo, error) {
 	name := config.GetBase().Metadata.Name
 	_, err := GetCertKey(name)
 	if err != nil {
-		if _, ok := err.(*cert_key.GetCertKeyNotFound); ok {
+		if _, ok := err.(*cert_key.DescribeCertKeyNotFound); ok {
 			// not found, so nothing to do
 			return build404Op(ref)
 		}
