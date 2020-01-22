@@ -279,7 +279,8 @@ func (o *ServerGroupInUpstream) validateForUpdating(old *ServerGroupInUpstream) 
 	if o.Weight != old.Weight {
 		return true
 	}
-	if !reflect.DeepEqual(o.Annotations, old.Annotations) {
+	if (len(o.Annotations) != 0 || len(old.Annotations) != 0) &&
+		!reflect.DeepEqual(o.Annotations, old.Annotations) {
 		return true
 	}
 	return false
