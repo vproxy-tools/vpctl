@@ -385,9 +385,6 @@ func sha1(s string) string {
 
 func (o *CertKey) validateForUpdating(old *CertKey) (bool, error) {
 	ref := fmt.Sprintf("%s:%s", "CertKey", o.Metadata.Name)
-	if o.Spec.Pem.Certs == nil || len(o.Spec.Pem.Certs) == 0 {
-		return false, fmt.Errorf("missing spec.pem.certs in %s", ref)
-	}
 	for idx, cert := range o.Spec.Pem.Certs {
 		o.Spec.Pem.Certs[idx] = strings.TrimSpace(cert)
 	}

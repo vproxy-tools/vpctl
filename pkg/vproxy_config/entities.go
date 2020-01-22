@@ -164,7 +164,7 @@ type PemCertKey struct {
 }
 
 type CertKeySpec struct {
-	Pem PemCertKey `json:"file" yaml:"file"`
+	Pem PemCertKey `json:"pem" yaml:"pem"`
 }
 
 type CertKeyStatus struct {

@@ -13,7 +13,7 @@ func GetWorkingDir() string {
 		home, _ := os.UserHomeDir()
 		p = path.Join(home, "vpctl")
 	}
-	_ = os.MkdirAll(p, os.FileMode(0x777))
+	_ = os.MkdirAll(p, os.FileMode(0755))
 	return p
 }
 
