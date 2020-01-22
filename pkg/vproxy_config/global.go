@@ -43,5 +43,20 @@ func KeyName(s string) string {
 }
 
 func IsCertKeyName(f string, s string) bool {
-	return strings.HasPrefix(f, s)
+	if !strings.HasPrefix(f, s) {
+		return false
+	}
+	if !strings.HasSuffix(f, ".crt") && !strings.HasSuffix(f, ".key") {
+		return false
+	}
+	mid := f[len(s) : len(f)-4]
+	if strings.HasSuffix(f, ".crt") {
+		if !strings.HasPrefix(mid, ".") {
+			return false
+		}
+		_, err := strconv.ParseInt(mid[1:], 10, 32)
+		return err == nil
+	} else {
+		return len(mid) == 0
+	}
 }
