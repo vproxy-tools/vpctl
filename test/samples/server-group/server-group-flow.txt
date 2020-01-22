@@ -283,6 +283,54 @@ status:
 delete sg sg002
 ServerGroup:sg002 deleted
 ***********
+apply -f server-group/sg002.yaml
+ServerGroup:sg002 created
+ServerGroup/Server:sg002/svr1 created
+ServerGroup/Server:sg002/svr2 created
+***********
+apply -f server-group/sg002-update-svr.yaml
+ServerGroup/Server:sg002/svr1 deleted
+ServerGroup/Server:sg002/svr1 created
+ServerGroup/Server:sg002/svr2 configured
+***********
+get sg sg002 -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: ServerGroup
+metadata:
+  name: sg002
+  annotations: {}
+spec:
+  timeout: 1000
+  period: 5000
+  up: 2
+  down: 3
+  protocol: tcp
+  method: wrr
+  servers:
+    static:
+    - name: svr2
+      address: 127.0.0.1:10002
+      weight: 20
+    - name: svr1
+      address: 127.0.0.1:10011
+      weight: 10
+status:
+  servers:
+  - name: svr2
+    address: 127.0.0.1:10002
+    weight: 20
+    currentIp: 127.0.0.1
+    status: DOWN
+  - name: svr1
+    address: 127.0.0.1:10011
+    weight: 10
+    currentIp: 127.0.0.1
+    status: DOWN
+***********
+delete sg sg002
+ServerGroup:sg002 deleted
+***********
 apply -f server-group/sg001-002.yaml
 ServerGroup:sg001 created
 ServerGroup/Server:sg001/svr1 created
