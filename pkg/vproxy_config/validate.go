@@ -93,9 +93,6 @@ func (o *TcpLb) Validate() error {
 	if o.Spec.Backend == "" {
 		return fmt.Errorf("missing spec.backend in %s", ref)
 	}
-	if o.Spec.Protocol == "" {
-		return fmt.Errorf("missing spec.protocol in %s", ref)
-	}
 	if o.Spec.ListOfCertKey != nil {
 		// check empty string in ListOfCertKey
 		for idx, ck := range o.Spec.ListOfCertKey {
@@ -115,7 +112,7 @@ func (o *TcpLb) validateForUpdating(old *TcpLb) (bool, error) {
 	if o.Spec.Backend != old.Spec.Backend {
 		return false, fmt.Errorf("cannot modify immutable field spec.backend in %s from %s to %s", ref, old.Spec.Backend, o.Spec.Backend)
 	}
-	if o.Spec.Protocol != old.Spec.Protocol {
+	if o.Spec.Protocol != "" && o.Spec.Protocol != old.Spec.Protocol {
 		return false, fmt.Errorf("cannot modify immutable field spec.protocol in %s from %s to %s", ref, old.Spec.Protocol, o.Spec.Protocol)
 	}
 	if (len(o.Spec.ListOfCertKey) != 0 || len(old.Spec.ListOfCertKey) != 0) &&
@@ -123,7 +120,7 @@ func (o *TcpLb) validateForUpdating(old *TcpLb) (bool, error) {
 		return false, fmt.Errorf("cannot modify immutable field spec.listOfCertKey in %s from %v to %v", ref, old.Spec.ListOfCertKey, o.Spec.ListOfCertKey)
 	}
 	update := false
-	if o.Spec.SecurityGroup != old.Spec.SecurityGroup {
+	if o.Spec.SecurityGroup != "" && o.Spec.SecurityGroup != old.Spec.SecurityGroup {
 		update = true
 	}
 	return update, nil
@@ -250,10 +247,10 @@ func (o *ServerGroup) validateForUpdating(old *ServerGroup) (updateTop bool, upd
 	if o.Spec.Down != old.Spec.Down {
 		updateTop = true
 	}
-	if o.Spec.Protocol != old.Spec.Protocol {
+	if o.Spec.Protocol != "" && o.Spec.Protocol != old.Spec.Protocol {
 		updateTop = true
 	}
-	if o.Spec.Method != old.Spec.Method {
+	if o.Spec.Method != "" && o.Spec.Method != old.Spec.Method {
 		updateTop = true
 	}
 	if (len(o.Metadata.Annotations) != 0 || len(old.Metadata.Annotations) != 0) &&
