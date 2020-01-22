@@ -16,7 +16,7 @@ import (
 type Socks5ServerUpdate struct {
 
 	// allow or disallow to proxy to non-backend endpoints
-	AllowNonBackend bool `json:"allowNonBackend,omitempty"`
+	AllowNonBackend *bool `json:"allowNonBackend,omitempty"`
 
 	// in buffer size
 	InBufferSize int64 `json:"inBufferSize,omitempty"`
