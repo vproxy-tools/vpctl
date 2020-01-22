@@ -1,0 +1,116 @@
+apply -f example.yaml
+ServerGroup:payment created
+ServerGroup:main created
+ServerGroup/Server:main/svr1 created
+ServerGroup/Server:main/svr2 created
+SecurityGroup:work-area created
+SecurityGroup/SecurityGroupRule:work-area/for-http created
+SecurityGroup/SecurityGroupRule:work-area/for-https created
+CertKey:ck-main created
+CertKey:ck-payment created
+Upstream:sites created
+Upstream/ServerGroup:sites/main created
+Upstream/ServerGroup:sites/payment created
+SmartGroupDelegate:payment-delegate created
+TcpLb:lb-http created
+TcpLb:lb-https created
+Socks5Server:admin-socks5 created
+DnsServer:self-resolver created
+***********
+apply -f example.yaml
+ServerGroup:payment unchanged
+ServerGroup:main unchanged
+SecurityGroup:work-area unchanged
+CertKey:ck-main unchanged
+CertKey:ck-payment unchanged
+Upstream:sites unchanged (text)
+SmartGroupDelegate:payment-delegate unchanged
+TcpLb:lb-http unchanged
+TcpLb:lb-https unchanged
+Socks5Server:admin-socks5 unchanged
+DnsServer:self-resolver unchanged
+***********
+get tl
+NAME       ADDRESS         BACKEND   PROTOCOL   TLS     SECURITY-GROUP
+lb-http    0.0.0.0:40080   sites     http       FALSE   (allow-all)
+lb-https   0.0.0.0:40443   sites     http       TRUE    (allow-all)
+***********
+get socks5
+NAME           ADDRESS         BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+admin-socks5   0.0.0.0:41080   sites     work-area        FALSE
+***********
+get dns
+NAME            ADDRESS         RRSETS   TTL   SECURITY-GROUP
+self-resolver   0.0.0.0:40053   sites    600   (allow-all)
+***********
+get ups
+NAME    SERVER-GROUPS
+sites   2
+***********
+get sg
+NAME      SERVERS   UP   DOWN
+payment   0         0    0
+main      2         0    2
+***********
+get secg
+NAME        DEFAULT-RULE   RULES
+work-area   deny           2
+***********
+get ck
+NAME
+ck-main
+ck-payment
+***********
+get sgd
+NAME               SERVICE           ZONE        HANDLED-GROUP
+payment-delegate   service-payment   cn-east-1   payment
+***********
+delete -f example.yaml
+DnsServer:self-resolver deleted
+Socks5Server:admin-socks5 deleted
+TcpLb:lb-http deleted
+TcpLb:lb-https deleted
+SmartGroupDelegate:payment-delegate deleted
+Upstream:sites deleted
+CertKey:ck-main deleted
+CertKey:ck-payment deleted
+SecurityGroup:work-area deleted
+ServerGroup:main deleted
+ServerGroup:payment deleted
+***********
+delete -f example.yaml
+DnsServer:self-resolver not found
+Socks5Server:admin-socks5 not found
+TcpLb:lb-http not found
+TcpLb:lb-https not found
+SmartGroupDelegate:payment-delegate not found
+Upstream:sites not found
+CertKey:ck-main not found
+CertKey:ck-payment not found
+SecurityGroup:work-area not found
+ServerGroup:main not found
+ServerGroup:payment not found
+***********
+get tl
+NAME   ADDRESS   BACKEND   PROTOCOL   TLS   SECURITY-GROUP
+***********
+get socks5
+NAME   ADDRESS   BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+***********
+get dns
+NAME   ADDRESS   RRSETS   TTL   SECURITY-GROUP
+***********
+get ups
+NAME   SERVER-GROUPS
+***********
+get sg
+NAME   SERVERS   UP   DOWN
+***********
+get secg
+NAME   DEFAULT-RULE   RULES
+***********
+get ck
+NAME
+***********
+get sgd
+NAME   SERVICE   ZONE   HANDLED-GROUP
