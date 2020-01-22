@@ -71,7 +71,7 @@ func updateSocks5Server(todo *Todo) error {
 	socks5 := todo.object.(*Socks5Server)
 	params := socks5_server.NewUpdateSocks5ServerParams()
 	params.SetBody(&vproxy_client_model.Socks5ServerUpdate{
-		AllowNonBackend: &socks5.Spec.AllowNonBackend,
+		AllowNonBackend: socks5.Spec.AllowNonBackend,
 		SecurityGroup:   socks5.Spec.SecurityGroup,
 	})
 	params.SetSocks5(socks5.Metadata.Name)
@@ -95,7 +95,7 @@ func createDnsServer(todo *Todo) error {
 		Name:          &dns.Metadata.Name,
 		Rrsets:        &dns.Spec.RRSets,
 		SecurityGroup: dns.Spec.SecurityGroup,
-		TTL:           int64(dns.Spec.TTL),
+		TTL:           intptr2int64ptr(dns.Spec.TTL),
 	})
 	_, err := todo.client.DNSServer.AddDNSServer(params)
 	return err
@@ -106,7 +106,7 @@ func updateDnsServer(todo *Todo) error {
 	params := dns_server.NewUpdateDNSServerParams()
 	params.SetBody(&vproxy_client_model.DNSServerUpdate{
 		SecurityGroup: dns.Spec.SecurityGroup,
-		TTL:           int64(dns.Spec.TTL),
+		TTL:           intptr2int64ptr(dns.Spec.TTL),
 	})
 	params.SetDNS(dns.Metadata.Name)
 	_, err := todo.client.DNSServer.UpdateDNSServer(params)
@@ -151,7 +151,7 @@ func createServerGroupInUpstream(todo *Todo) error {
 	params.SetBody(&vproxy_client_model.ServerGroupInUpstreamCreate{
 		Annotations: sg.Annotations,
 		Name:        &sg.Name,
-		Weight:      int64(sg.Weight),
+		Weight:      intptr2int64ptr(sg.Weight),
 	})
 	params.SetUps(ups.Metadata.Name)
 	_, err := todo.client.ServerGroup.AddServerGroupInUpstream(params)
@@ -164,7 +164,7 @@ func updateServerGroupInUpstream(todo *Todo) error {
 	params := server_group.NewUpdateServerGroupInUpstreamParams()
 	params.SetBody(&vproxy_client_model.ServerGroupInUpstreamUpdate{
 		Annotations: sg.Annotations,
-		Weight:      int64(sg.Weight),
+		Weight:      intptr2int64ptr(sg.Weight),
 	})
 	params.SetSg(sg.Name)
 	params.SetUps(ups.Metadata.Name)
@@ -231,7 +231,7 @@ func createStaticServerInServerGroup(todo *Todo) error {
 	params.SetBody(&vproxy_client_model.ServerCreate{
 		Address: &svr.Address,
 		Name:    &svr.Name,
-		Weight:  int64(svr.Weight),
+		Weight:  intptr2int64ptr(svr.Weight),
 	})
 	params.SetSg(sg.Metadata.Name)
 	_, err := todo.client.Server.AddServer(params)
@@ -243,7 +243,7 @@ func updateStaticServerInServerGroup(todo *Todo) error {
 	sg := todo.parent.(*ServerGroup)
 	params := server.NewUpdateServerParams()
 	params.SetBody(&vproxy_client_model.ServerUpdate{
-		Weight: int64(svr.Weight),
+		Weight: intptr2int64ptr(svr.Weight),
 	})
 	params.SetSg(sg.Metadata.Name)
 	params.SetSvr(svr.Name)

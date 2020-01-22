@@ -142,7 +142,7 @@ func PrintSocks5Server(list []*Socks5Server, yaml bool) {
 		ret[1][idx] = socks5.Spec.Address
 		ret[2][idx] = socks5.Spec.Backend
 		ret[3][idx] = socks5.Spec.SecurityGroup
-		if socks5.Spec.AllowNonBackend {
+		if *socks5.Spec.AllowNonBackend {
 			ret[4][idx] = "TRUE"
 		} else {
 			ret[4][idx] = "FALSE"
@@ -172,7 +172,7 @@ func PrintDnsServer(list []*DnsServer, yaml bool) {
 		ret[0][idx] = dns.Metadata.Name
 		ret[1][idx] = dns.Spec.Address
 		ret[2][idx] = dns.Spec.RRSets
-		ret[3][idx] = strconv.FormatInt(int64(dns.Spec.TTL), 10)
+		ret[3][idx] = strconv.FormatInt(int64(*dns.Spec.TTL), 10)
 		ret[4][idx] = dns.Spec.SecurityGroup
 	}
 	printTable(ret)
