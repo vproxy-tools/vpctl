@@ -118,7 +118,8 @@ func (o *TcpLb) validateForUpdating(old *TcpLb) (bool, error) {
 	if o.Spec.Protocol != old.Spec.Protocol {
 		return false, fmt.Errorf("cannot modify immutable field spec.protocol in %s from %s to %s", ref, old.Spec.Protocol, o.Spec.Protocol)
 	}
-	if reflect.DeepEqual(o.Spec.ListOfCertKey, old.Spec.ListOfCertKey) {
+	if (len(o.Spec.ListOfCertKey) != 0 || len(old.Spec.ListOfCertKey) != 0) &&
+		!reflect.DeepEqual(o.Spec.ListOfCertKey, old.Spec.ListOfCertKey) {
 		return false, fmt.Errorf("cannot modify immutable field spec.listOfCertKey in %s from %v to %v", ref, old.Spec.ListOfCertKey, o.Spec.ListOfCertKey)
 	}
 	update := false

@@ -1,3 +1,171 @@
 get tl
 NAME   ADDRESS   BACKEND   PROTOCOL   TLS   SECURITY-GROUP
 ***********
+apply -f server-group/sg001-002.yaml
+ServerGroup:sg001 created
+ServerGroup/Server:sg001/svr1 created
+ServerGroup/Server:sg001/svr2 created
+ServerGroup:sg002 created
+ServerGroup/Server:sg002/svr1 created
+ServerGroup/Server:sg002/svr2 created
+***********
+apply -f upstream/ups001-002.yaml
+Upstream:ups001 created
+Upstream/ServerGroup:ups001/sg001 created
+Upstream:ups002 created
+Upstream/ServerGroup:ups002/sg001 created
+Upstream/ServerGroup:ups002/sg002 created
+***********
+apply -f security-group/secg-001-002.yaml
+SecurityGroup:secg001 created
+SecurityGroup/SecurityGroupRule:secg001/r001 created
+SecurityGroup/SecurityGroupRule:secg001/r002 created
+SecurityGroup:secg002 created
+SecurityGroup/SecurityGroupRule:secg002/work-area-http created
+SecurityGroup/SecurityGroupRule:secg002/work-area-https created
+SecurityGroup/SecurityGroupRule:secg002/public-dns created
+***********
+apply -f cert-key/ck-001-002.yaml
+CertKey:ck001 created
+CertKey:ck002 created
+***********
+apply -f tcp-lb/tl001.yaml
+TcpLb:tl001 created
+***********
+get tl
+NAME    ADDRESS           BACKEND   PROTOCOL   TLS     SECURITY-GROUP
+tl001   127.0.0.1:50001   ups001    tcp        FALSE   secg001
+***********
+get tl -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: TcpLb
+metadata:
+  name: tl001
+  annotations: {}
+spec:
+  address: 127.0.0.1:50001
+  backend: ups001
+  protocol: tcp
+  listOfCertKey: []
+  securityGroup: secg001
+***********
+apply -f tcp-lb/tl001.yaml
+TcpLb:tl001 unchanged
+***********
+delete tl tl001
+TcpLb:tl001 deleted
+***********
+get tl
+NAME   ADDRESS   BACKEND   PROTOCOL   TLS   SECURITY-GROUP
+***********
+apply -f tcp-lb/tl002.yaml
+TcpLb:tl002 created
+***********
+apply -f tcp-lb/tl002.yaml
+TcpLb:tl002 unchanged
+***********
+get tl tl002
+NAME    ADDRESS           BACKEND   PROTOCOL   TLS    SECURITY-GROUP
+tl002   127.0.0.1:50002   ups002    http       TRUE   secg002
+***********
+get tl tl002 -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: TcpLb
+metadata:
+  name: tl002
+  annotations: {}
+spec:
+  address: 127.0.0.1:50002
+  backend: ups002
+  protocol: http
+  listOfCertKey:
+  - ck001
+  - ck002
+  securityGroup: secg002
+***********
+apply -f tcp-lb/tl002-update-secg.yaml
+TcpLb:tl002 configured
+***********
+get tl tl002
+NAME    ADDRESS           BACKEND   PROTOCOL   TLS    SECURITY-GROUP
+tl002   127.0.0.1:50002   ups002    http       TRUE   secg001
+***********
+delete tl tl002
+TcpLb:tl002 deleted
+***********
+apply -f tcp-lb/tl001-002.yaml
+TcpLb:tl001 created
+TcpLb:tl002 created
+***********
+get tl
+NAME    ADDRESS           BACKEND   PROTOCOL   TLS     SECURITY-GROUP
+tl001   127.0.0.1:50001   ups001    tcp        FALSE   secg001
+tl002   127.0.0.1:50002   ups002    http       TRUE    secg002
+***********
+get TcpLb
+NAME    ADDRESS           BACKEND   PROTOCOL   TLS     SECURITY-GROUP
+tl001   127.0.0.1:50001   ups001    tcp        FALSE   secg001
+tl002   127.0.0.1:50002   ups002    http       TRUE    secg002
+***********
+get tcp-lb
+NAME    ADDRESS           BACKEND   PROTOCOL   TLS     SECURITY-GROUP
+tl001   127.0.0.1:50001   ups001    tcp        FALSE   secg001
+tl002   127.0.0.1:50002   ups002    http       TRUE    secg002
+***********
+get tl -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: TcpLb
+metadata:
+  name: tl001
+  annotations: {}
+spec:
+  address: 127.0.0.1:50001
+  backend: ups001
+  protocol: tcp
+  listOfCertKey: []
+  securityGroup: secg001
+
+---
+apiVersion: vproxy/v1alpha1
+kind: TcpLb
+metadata:
+  name: tl002
+  annotations: {}
+spec:
+  address: 127.0.0.1:50002
+  backend: ups002
+  protocol: http
+  listOfCertKey:
+  - ck001
+  - ck002
+  securityGroup: secg002
+***********
+delete -f tcp-lb/tl001-002.yaml
+TcpLb:tl001 deleted
+TcpLb:tl002 deleted
+***********
+delete -f tcp-lb/tl001-002.yaml
+TcpLb:tl001 not found
+TcpLb:tl002 not found
+***********
+get tl
+NAME   ADDRESS   BACKEND   PROTOCOL   TLS   SECURITY-GROUP
+***********
+delete -f upstream/ups001-002.yaml
+Upstream:ups001 deleted
+Upstream:ups002 deleted
+***********
+delete -f server-group/sg001-002.yaml
+ServerGroup:sg001 deleted
+ServerGroup:sg002 deleted
+***********
+delete -f security-group/secg-001-002.yaml
+SecurityGroup:secg001 deleted
+SecurityGroup:secg002 deleted
+***********
+delete -f cert-key/ck-001-002.yaml
+CertKey:ck001 deleted
+CertKey:ck002 deleted
