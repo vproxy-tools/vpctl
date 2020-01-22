@@ -26,7 +26,7 @@ type ServerCreate struct {
 	Name *string `json:"name"`
 
 	// weight of the server in the server group
-	Weight int64 `json:"weight,omitempty"`
+	Weight *int64 `json:"weight,omitempty"`
 }
 
 // Validate validates this server create

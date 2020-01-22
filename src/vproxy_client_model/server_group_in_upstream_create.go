@@ -25,7 +25,7 @@ type ServerGroupInUpstreamCreate struct {
 	Name *string `json:"name"`
 
 	// weight of the server-group in the upstream
-	Weight int64 `json:"weight,omitempty"`
+	Weight *int64 `json:"weight,omitempty"`
 }
 
 // Validate validates this server group in upstream create
