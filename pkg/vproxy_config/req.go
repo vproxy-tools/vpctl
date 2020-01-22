@@ -293,7 +293,7 @@ func deleteSecurityGroup(todo *Todo) error {
 
 func createSecurityGroupRuleInSecurityGroup(todo *Todo) error {
 	secgr := todo.object.(*SecurityGroupRule)
-	secg := todo.object.(*SecurityGroup)
+	secg := todo.parent.(*SecurityGroup)
 	params := security_group_rule.NewAddSecurityGroupRuleParams()
 	params.SetBody(&vproxy_client_model.SecurityGroupRuleCreate{
 		ClientNetwork: &secgr.ClientNetwork,
@@ -316,7 +316,7 @@ func updateSecurityGroupRuleInSecurityGroup(todo *Todo) error {
 
 func deleteSecurityGroupRuleInSecurityGroup(todo *Todo) error {
 	secgr := todo.object.(*SecurityGroupRule)
-	secg := todo.object.(*SecurityGroup)
+	secg := todo.parent.(*SecurityGroup)
 	params := security_group_rule.NewRemoveSecurityGroupRuleParams()
 	params.SetSecg(secg.Metadata.Name)
 	params.SetSecgr(secgr.Name)
