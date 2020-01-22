@@ -35,7 +35,7 @@ func (o *Socks5Server) toCreate() model.Socks5ServerCreate {
 
 func (o *Socks5Server) toUpdate() model.Socks5ServerUpdate {
 	return model.Socks5ServerUpdate{
-		AllowNonBackend: o.Spec.AllowNonBackend,
+		AllowNonBackend: &o.Spec.AllowNonBackend,
 		SecurityGroup:   o.Spec.SecurityGroup,
 	}
 }
