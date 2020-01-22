@@ -1,0 +1,9 @@
+---
+apiVersion: vproxy/v1alpha1
+kind: SmartGroupDelegate
+metadata:
+  name: sgd001
+spec:
+  service: my-example
+  zone: my-zone
+  handledGroup: sg001
