@@ -21,4 +21,4 @@ vpctl delete {type} {name}
 
 ## config
 
-You may refer to the yaml configurations in directory `test/samples/`.
+You may refer to the yaml configurations in directory `test/samples/`, e.g. [example.yaml](https://github.com/vproxy-tools/vpctl/blob/master/test/samples/example.yaml).
