@@ -1,3 +1,217 @@
 get secg
 NAME   DEFAULT-RULE   RULES
 ***********
+apply -f security-group/secg-001.yaml
+SecurityGroup:secg001 created
+SecurityGroup/SecurityGroupRule:secg001/r001 created
+SecurityGroup/SecurityGroupRule:secg001/r002 created
+***********
+get secg
+NAME      DEFAULT-RULE   RULES
+secg001   allow          2
+***********
+get secg -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: secg001
+  annotations: {}
+spec:
+  defaultRule: allow
+  rules:
+  - name: r001
+    clientNetwork: 127.0.0.0/8
+    protocol: TCP
+    serverPortMin: 80
+    serverPortMax: 80
+    rule: deny
+  - name: r002
+    clientNetwork: 192.168.1.0/24
+    protocol: UDP
+    serverPortMin: 53
+    serverPortMax: 53
+    rule: deny
+***********
+delete secg secg001
+SecurityGroup:secg001 deleted
+***********
+get secg
+NAME   DEFAULT-RULE   RULES
+***********
+apply -f security-group/secg-002.yaml
+SecurityGroup:secg002 created
+SecurityGroup/SecurityGroupRule:secg002/work-area-http created
+SecurityGroup/SecurityGroupRule:secg002/work-area-https created
+SecurityGroup/SecurityGroupRule:secg002/public-dns created
+***********
+apply -f security-group/secg-002.yaml
+SecurityGroup:secg002 unchanged
+***********
+apply -f security-group/secg-002-update-default-rule.yaml
+SecurityGroup:secg002 configured
+***********
+get secg secg002 -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: secg002
+  annotations: {}
+spec:
+  defaultRule: allow
+  rules:
+  - name: work-area-http
+    clientNetwork: 69.1.2.0/24
+    protocol: TCP
+    serverPortMin: 80
+    serverPortMax: 80
+    rule: allow
+  - name: work-area-https
+    clientNetwork: 69.1.2.0/24
+    protocol: TCP
+    serverPortMin: 443
+    serverPortMax: 443
+    rule: allow
+  - name: public-dns
+    clientNetwork: 0.0.0.0/0
+    protocol: UDP
+    serverPortMin: 53
+    serverPortMax: 53
+    rule: allow
+***********
+delete secg secg002
+SecurityGroup:secg002 deleted
+***********
+apply -f security-group/secg-002.yaml
+SecurityGroup:secg002 created
+SecurityGroup/SecurityGroupRule:secg002/work-area-http created
+SecurityGroup/SecurityGroupRule:secg002/work-area-https created
+SecurityGroup/SecurityGroupRule:secg002/public-dns created
+***********
+apply -f security-group/secg-002-update-rules.yaml
+SecurityGroup/SecurityGroupRule:secg002/work-area-http deleted
+SecurityGroup/SecurityGroupRule:secg002/public-dns deleted
+SecurityGroup/SecurityGroupRule:secg002/public-dns created
+SecurityGroup/SecurityGroupRule:secg002/new-rule created
+***********
+get secg secg002
+NAME      DEFAULT-RULE   RULES
+secg002   deny           3
+***********
+get secg secg002 -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: secg002
+  annotations: {}
+spec:
+  defaultRule: deny
+  rules:
+  - name: work-area-https
+    clientNetwork: 69.1.2.0/24
+    protocol: TCP
+    serverPortMin: 443
+    serverPortMax: 443
+    rule: allow
+  - name: new-rule
+    clientNetwork: 1.2.3.4/32
+    protocol: TCP
+    serverPortMin: 443
+    serverPortMax: 443
+    rule: allow
+  - name: public-dns
+    clientNetwork: 0.0.0.0/0
+    protocol: UDP
+    serverPortMin: 53
+    serverPortMax: 54
+    rule: deny
+***********
+apply -f security-group/secg-002-update-rules.yaml
+SecurityGroup:secg002 unchanged (text)
+***********
+delete secg secg002
+SecurityGroup:secg002 deleted
+***********
+apply -f security-group/secg-001-002.yaml
+SecurityGroup:secg001 created
+SecurityGroup/SecurityGroupRule:secg001/r001 created
+SecurityGroup/SecurityGroupRule:secg001/r002 created
+SecurityGroup:secg002 created
+SecurityGroup/SecurityGroupRule:secg002/work-area-http created
+SecurityGroup/SecurityGroupRule:secg002/work-area-https created
+SecurityGroup/SecurityGroupRule:secg002/public-dns created
+***********
+get secg
+NAME      DEFAULT-RULE   RULES
+secg001   allow          2
+secg002   deny           3
+***********
+get SecurityGroup
+NAME      DEFAULT-RULE   RULES
+secg001   allow          2
+secg002   deny           3
+***********
+get security-group
+NAME      DEFAULT-RULE   RULES
+secg001   allow          2
+secg002   deny           3
+***********
+get secg -o yaml
+---
+apiVersion: vproxy/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: secg001
+  annotations: {}
+spec:
+  defaultRule: allow
+  rules:
+  - name: r001
+    clientNetwork: 127.0.0.0/8
+    protocol: TCP
+    serverPortMin: 80
+    serverPortMax: 80
+    rule: deny
+  - name: r002
+    clientNetwork: 192.168.1.0/24
+    protocol: UDP
+    serverPortMin: 53
+    serverPortMax: 53
+    rule: deny
+
+---
+apiVersion: vproxy/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: secg002
+  annotations: {}
+spec:
+  defaultRule: deny
+  rules:
+  - name: work-area-http
+    clientNetwork: 69.1.2.0/24
+    protocol: TCP
+    serverPortMin: 80
+    serverPortMax: 80
+    rule: allow
+  - name: work-area-https
+    clientNetwork: 69.1.2.0/24
+    protocol: TCP
+    serverPortMin: 443
+    serverPortMax: 443
+    rule: allow
+  - name: public-dns
+    clientNetwork: 0.0.0.0/0
+    protocol: UDP
+    serverPortMin: 53
+    serverPortMax: 53
+    rule: allow
+***********
+delete -f security-group/secg-001-002.yaml
+SecurityGroup:secg001 deleted
+SecurityGroup:secg002 deleted
+***********
+get secg
+NAME   DEFAULT-RULE   RULES

@@ -459,7 +459,7 @@ func applyServerGroup(sg *ServerGroup, client *client.Vproxy) ([]*Todo, error) {
 
 func getSecurityGroupRuleInSecurityGroup(secg *SecurityGroup, sample *SecurityGroupRule) *SecurityGroupRule {
 	for _, x := range secg.Spec.Rules {
-		if reflect.DeepEqual(x, sample) { // all fields immutable
+		if reflect.DeepEqual(&x, sample) { // all fields immutable
 			return &x
 		}
 	}
