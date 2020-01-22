@@ -94,6 +94,7 @@ func main() {
 func execute(cmd string, expectedStdout string) error {
 	fmt.Printf("testing %s\n", cmd)
 	c := exec.Command("../../vpctl", strings.Split(cmd, " ")...)
+	c.Env = append(os.Environ(), "VPCTL_WORKING_DIRECTORY=/tmp/vpctl_test")
 	c.Dir = "./test/samples"
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
