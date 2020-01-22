@@ -149,10 +149,10 @@ func (o *Socks5Server) validateForUpdating(old *Socks5Server) (bool, error) {
 		return false, fmt.Errorf("cannot modify immutable field spec.backend in %s from %s to %s", ref, old.Spec.Backend, o.Spec.Backend)
 	}
 	update := false
-	if o.Spec.SecurityGroup != old.Spec.SecurityGroup {
+	if o.Spec.SecurityGroup != "" && o.Spec.SecurityGroup != old.Spec.SecurityGroup {
 		update = true
 	}
-	if o.Spec.AllowNonBackend != old.Spec.AllowNonBackend {
+	if o.Spec.AllowNonBackend != nil && *o.Spec.AllowNonBackend != *old.Spec.AllowNonBackend {
 		update = true
 	}
 	return update, nil
@@ -166,7 +166,7 @@ func (o *DnsServer) Validate() error {
 	if o.Spec.RRSets == "" {
 		return fmt.Errorf("missing spec.rrsets in %s", ref)
 	}
-	if o.Spec.TTL < 0 {
+	if o.Spec.TTL != nil && *o.Spec.TTL < 0 {
 		return fmt.Errorf("invalid value for spec.ttl in %s: %d < 0", ref, o.Spec.TTL)
 	}
 	return nil
@@ -181,10 +181,10 @@ func (o *DnsServer) validateForUpdating(old *DnsServer) (bool, error) {
 		return false, fmt.Errorf("cannot modify immutable field spec.rrsets in %s from %s to %s", ref, old.Spec.RRSets, o.Spec.RRSets)
 	}
 	update := false
-	if o.Spec.TTL != old.Spec.TTL {
+	if o.Spec.TTL != nil && *o.Spec.TTL != *old.Spec.TTL {
 		update = true
 	}
-	if o.Spec.SecurityGroup != old.Spec.SecurityGroup {
+	if o.Spec.SecurityGroup != "" && o.Spec.SecurityGroup != old.Spec.SecurityGroup {
 		update = true
 	}
 	return update, nil
@@ -197,7 +197,7 @@ func (o *StaticServer) Validate() error {
 	if o.Address == "" {
 		return fmt.Errorf("missing address")
 	}
-	if o.Weight < 0 {
+	if o.Weight != nil && *o.Weight < 0 {
 		return fmt.Errorf("invalid value for weight: %d < 0", o.Weight)
 	}
 	return nil
@@ -229,7 +229,7 @@ func (o *ServerGroup) Validate() error {
 }
 
 func (o *StaticServer) validateForUpdating(old *StaticServer) bool {
-	if o.Weight != old.Weight {
+	if o.Weight != nil && *o.Weight != *old.Weight {
 		return true
 	}
 	return false
@@ -270,14 +270,14 @@ func (o *ServerGroupInUpstream) Validate() error {
 	if o.Name == "" {
 		return fmt.Errorf("missing name")
 	}
-	if o.Weight < 0 {
+	if o.Weight != nil && *o.Weight < 0 {
 		return fmt.Errorf("invalid value for weight: %d < 0", o.Weight)
 	}
 	return nil
 }
 
 func (o *ServerGroupInUpstream) validateForUpdating(old *ServerGroupInUpstream) bool {
-	if o.Weight != old.Weight {
+	if o.Weight != nil && *o.Weight != *old.Weight {
 		return true
 	}
 	if (len(o.Annotations) != 0 || len(old.Annotations) != 0) &&

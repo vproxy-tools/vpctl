@@ -25,7 +25,7 @@ func (o *Socks5Server) from(x *model.Socks5Server) {
 	o.Spec.Address = x.Address
 	o.Spec.Backend = x.Backend
 	o.Spec.SecurityGroup = x.SecurityGroup
-	o.Spec.AllowNonBackend = x.AllowNonBackend
+	o.Spec.AllowNonBackend = &x.AllowNonBackend
 }
 
 func (o *DnsServer) from(x *model.DNSServer) {
@@ -34,7 +34,7 @@ func (o *DnsServer) from(x *model.DNSServer) {
 	o.Metadata.Name = x.Name
 	o.Spec.Address = x.Address
 	o.Spec.RRSets = x.Rrsets
-	o.Spec.TTL = int(x.TTL)
+	o.Spec.TTL = int642intptr(x.TTL)
 	o.Spec.SecurityGroup = x.SecurityGroup
 }
 
@@ -46,7 +46,7 @@ func (o *Upstream) from(x *model.Upstream, y []*model.ServerGroupInUpstream) {
 	for idx, z := range y {
 		a := ServerGroupInUpstream{
 			Name:        z.Name,
-			Weight:      int(z.Weight),
+			Weight:      int642intptr(z.Weight),
 			Annotations: z.Annotations,
 		}
 		o.Spec.ServerGroups[idx] = a
@@ -69,7 +69,7 @@ func (o *ServerGroup) from(x *model.ServerGroup, y []*model.Server) {
 		a := StaticServer{
 			Name:    z.Name,
 			Address: z.Address,
-			Weight:  int(z.Weight),
+			Weight:  int642intptr(z.Weight),
 		}
 		o.Spec.Servers.Static[idx] = a
 	}

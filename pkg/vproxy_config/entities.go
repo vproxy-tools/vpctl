@@ -46,7 +46,7 @@ type Socks5ServerSpec struct {
 	Address         string `json:"address" yaml:"address"`
 	Backend         string `json:"backend" yaml:"backend"`
 	SecurityGroup   string `json:"securityGroup" yaml:"securityGroup"`
-	AllowNonBackend bool   `json:"allowNonBackend" yaml:"allowNonBackend"`
+	AllowNonBackend *bool  `json:"allowNonBackend" yaml:"allowNonBackend"`
 }
 
 type Socks5Server struct {
@@ -61,7 +61,7 @@ func (o *Socks5Server) GetBase() Base {
 type DnsServerSpec struct {
 	Address       string `json:"address" yaml:"address"`
 	RRSets        string `json:"rrsets" yaml:"rrsets"`
-	TTL           int    `json:"ttl" yaml:"ttl"`
+	TTL           *int   `json:"ttl" yaml:"ttl"`
 	SecurityGroup string `json:"securityGroup" yaml:"securityGroup"`
 }
 
@@ -77,7 +77,7 @@ func (o *DnsServer) GetBase() Base {
 type StaticServer struct {
 	Name    string `json:"name" yaml:"name"`
 	Address string `json:"address" yaml:"address"`
-	Weight  int    `json:"weight" yaml:"weight"`
+	Weight  *int   `json:"weight" yaml:"weight"`
 }
 
 type ServerInServerGroup struct {
@@ -118,7 +118,7 @@ func (o *ServerGroup) GetBase() Base {
 
 type ServerGroupInUpstream struct {
 	Name        string            `json:"name" yaml:"name"`
-	Weight      int               `json:"weight" yaml:"weight"`
+	Weight      *int              `json:"weight" yaml:"weight"`
 	Annotations map[string]string `json:"annotations" yaml:"annotations"`
 }
 

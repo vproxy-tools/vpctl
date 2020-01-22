@@ -35,7 +35,7 @@ func (o *Socks5Server) toCreate() model.Socks5ServerCreate {
 
 func (o *Socks5Server) toUpdate() model.Socks5ServerUpdate {
 	return model.Socks5ServerUpdate{
-		AllowNonBackend: &o.Spec.AllowNonBackend,
+		AllowNonBackend: o.Spec.AllowNonBackend,
 		SecurityGroup:   o.Spec.SecurityGroup,
 	}
 }
@@ -46,14 +46,14 @@ func (o *DnsServer) toCreate() model.DNSServerCreate {
 		Name:          &o.Metadata.Name,
 		Rrsets:        &o.Spec.RRSets,
 		SecurityGroup: o.Spec.SecurityGroup,
-		TTL:           int64(o.Spec.TTL),
+		TTL:           intptr2int64ptr(o.Spec.TTL),
 	}
 }
 
 func (o *DnsServer) toUpdate() model.DNSServerUpdate {
 	return model.DNSServerUpdate{
 		SecurityGroup: o.Spec.SecurityGroup,
-		TTL:           int64(o.Spec.TTL),
+		TTL:           intptr2int64ptr(o.Spec.TTL),
 	}
 }
 
@@ -61,18 +61,30 @@ func (o *StaticServer) toCreate(parent string, idx int) model.ServerCreate {
 	return model.ServerCreate{
 		Address: &o.Address,
 		Name:    &o.Name,
-		Weight:  int64(o.Weight),
+		Weight:  intptr2int64ptr(o.Weight),
 	}
 }
 
 func (o *StaticServer) toUpdate(parent string, idx int) model.ServerUpdate {
 	return model.ServerUpdate{
-		Weight: int64(o.Weight),
+		Weight: intptr2int64ptr(o.Weight),
 	}
 }
 
 func int64ptr(i int) *int64 {
 	x := int64(i)
+	return &x
+}
+
+func intptr2int64ptr(i *int) *int64 {
+	if i == nil {
+		return nil
+	}
+	return int64ptr(*i)
+}
+
+func int642intptr(i int64) *int {
+	x := int(i)
 	return &x
 }
 
@@ -105,14 +117,14 @@ func (o *ServerGroupInUpstream) toCreate(parent string, idx int) model.ServerGro
 	return model.ServerGroupInUpstreamCreate{
 		Annotations: o.Annotations,
 		Name:        &o.Name,
-		Weight:      int64(o.Weight),
+		Weight:      intptr2int64ptr(o.Weight),
 	}
 }
 
 func (o *ServerGroupInUpstream) toUpdate(parent string, idx int) model.ServerGroupInUpstreamUpdate {
 	return model.ServerGroupInUpstreamUpdate{
 		Annotations: o.Annotations,
-		Weight:      int64(o.Weight),
+		Weight:      intptr2int64ptr(o.Weight),
 	}
 }
 
