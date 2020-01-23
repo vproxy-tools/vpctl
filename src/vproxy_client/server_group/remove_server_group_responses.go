@@ -7,10 +7,13 @@ package server_group
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // RemoveServerGroupReader is a Reader for the RemoveServerGroup structure.
@@ -35,6 +38,18 @@ func (o *RemoveServerGroupReader) ReadResponse(response runtime.ClientResponse, 
 		return nil, result
 	case 404:
 		result := NewRemoveServerGroupNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewRemoveServerGroupConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewRemoveServerGroupInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewRemoveServerGroupBadRequest() *RemoveServerGroupBadRequest {
 
 /*RemoveServerGroupBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type RemoveServerGroupBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *RemoveServerGroupBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /server-group/{sg}][%d] removeServerGroupBadRequest ", 400)
+	return fmt.Sprintf("[DELETE /server-group/{sg}][%d] removeServerGroupBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *RemoveServerGroupBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *RemoveServerGroupBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewRemoveServerGroupNotFound() *RemoveServerGroupNotFound {
 
 /*RemoveServerGroupNotFound handles this case with default header values.
 
-ServerGroup not found
+resource not found
 */
 type RemoveServerGroupNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *RemoveServerGroupNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /server-group/{sg}][%d] removeServerGroupNotFound ", 404)
+	return fmt.Sprintf("[DELETE /server-group/{sg}][%d] removeServerGroupNotFound  %+v", 404, o.Payload)
+}
+
+func (o *RemoveServerGroupNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *RemoveServerGroupNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveServerGroupConflict creates a RemoveServerGroupConflict with default headers values
+func NewRemoveServerGroupConflict() *RemoveServerGroupConflict {
+	return &RemoveServerGroupConflict{}
+}
+
+/*RemoveServerGroupConflict handles this case with default header values.
+
+conflict
+*/
+type RemoveServerGroupConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *RemoveServerGroupConflict) Error() string {
+	return fmt.Sprintf("[DELETE /server-group/{sg}][%d] removeServerGroupConflict  %+v", 409, o.Payload)
+}
+
+func (o *RemoveServerGroupConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *RemoveServerGroupConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveServerGroupInternalServerError creates a RemoveServerGroupInternalServerError with default headers values
+func NewRemoveServerGroupInternalServerError() *RemoveServerGroupInternalServerError {
+	return &RemoveServerGroupInternalServerError{}
+}
+
+/*RemoveServerGroupInternalServerError handles this case with default header values.
+
+internal error
+*/
+type RemoveServerGroupInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *RemoveServerGroupInternalServerError) Error() string {
+	return fmt.Sprintf("[DELETE /server-group/{sg}][%d] removeServerGroupInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *RemoveServerGroupInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *RemoveServerGroupInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

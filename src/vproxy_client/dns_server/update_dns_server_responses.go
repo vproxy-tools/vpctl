@@ -7,10 +7,13 @@ package dns_server
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // UpdateDNSServerReader is a Reader for the UpdateDNSServer structure.
@@ -35,6 +38,18 @@ func (o *UpdateDNSServerReader) ReadResponse(response runtime.ClientResponse, co
 		return nil, result
 	case 404:
 		result := NewUpdateDNSServerNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewUpdateDNSServerConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewUpdateDNSServerInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewUpdateDNSServerBadRequest() *UpdateDNSServerBadRequest {
 
 /*UpdateDNSServerBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type UpdateDNSServerBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *UpdateDNSServerBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /dns-server/{dns}][%d] updateDnsServerBadRequest ", 400)
+	return fmt.Sprintf("[PUT /dns-server/{dns}][%d] updateDnsServerBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *UpdateDNSServerBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *UpdateDNSServerBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewUpdateDNSServerNotFound() *UpdateDNSServerNotFound {
 
 /*UpdateDNSServerNotFound handles this case with default header values.
 
-DnsServer not found
+resource not found
 */
 type UpdateDNSServerNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *UpdateDNSServerNotFound) Error() string {
-	return fmt.Sprintf("[PUT /dns-server/{dns}][%d] updateDnsServerNotFound ", 404)
+	return fmt.Sprintf("[PUT /dns-server/{dns}][%d] updateDnsServerNotFound  %+v", 404, o.Payload)
+}
+
+func (o *UpdateDNSServerNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *UpdateDNSServerNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewUpdateDNSServerConflict creates a UpdateDNSServerConflict with default headers values
+func NewUpdateDNSServerConflict() *UpdateDNSServerConflict {
+	return &UpdateDNSServerConflict{}
+}
+
+/*UpdateDNSServerConflict handles this case with default header values.
+
+conflict
+*/
+type UpdateDNSServerConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *UpdateDNSServerConflict) Error() string {
+	return fmt.Sprintf("[PUT /dns-server/{dns}][%d] updateDnsServerConflict  %+v", 409, o.Payload)
+}
+
+func (o *UpdateDNSServerConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *UpdateDNSServerConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewUpdateDNSServerInternalServerError creates a UpdateDNSServerInternalServerError with default headers values
+func NewUpdateDNSServerInternalServerError() *UpdateDNSServerInternalServerError {
+	return &UpdateDNSServerInternalServerError{}
+}
+
+/*UpdateDNSServerInternalServerError handles this case with default header values.
+
+internal error
+*/
+type UpdateDNSServerInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *UpdateDNSServerInternalServerError) Error() string {
+	return fmt.Sprintf("[PUT /dns-server/{dns}][%d] updateDnsServerInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *UpdateDNSServerInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *UpdateDNSServerInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

@@ -7,10 +7,13 @@ package smart_node_delegate
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // RemoveSmartNodeDelegateReader is a Reader for the RemoveSmartNodeDelegate structure.
@@ -35,6 +38,18 @@ func (o *RemoveSmartNodeDelegateReader) ReadResponse(response runtime.ClientResp
 		return nil, result
 	case 404:
 		result := NewRemoveSmartNodeDelegateNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewRemoveSmartNodeDelegateConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewRemoveSmartNodeDelegateInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewRemoveSmartNodeDelegateBadRequest() *RemoveSmartNodeDelegateBadRequest {
 
 /*RemoveSmartNodeDelegateBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type RemoveSmartNodeDelegateBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *RemoveSmartNodeDelegateBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /smart-node-delegate/{snd}][%d] removeSmartNodeDelegateBadRequest ", 400)
+	return fmt.Sprintf("[DELETE /smart-node-delegate/{snd}][%d] removeSmartNodeDelegateBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *RemoveSmartNodeDelegateBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *RemoveSmartNodeDelegateBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewRemoveSmartNodeDelegateNotFound() *RemoveSmartNodeDelegateNotFound {
 
 /*RemoveSmartNodeDelegateNotFound handles this case with default header values.
 
-SmartNodeDelegate not found
+resource not found
 */
 type RemoveSmartNodeDelegateNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *RemoveSmartNodeDelegateNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /smart-node-delegate/{snd}][%d] removeSmartNodeDelegateNotFound ", 404)
+	return fmt.Sprintf("[DELETE /smart-node-delegate/{snd}][%d] removeSmartNodeDelegateNotFound  %+v", 404, o.Payload)
+}
+
+func (o *RemoveSmartNodeDelegateNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *RemoveSmartNodeDelegateNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveSmartNodeDelegateConflict creates a RemoveSmartNodeDelegateConflict with default headers values
+func NewRemoveSmartNodeDelegateConflict() *RemoveSmartNodeDelegateConflict {
+	return &RemoveSmartNodeDelegateConflict{}
+}
+
+/*RemoveSmartNodeDelegateConflict handles this case with default header values.
+
+conflict
+*/
+type RemoveSmartNodeDelegateConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *RemoveSmartNodeDelegateConflict) Error() string {
+	return fmt.Sprintf("[DELETE /smart-node-delegate/{snd}][%d] removeSmartNodeDelegateConflict  %+v", 409, o.Payload)
+}
+
+func (o *RemoveSmartNodeDelegateConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *RemoveSmartNodeDelegateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveSmartNodeDelegateInternalServerError creates a RemoveSmartNodeDelegateInternalServerError with default headers values
+func NewRemoveSmartNodeDelegateInternalServerError() *RemoveSmartNodeDelegateInternalServerError {
+	return &RemoveSmartNodeDelegateInternalServerError{}
+}
+
+/*RemoveSmartNodeDelegateInternalServerError handles this case with default header values.
+
+internal error
+*/
+type RemoveSmartNodeDelegateInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *RemoveSmartNodeDelegateInternalServerError) Error() string {
+	return fmt.Sprintf("[DELETE /smart-node-delegate/{snd}][%d] removeSmartNodeDelegateInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *RemoveSmartNodeDelegateInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *RemoveSmartNodeDelegateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

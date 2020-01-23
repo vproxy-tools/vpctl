@@ -7,10 +7,13 @@ package smart_node_delegate
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // AddSmartNodeDelegateReader is a Reader for the AddSmartNodeDelegate structure.
@@ -29,6 +32,24 @@ func (o *AddSmartNodeDelegateReader) ReadResponse(response runtime.ClientRespons
 		return result, nil
 	case 400:
 		result := NewAddSmartNodeDelegateBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 404:
+		result := NewAddSmartNodeDelegateNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewAddSmartNodeDelegateConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewAddSmartNodeDelegateInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -67,16 +88,127 @@ func NewAddSmartNodeDelegateBadRequest() *AddSmartNodeDelegateBadRequest {
 
 /*AddSmartNodeDelegateBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type AddSmartNodeDelegateBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *AddSmartNodeDelegateBadRequest) Error() string {
-	return fmt.Sprintf("[POST /smart-node-delegate][%d] addSmartNodeDelegateBadRequest ", 400)
+	return fmt.Sprintf("[POST /smart-node-delegate][%d] addSmartNodeDelegateBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *AddSmartNodeDelegateBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *AddSmartNodeDelegateBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddSmartNodeDelegateNotFound creates a AddSmartNodeDelegateNotFound with default headers values
+func NewAddSmartNodeDelegateNotFound() *AddSmartNodeDelegateNotFound {
+	return &AddSmartNodeDelegateNotFound{}
+}
+
+/*AddSmartNodeDelegateNotFound handles this case with default header values.
+
+resource not found
+*/
+type AddSmartNodeDelegateNotFound struct {
+	Payload *vproxy_client_model.Error404
+}
+
+func (o *AddSmartNodeDelegateNotFound) Error() string {
+	return fmt.Sprintf("[POST /smart-node-delegate][%d] addSmartNodeDelegateNotFound  %+v", 404, o.Payload)
+}
+
+func (o *AddSmartNodeDelegateNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
+}
+
+func (o *AddSmartNodeDelegateNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddSmartNodeDelegateConflict creates a AddSmartNodeDelegateConflict with default headers values
+func NewAddSmartNodeDelegateConflict() *AddSmartNodeDelegateConflict {
+	return &AddSmartNodeDelegateConflict{}
+}
+
+/*AddSmartNodeDelegateConflict handles this case with default header values.
+
+conflict
+*/
+type AddSmartNodeDelegateConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *AddSmartNodeDelegateConflict) Error() string {
+	return fmt.Sprintf("[POST /smart-node-delegate][%d] addSmartNodeDelegateConflict  %+v", 409, o.Payload)
+}
+
+func (o *AddSmartNodeDelegateConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *AddSmartNodeDelegateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddSmartNodeDelegateInternalServerError creates a AddSmartNodeDelegateInternalServerError with default headers values
+func NewAddSmartNodeDelegateInternalServerError() *AddSmartNodeDelegateInternalServerError {
+	return &AddSmartNodeDelegateInternalServerError{}
+}
+
+/*AddSmartNodeDelegateInternalServerError handles this case with default header values.
+
+internal error
+*/
+type AddSmartNodeDelegateInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *AddSmartNodeDelegateInternalServerError) Error() string {
+	return fmt.Sprintf("[POST /smart-node-delegate][%d] addSmartNodeDelegateInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *AddSmartNodeDelegateInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *AddSmartNodeDelegateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

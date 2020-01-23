@@ -7,10 +7,13 @@ package server
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // UpdateServerReader is a Reader for the UpdateServer structure.
@@ -35,6 +38,18 @@ func (o *UpdateServerReader) ReadResponse(response runtime.ClientResponse, consu
 		return nil, result
 	case 404:
 		result := NewUpdateServerNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewUpdateServerConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewUpdateServerInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewUpdateServerBadRequest() *UpdateServerBadRequest {
 
 /*UpdateServerBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type UpdateServerBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *UpdateServerBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /server-group/{sg}/server/{svr}][%d] updateServerBadRequest ", 400)
+	return fmt.Sprintf("[PUT /server-group/{sg}/server/{svr}][%d] updateServerBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *UpdateServerBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *UpdateServerBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewUpdateServerNotFound() *UpdateServerNotFound {
 
 /*UpdateServerNotFound handles this case with default header values.
 
-Server not found
+resource not found
 */
 type UpdateServerNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *UpdateServerNotFound) Error() string {
-	return fmt.Sprintf("[PUT /server-group/{sg}/server/{svr}][%d] updateServerNotFound ", 404)
+	return fmt.Sprintf("[PUT /server-group/{sg}/server/{svr}][%d] updateServerNotFound  %+v", 404, o.Payload)
+}
+
+func (o *UpdateServerNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *UpdateServerNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewUpdateServerConflict creates a UpdateServerConflict with default headers values
+func NewUpdateServerConflict() *UpdateServerConflict {
+	return &UpdateServerConflict{}
+}
+
+/*UpdateServerConflict handles this case with default header values.
+
+conflict
+*/
+type UpdateServerConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *UpdateServerConflict) Error() string {
+	return fmt.Sprintf("[PUT /server-group/{sg}/server/{svr}][%d] updateServerConflict  %+v", 409, o.Payload)
+}
+
+func (o *UpdateServerConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *UpdateServerConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewUpdateServerInternalServerError creates a UpdateServerInternalServerError with default headers values
+func NewUpdateServerInternalServerError() *UpdateServerInternalServerError {
+	return &UpdateServerInternalServerError{}
+}
+
+/*UpdateServerInternalServerError handles this case with default header values.
+
+internal error
+*/
+type UpdateServerInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *UpdateServerInternalServerError) Error() string {
+	return fmt.Sprintf("[PUT /server-group/{sg}/server/{svr}][%d] updateServerInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *UpdateServerInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *UpdateServerInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

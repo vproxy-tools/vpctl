@@ -7,10 +7,13 @@ package event_loop_group
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // AddEventLoopGroupReader is a Reader for the AddEventLoopGroup structure.
@@ -29,6 +32,24 @@ func (o *AddEventLoopGroupReader) ReadResponse(response runtime.ClientResponse, 
 		return result, nil
 	case 400:
 		result := NewAddEventLoopGroupBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 404:
+		result := NewAddEventLoopGroupNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewAddEventLoopGroupConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewAddEventLoopGroupInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -67,16 +88,127 @@ func NewAddEventLoopGroupBadRequest() *AddEventLoopGroupBadRequest {
 
 /*AddEventLoopGroupBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type AddEventLoopGroupBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *AddEventLoopGroupBadRequest) Error() string {
-	return fmt.Sprintf("[POST /event-loop-group][%d] addEventLoopGroupBadRequest ", 400)
+	return fmt.Sprintf("[POST /event-loop-group][%d] addEventLoopGroupBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *AddEventLoopGroupBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *AddEventLoopGroupBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddEventLoopGroupNotFound creates a AddEventLoopGroupNotFound with default headers values
+func NewAddEventLoopGroupNotFound() *AddEventLoopGroupNotFound {
+	return &AddEventLoopGroupNotFound{}
+}
+
+/*AddEventLoopGroupNotFound handles this case with default header values.
+
+resource not found
+*/
+type AddEventLoopGroupNotFound struct {
+	Payload *vproxy_client_model.Error404
+}
+
+func (o *AddEventLoopGroupNotFound) Error() string {
+	return fmt.Sprintf("[POST /event-loop-group][%d] addEventLoopGroupNotFound  %+v", 404, o.Payload)
+}
+
+func (o *AddEventLoopGroupNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
+}
+
+func (o *AddEventLoopGroupNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddEventLoopGroupConflict creates a AddEventLoopGroupConflict with default headers values
+func NewAddEventLoopGroupConflict() *AddEventLoopGroupConflict {
+	return &AddEventLoopGroupConflict{}
+}
+
+/*AddEventLoopGroupConflict handles this case with default header values.
+
+conflict
+*/
+type AddEventLoopGroupConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *AddEventLoopGroupConflict) Error() string {
+	return fmt.Sprintf("[POST /event-loop-group][%d] addEventLoopGroupConflict  %+v", 409, o.Payload)
+}
+
+func (o *AddEventLoopGroupConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *AddEventLoopGroupConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddEventLoopGroupInternalServerError creates a AddEventLoopGroupInternalServerError with default headers values
+func NewAddEventLoopGroupInternalServerError() *AddEventLoopGroupInternalServerError {
+	return &AddEventLoopGroupInternalServerError{}
+}
+
+/*AddEventLoopGroupInternalServerError handles this case with default header values.
+
+internal error
+*/
+type AddEventLoopGroupInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *AddEventLoopGroupInternalServerError) Error() string {
+	return fmt.Sprintf("[POST /event-loop-group][%d] addEventLoopGroupInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *AddEventLoopGroupInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *AddEventLoopGroupInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

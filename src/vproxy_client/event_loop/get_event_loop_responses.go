@@ -30,8 +30,26 @@ func (o *GetEventLoopReader) ReadResponse(response runtime.ClientResponse, consu
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewGetEventLoopBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewGetEventLoopNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewGetEventLoopConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewGetEventLoopInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *GetEventLoopOK) readResponse(response runtime.ClientResponse, consumer 
 	return nil
 }
 
+// NewGetEventLoopBadRequest creates a GetEventLoopBadRequest with default headers values
+func NewGetEventLoopBadRequest() *GetEventLoopBadRequest {
+	return &GetEventLoopBadRequest{}
+}
+
+/*GetEventLoopBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type GetEventLoopBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *GetEventLoopBadRequest) Error() string {
+	return fmt.Sprintf("[GET /event-loop-group/{elg}/event-loop/{el}][%d] getEventLoopBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *GetEventLoopBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *GetEventLoopBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewGetEventLoopNotFound creates a GetEventLoopNotFound with default headers values
 func NewGetEventLoopNotFound() *GetEventLoopNotFound {
 	return &GetEventLoopNotFound{}
@@ -82,16 +133,94 @@ func NewGetEventLoopNotFound() *GetEventLoopNotFound {
 
 /*GetEventLoopNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type GetEventLoopNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *GetEventLoopNotFound) Error() string {
-	return fmt.Sprintf("[GET /event-loop-group/{elg}/event-loop/{el}][%d] getEventLoopNotFound ", 404)
+	return fmt.Sprintf("[GET /event-loop-group/{elg}/event-loop/{el}][%d] getEventLoopNotFound  %+v", 404, o.Payload)
+}
+
+func (o *GetEventLoopNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *GetEventLoopNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetEventLoopConflict creates a GetEventLoopConflict with default headers values
+func NewGetEventLoopConflict() *GetEventLoopConflict {
+	return &GetEventLoopConflict{}
+}
+
+/*GetEventLoopConflict handles this case with default header values.
+
+conflict
+*/
+type GetEventLoopConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *GetEventLoopConflict) Error() string {
+	return fmt.Sprintf("[GET /event-loop-group/{elg}/event-loop/{el}][%d] getEventLoopConflict  %+v", 409, o.Payload)
+}
+
+func (o *GetEventLoopConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *GetEventLoopConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetEventLoopInternalServerError creates a GetEventLoopInternalServerError with default headers values
+func NewGetEventLoopInternalServerError() *GetEventLoopInternalServerError {
+	return &GetEventLoopInternalServerError{}
+}
+
+/*GetEventLoopInternalServerError handles this case with default header values.
+
+internal error
+*/
+type GetEventLoopInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *GetEventLoopInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /event-loop-group/{elg}/event-loop/{el}][%d] getEventLoopInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *GetEventLoopInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *GetEventLoopInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

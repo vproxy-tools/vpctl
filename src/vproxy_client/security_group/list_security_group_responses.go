@@ -30,6 +30,24 @@ func (o *ListSecurityGroupReader) ReadResponse(response runtime.ClientResponse, 
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewListSecurityGroupBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewListSecurityGroupConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewListSecurityGroupInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
@@ -61,6 +79,105 @@ func (o *ListSecurityGroupOK) readResponse(response runtime.ClientResponse, cons
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSecurityGroupBadRequest creates a ListSecurityGroupBadRequest with default headers values
+func NewListSecurityGroupBadRequest() *ListSecurityGroupBadRequest {
+	return &ListSecurityGroupBadRequest{}
+}
+
+/*ListSecurityGroupBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type ListSecurityGroupBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *ListSecurityGroupBadRequest) Error() string {
+	return fmt.Sprintf("[GET /security-group][%d] listSecurityGroupBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *ListSecurityGroupBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *ListSecurityGroupBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSecurityGroupConflict creates a ListSecurityGroupConflict with default headers values
+func NewListSecurityGroupConflict() *ListSecurityGroupConflict {
+	return &ListSecurityGroupConflict{}
+}
+
+/*ListSecurityGroupConflict handles this case with default header values.
+
+conflict
+*/
+type ListSecurityGroupConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *ListSecurityGroupConflict) Error() string {
+	return fmt.Sprintf("[GET /security-group][%d] listSecurityGroupConflict  %+v", 409, o.Payload)
+}
+
+func (o *ListSecurityGroupConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *ListSecurityGroupConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSecurityGroupInternalServerError creates a ListSecurityGroupInternalServerError with default headers values
+func NewListSecurityGroupInternalServerError() *ListSecurityGroupInternalServerError {
+	return &ListSecurityGroupInternalServerError{}
+}
+
+/*ListSecurityGroupInternalServerError handles this case with default header values.
+
+internal error
+*/
+type ListSecurityGroupInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *ListSecurityGroupInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /security-group][%d] listSecurityGroupInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *ListSecurityGroupInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *ListSecurityGroupInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

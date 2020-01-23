@@ -30,8 +30,26 @@ func (o *GetUpstreamReader) ReadResponse(response runtime.ClientResponse, consum
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewGetUpstreamBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewGetUpstreamNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewGetUpstreamConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewGetUpstreamInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *GetUpstreamOK) readResponse(response runtime.ClientResponse, consumer r
 	return nil
 }
 
+// NewGetUpstreamBadRequest creates a GetUpstreamBadRequest with default headers values
+func NewGetUpstreamBadRequest() *GetUpstreamBadRequest {
+	return &GetUpstreamBadRequest{}
+}
+
+/*GetUpstreamBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type GetUpstreamBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *GetUpstreamBadRequest) Error() string {
+	return fmt.Sprintf("[GET /upstream/{ups}][%d] getUpstreamBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *GetUpstreamBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *GetUpstreamBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewGetUpstreamNotFound creates a GetUpstreamNotFound with default headers values
 func NewGetUpstreamNotFound() *GetUpstreamNotFound {
 	return &GetUpstreamNotFound{}
@@ -82,16 +133,94 @@ func NewGetUpstreamNotFound() *GetUpstreamNotFound {
 
 /*GetUpstreamNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type GetUpstreamNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *GetUpstreamNotFound) Error() string {
-	return fmt.Sprintf("[GET /upstream/{ups}][%d] getUpstreamNotFound ", 404)
+	return fmt.Sprintf("[GET /upstream/{ups}][%d] getUpstreamNotFound  %+v", 404, o.Payload)
+}
+
+func (o *GetUpstreamNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *GetUpstreamNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetUpstreamConflict creates a GetUpstreamConflict with default headers values
+func NewGetUpstreamConflict() *GetUpstreamConflict {
+	return &GetUpstreamConflict{}
+}
+
+/*GetUpstreamConflict handles this case with default header values.
+
+conflict
+*/
+type GetUpstreamConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *GetUpstreamConflict) Error() string {
+	return fmt.Sprintf("[GET /upstream/{ups}][%d] getUpstreamConflict  %+v", 409, o.Payload)
+}
+
+func (o *GetUpstreamConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *GetUpstreamConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetUpstreamInternalServerError creates a GetUpstreamInternalServerError with default headers values
+func NewGetUpstreamInternalServerError() *GetUpstreamInternalServerError {
+	return &GetUpstreamInternalServerError{}
+}
+
+/*GetUpstreamInternalServerError handles this case with default header values.
+
+internal error
+*/
+type GetUpstreamInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *GetUpstreamInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /upstream/{ups}][%d] getUpstreamInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *GetUpstreamInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *GetUpstreamInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

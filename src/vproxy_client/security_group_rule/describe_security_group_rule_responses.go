@@ -30,8 +30,26 @@ func (o *DescribeSecurityGroupRuleReader) ReadResponse(response runtime.ClientRe
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewDescribeSecurityGroupRuleBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewDescribeSecurityGroupRuleNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewDescribeSecurityGroupRuleConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewDescribeSecurityGroupRuleInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *DescribeSecurityGroupRuleOK) readResponse(response runtime.ClientRespon
 	return nil
 }
 
+// NewDescribeSecurityGroupRuleBadRequest creates a DescribeSecurityGroupRuleBadRequest with default headers values
+func NewDescribeSecurityGroupRuleBadRequest() *DescribeSecurityGroupRuleBadRequest {
+	return &DescribeSecurityGroupRuleBadRequest{}
+}
+
+/*DescribeSecurityGroupRuleBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type DescribeSecurityGroupRuleBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *DescribeSecurityGroupRuleBadRequest) Error() string {
+	return fmt.Sprintf("[GET /security-group/{secg}/security-group-rule/{secgr}/detail][%d] describeSecurityGroupRuleBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *DescribeSecurityGroupRuleBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *DescribeSecurityGroupRuleBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewDescribeSecurityGroupRuleNotFound creates a DescribeSecurityGroupRuleNotFound with default headers values
 func NewDescribeSecurityGroupRuleNotFound() *DescribeSecurityGroupRuleNotFound {
 	return &DescribeSecurityGroupRuleNotFound{}
@@ -82,16 +133,94 @@ func NewDescribeSecurityGroupRuleNotFound() *DescribeSecurityGroupRuleNotFound {
 
 /*DescribeSecurityGroupRuleNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type DescribeSecurityGroupRuleNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *DescribeSecurityGroupRuleNotFound) Error() string {
-	return fmt.Sprintf("[GET /security-group/{secg}/security-group-rule/{secgr}/detail][%d] describeSecurityGroupRuleNotFound ", 404)
+	return fmt.Sprintf("[GET /security-group/{secg}/security-group-rule/{secgr}/detail][%d] describeSecurityGroupRuleNotFound  %+v", 404, o.Payload)
+}
+
+func (o *DescribeSecurityGroupRuleNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *DescribeSecurityGroupRuleNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewDescribeSecurityGroupRuleConflict creates a DescribeSecurityGroupRuleConflict with default headers values
+func NewDescribeSecurityGroupRuleConflict() *DescribeSecurityGroupRuleConflict {
+	return &DescribeSecurityGroupRuleConflict{}
+}
+
+/*DescribeSecurityGroupRuleConflict handles this case with default header values.
+
+conflict
+*/
+type DescribeSecurityGroupRuleConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *DescribeSecurityGroupRuleConflict) Error() string {
+	return fmt.Sprintf("[GET /security-group/{secg}/security-group-rule/{secgr}/detail][%d] describeSecurityGroupRuleConflict  %+v", 409, o.Payload)
+}
+
+func (o *DescribeSecurityGroupRuleConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *DescribeSecurityGroupRuleConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewDescribeSecurityGroupRuleInternalServerError creates a DescribeSecurityGroupRuleInternalServerError with default headers values
+func NewDescribeSecurityGroupRuleInternalServerError() *DescribeSecurityGroupRuleInternalServerError {
+	return &DescribeSecurityGroupRuleInternalServerError{}
+}
+
+/*DescribeSecurityGroupRuleInternalServerError handles this case with default header values.
+
+internal error
+*/
+type DescribeSecurityGroupRuleInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *DescribeSecurityGroupRuleInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /security-group/{secg}/security-group-rule/{secgr}/detail][%d] describeSecurityGroupRuleInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *DescribeSecurityGroupRuleInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *DescribeSecurityGroupRuleInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

@@ -7,10 +7,13 @@ package cert_key
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // RemoveCertKeyReader is a Reader for the RemoveCertKey structure.
@@ -35,6 +38,18 @@ func (o *RemoveCertKeyReader) ReadResponse(response runtime.ClientResponse, cons
 		return nil, result
 	case 404:
 		result := NewRemoveCertKeyNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewRemoveCertKeyConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewRemoveCertKeyInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewRemoveCertKeyBadRequest() *RemoveCertKeyBadRequest {
 
 /*RemoveCertKeyBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type RemoveCertKeyBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *RemoveCertKeyBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /cert-key/{ck}][%d] removeCertKeyBadRequest ", 400)
+	return fmt.Sprintf("[DELETE /cert-key/{ck}][%d] removeCertKeyBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *RemoveCertKeyBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *RemoveCertKeyBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewRemoveCertKeyNotFound() *RemoveCertKeyNotFound {
 
 /*RemoveCertKeyNotFound handles this case with default header values.
 
-CertKey not found
+resource not found
 */
 type RemoveCertKeyNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *RemoveCertKeyNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /cert-key/{ck}][%d] removeCertKeyNotFound ", 404)
+	return fmt.Sprintf("[DELETE /cert-key/{ck}][%d] removeCertKeyNotFound  %+v", 404, o.Payload)
+}
+
+func (o *RemoveCertKeyNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *RemoveCertKeyNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveCertKeyConflict creates a RemoveCertKeyConflict with default headers values
+func NewRemoveCertKeyConflict() *RemoveCertKeyConflict {
+	return &RemoveCertKeyConflict{}
+}
+
+/*RemoveCertKeyConflict handles this case with default header values.
+
+conflict
+*/
+type RemoveCertKeyConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *RemoveCertKeyConflict) Error() string {
+	return fmt.Sprintf("[DELETE /cert-key/{ck}][%d] removeCertKeyConflict  %+v", 409, o.Payload)
+}
+
+func (o *RemoveCertKeyConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *RemoveCertKeyConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveCertKeyInternalServerError creates a RemoveCertKeyInternalServerError with default headers values
+func NewRemoveCertKeyInternalServerError() *RemoveCertKeyInternalServerError {
+	return &RemoveCertKeyInternalServerError{}
+}
+
+/*RemoveCertKeyInternalServerError handles this case with default header values.
+
+internal error
+*/
+type RemoveCertKeyInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *RemoveCertKeyInternalServerError) Error() string {
+	return fmt.Sprintf("[DELETE /cert-key/{ck}][%d] removeCertKeyInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *RemoveCertKeyInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *RemoveCertKeyInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

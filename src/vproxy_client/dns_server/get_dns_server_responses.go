@@ -30,8 +30,26 @@ func (o *GetDNSServerReader) ReadResponse(response runtime.ClientResponse, consu
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewGetDNSServerBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewGetDNSServerNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewGetDNSServerConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewGetDNSServerInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *GetDNSServerOK) readResponse(response runtime.ClientResponse, consumer 
 	return nil
 }
 
+// NewGetDNSServerBadRequest creates a GetDNSServerBadRequest with default headers values
+func NewGetDNSServerBadRequest() *GetDNSServerBadRequest {
+	return &GetDNSServerBadRequest{}
+}
+
+/*GetDNSServerBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type GetDNSServerBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *GetDNSServerBadRequest) Error() string {
+	return fmt.Sprintf("[GET /dns-server/{dns}][%d] getDnsServerBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *GetDNSServerBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *GetDNSServerBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewGetDNSServerNotFound creates a GetDNSServerNotFound with default headers values
 func NewGetDNSServerNotFound() *GetDNSServerNotFound {
 	return &GetDNSServerNotFound{}
@@ -82,16 +133,94 @@ func NewGetDNSServerNotFound() *GetDNSServerNotFound {
 
 /*GetDNSServerNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type GetDNSServerNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *GetDNSServerNotFound) Error() string {
-	return fmt.Sprintf("[GET /dns-server/{dns}][%d] getDnsServerNotFound ", 404)
+	return fmt.Sprintf("[GET /dns-server/{dns}][%d] getDnsServerNotFound  %+v", 404, o.Payload)
+}
+
+func (o *GetDNSServerNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *GetDNSServerNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetDNSServerConflict creates a GetDNSServerConflict with default headers values
+func NewGetDNSServerConflict() *GetDNSServerConflict {
+	return &GetDNSServerConflict{}
+}
+
+/*GetDNSServerConflict handles this case with default header values.
+
+conflict
+*/
+type GetDNSServerConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *GetDNSServerConflict) Error() string {
+	return fmt.Sprintf("[GET /dns-server/{dns}][%d] getDnsServerConflict  %+v", 409, o.Payload)
+}
+
+func (o *GetDNSServerConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *GetDNSServerConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetDNSServerInternalServerError creates a GetDNSServerInternalServerError with default headers values
+func NewGetDNSServerInternalServerError() *GetDNSServerInternalServerError {
+	return &GetDNSServerInternalServerError{}
+}
+
+/*GetDNSServerInternalServerError handles this case with default header values.
+
+internal error
+*/
+type GetDNSServerInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *GetDNSServerInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /dns-server/{dns}][%d] getDnsServerInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *GetDNSServerInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *GetDNSServerInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

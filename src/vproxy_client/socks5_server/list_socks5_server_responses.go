@@ -30,6 +30,24 @@ func (o *ListSocks5ServerReader) ReadResponse(response runtime.ClientResponse, c
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewListSocks5ServerBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewListSocks5ServerConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewListSocks5ServerInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
@@ -61,6 +79,105 @@ func (o *ListSocks5ServerOK) readResponse(response runtime.ClientResponse, consu
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSocks5ServerBadRequest creates a ListSocks5ServerBadRequest with default headers values
+func NewListSocks5ServerBadRequest() *ListSocks5ServerBadRequest {
+	return &ListSocks5ServerBadRequest{}
+}
+
+/*ListSocks5ServerBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type ListSocks5ServerBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *ListSocks5ServerBadRequest) Error() string {
+	return fmt.Sprintf("[GET /socks5-server][%d] listSocks5ServerBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *ListSocks5ServerBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *ListSocks5ServerBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSocks5ServerConflict creates a ListSocks5ServerConflict with default headers values
+func NewListSocks5ServerConflict() *ListSocks5ServerConflict {
+	return &ListSocks5ServerConflict{}
+}
+
+/*ListSocks5ServerConflict handles this case with default header values.
+
+conflict
+*/
+type ListSocks5ServerConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *ListSocks5ServerConflict) Error() string {
+	return fmt.Sprintf("[GET /socks5-server][%d] listSocks5ServerConflict  %+v", 409, o.Payload)
+}
+
+func (o *ListSocks5ServerConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *ListSocks5ServerConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSocks5ServerInternalServerError creates a ListSocks5ServerInternalServerError with default headers values
+func NewListSocks5ServerInternalServerError() *ListSocks5ServerInternalServerError {
+	return &ListSocks5ServerInternalServerError{}
+}
+
+/*ListSocks5ServerInternalServerError handles this case with default header values.
+
+internal error
+*/
+type ListSocks5ServerInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *ListSocks5ServerInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /socks5-server][%d] listSocks5ServerInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *ListSocks5ServerInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *ListSocks5ServerInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

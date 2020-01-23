@@ -7,10 +7,13 @@ package security_group_rule
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // AddSecurityGroupRuleReader is a Reader for the AddSecurityGroupRule structure.
@@ -29,6 +32,24 @@ func (o *AddSecurityGroupRuleReader) ReadResponse(response runtime.ClientRespons
 		return result, nil
 	case 400:
 		result := NewAddSecurityGroupRuleBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 404:
+		result := NewAddSecurityGroupRuleNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewAddSecurityGroupRuleConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewAddSecurityGroupRuleInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -67,16 +88,127 @@ func NewAddSecurityGroupRuleBadRequest() *AddSecurityGroupRuleBadRequest {
 
 /*AddSecurityGroupRuleBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type AddSecurityGroupRuleBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *AddSecurityGroupRuleBadRequest) Error() string {
-	return fmt.Sprintf("[POST /security-group/{secg}/security-group-rule][%d] addSecurityGroupRuleBadRequest ", 400)
+	return fmt.Sprintf("[POST /security-group/{secg}/security-group-rule][%d] addSecurityGroupRuleBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *AddSecurityGroupRuleBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *AddSecurityGroupRuleBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddSecurityGroupRuleNotFound creates a AddSecurityGroupRuleNotFound with default headers values
+func NewAddSecurityGroupRuleNotFound() *AddSecurityGroupRuleNotFound {
+	return &AddSecurityGroupRuleNotFound{}
+}
+
+/*AddSecurityGroupRuleNotFound handles this case with default header values.
+
+resource not found
+*/
+type AddSecurityGroupRuleNotFound struct {
+	Payload *vproxy_client_model.Error404
+}
+
+func (o *AddSecurityGroupRuleNotFound) Error() string {
+	return fmt.Sprintf("[POST /security-group/{secg}/security-group-rule][%d] addSecurityGroupRuleNotFound  %+v", 404, o.Payload)
+}
+
+func (o *AddSecurityGroupRuleNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
+}
+
+func (o *AddSecurityGroupRuleNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddSecurityGroupRuleConflict creates a AddSecurityGroupRuleConflict with default headers values
+func NewAddSecurityGroupRuleConflict() *AddSecurityGroupRuleConflict {
+	return &AddSecurityGroupRuleConflict{}
+}
+
+/*AddSecurityGroupRuleConflict handles this case with default header values.
+
+conflict
+*/
+type AddSecurityGroupRuleConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *AddSecurityGroupRuleConflict) Error() string {
+	return fmt.Sprintf("[POST /security-group/{secg}/security-group-rule][%d] addSecurityGroupRuleConflict  %+v", 409, o.Payload)
+}
+
+func (o *AddSecurityGroupRuleConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *AddSecurityGroupRuleConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddSecurityGroupRuleInternalServerError creates a AddSecurityGroupRuleInternalServerError with default headers values
+func NewAddSecurityGroupRuleInternalServerError() *AddSecurityGroupRuleInternalServerError {
+	return &AddSecurityGroupRuleInternalServerError{}
+}
+
+/*AddSecurityGroupRuleInternalServerError handles this case with default header values.
+
+internal error
+*/
+type AddSecurityGroupRuleInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *AddSecurityGroupRuleInternalServerError) Error() string {
+	return fmt.Sprintf("[POST /security-group/{secg}/security-group-rule][%d] addSecurityGroupRuleInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *AddSecurityGroupRuleInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *AddSecurityGroupRuleInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

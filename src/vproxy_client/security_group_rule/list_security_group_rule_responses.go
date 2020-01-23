@@ -30,6 +30,24 @@ func (o *ListSecurityGroupRuleReader) ReadResponse(response runtime.ClientRespon
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewListSecurityGroupRuleBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewListSecurityGroupRuleConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewListSecurityGroupRuleInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
@@ -61,6 +79,105 @@ func (o *ListSecurityGroupRuleOK) readResponse(response runtime.ClientResponse, 
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSecurityGroupRuleBadRequest creates a ListSecurityGroupRuleBadRequest with default headers values
+func NewListSecurityGroupRuleBadRequest() *ListSecurityGroupRuleBadRequest {
+	return &ListSecurityGroupRuleBadRequest{}
+}
+
+/*ListSecurityGroupRuleBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type ListSecurityGroupRuleBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *ListSecurityGroupRuleBadRequest) Error() string {
+	return fmt.Sprintf("[GET /security-group/{secg}/security-group-rule][%d] listSecurityGroupRuleBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *ListSecurityGroupRuleBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *ListSecurityGroupRuleBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSecurityGroupRuleConflict creates a ListSecurityGroupRuleConflict with default headers values
+func NewListSecurityGroupRuleConflict() *ListSecurityGroupRuleConflict {
+	return &ListSecurityGroupRuleConflict{}
+}
+
+/*ListSecurityGroupRuleConflict handles this case with default header values.
+
+conflict
+*/
+type ListSecurityGroupRuleConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *ListSecurityGroupRuleConflict) Error() string {
+	return fmt.Sprintf("[GET /security-group/{secg}/security-group-rule][%d] listSecurityGroupRuleConflict  %+v", 409, o.Payload)
+}
+
+func (o *ListSecurityGroupRuleConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *ListSecurityGroupRuleConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSecurityGroupRuleInternalServerError creates a ListSecurityGroupRuleInternalServerError with default headers values
+func NewListSecurityGroupRuleInternalServerError() *ListSecurityGroupRuleInternalServerError {
+	return &ListSecurityGroupRuleInternalServerError{}
+}
+
+/*ListSecurityGroupRuleInternalServerError handles this case with default header values.
+
+internal error
+*/
+type ListSecurityGroupRuleInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *ListSecurityGroupRuleInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /security-group/{secg}/security-group-rule][%d] listSecurityGroupRuleInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *ListSecurityGroupRuleInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *ListSecurityGroupRuleInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

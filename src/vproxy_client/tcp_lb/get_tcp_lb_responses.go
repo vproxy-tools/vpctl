@@ -30,8 +30,26 @@ func (o *GetTCPLbReader) ReadResponse(response runtime.ClientResponse, consumer 
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewGetTCPLbBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewGetTCPLbNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewGetTCPLbConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewGetTCPLbInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *GetTCPLbOK) readResponse(response runtime.ClientResponse, consumer runt
 	return nil
 }
 
+// NewGetTCPLbBadRequest creates a GetTCPLbBadRequest with default headers values
+func NewGetTCPLbBadRequest() *GetTCPLbBadRequest {
+	return &GetTCPLbBadRequest{}
+}
+
+/*GetTCPLbBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type GetTCPLbBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *GetTCPLbBadRequest) Error() string {
+	return fmt.Sprintf("[GET /tcp-lb/{tl}][%d] getTcpLbBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *GetTCPLbBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *GetTCPLbBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewGetTCPLbNotFound creates a GetTCPLbNotFound with default headers values
 func NewGetTCPLbNotFound() *GetTCPLbNotFound {
 	return &GetTCPLbNotFound{}
@@ -82,16 +133,94 @@ func NewGetTCPLbNotFound() *GetTCPLbNotFound {
 
 /*GetTCPLbNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type GetTCPLbNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *GetTCPLbNotFound) Error() string {
-	return fmt.Sprintf("[GET /tcp-lb/{tl}][%d] getTcpLbNotFound ", 404)
+	return fmt.Sprintf("[GET /tcp-lb/{tl}][%d] getTcpLbNotFound  %+v", 404, o.Payload)
+}
+
+func (o *GetTCPLbNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *GetTCPLbNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetTCPLbConflict creates a GetTCPLbConflict with default headers values
+func NewGetTCPLbConflict() *GetTCPLbConflict {
+	return &GetTCPLbConflict{}
+}
+
+/*GetTCPLbConflict handles this case with default header values.
+
+conflict
+*/
+type GetTCPLbConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *GetTCPLbConflict) Error() string {
+	return fmt.Sprintf("[GET /tcp-lb/{tl}][%d] getTcpLbConflict  %+v", 409, o.Payload)
+}
+
+func (o *GetTCPLbConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *GetTCPLbConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetTCPLbInternalServerError creates a GetTCPLbInternalServerError with default headers values
+func NewGetTCPLbInternalServerError() *GetTCPLbInternalServerError {
+	return &GetTCPLbInternalServerError{}
+}
+
+/*GetTCPLbInternalServerError handles this case with default header values.
+
+internal error
+*/
+type GetTCPLbInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *GetTCPLbInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /tcp-lb/{tl}][%d] getTcpLbInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *GetTCPLbInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *GetTCPLbInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

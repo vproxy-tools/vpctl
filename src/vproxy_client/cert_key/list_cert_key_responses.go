@@ -30,6 +30,24 @@ func (o *ListCertKeyReader) ReadResponse(response runtime.ClientResponse, consum
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewListCertKeyBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewListCertKeyConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewListCertKeyInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
@@ -61,6 +79,105 @@ func (o *ListCertKeyOK) readResponse(response runtime.ClientResponse, consumer r
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListCertKeyBadRequest creates a ListCertKeyBadRequest with default headers values
+func NewListCertKeyBadRequest() *ListCertKeyBadRequest {
+	return &ListCertKeyBadRequest{}
+}
+
+/*ListCertKeyBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type ListCertKeyBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *ListCertKeyBadRequest) Error() string {
+	return fmt.Sprintf("[GET /cert-key][%d] listCertKeyBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *ListCertKeyBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *ListCertKeyBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListCertKeyConflict creates a ListCertKeyConflict with default headers values
+func NewListCertKeyConflict() *ListCertKeyConflict {
+	return &ListCertKeyConflict{}
+}
+
+/*ListCertKeyConflict handles this case with default header values.
+
+conflict
+*/
+type ListCertKeyConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *ListCertKeyConflict) Error() string {
+	return fmt.Sprintf("[GET /cert-key][%d] listCertKeyConflict  %+v", 409, o.Payload)
+}
+
+func (o *ListCertKeyConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *ListCertKeyConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListCertKeyInternalServerError creates a ListCertKeyInternalServerError with default headers values
+func NewListCertKeyInternalServerError() *ListCertKeyInternalServerError {
+	return &ListCertKeyInternalServerError{}
+}
+
+/*ListCertKeyInternalServerError handles this case with default header values.
+
+internal error
+*/
+type ListCertKeyInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *ListCertKeyInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /cert-key][%d] listCertKeyInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *ListCertKeyInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *ListCertKeyInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

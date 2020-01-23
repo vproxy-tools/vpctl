@@ -7,10 +7,13 @@ package upstream
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // RemoveUpstreamReader is a Reader for the RemoveUpstream structure.
@@ -35,6 +38,18 @@ func (o *RemoveUpstreamReader) ReadResponse(response runtime.ClientResponse, con
 		return nil, result
 	case 404:
 		result := NewRemoveUpstreamNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewRemoveUpstreamConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewRemoveUpstreamInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewRemoveUpstreamBadRequest() *RemoveUpstreamBadRequest {
 
 /*RemoveUpstreamBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type RemoveUpstreamBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *RemoveUpstreamBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /upstream/{ups}][%d] removeUpstreamBadRequest ", 400)
+	return fmt.Sprintf("[DELETE /upstream/{ups}][%d] removeUpstreamBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *RemoveUpstreamBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *RemoveUpstreamBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewRemoveUpstreamNotFound() *RemoveUpstreamNotFound {
 
 /*RemoveUpstreamNotFound handles this case with default header values.
 
-Upstream not found
+resource not found
 */
 type RemoveUpstreamNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *RemoveUpstreamNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /upstream/{ups}][%d] removeUpstreamNotFound ", 404)
+	return fmt.Sprintf("[DELETE /upstream/{ups}][%d] removeUpstreamNotFound  %+v", 404, o.Payload)
+}
+
+func (o *RemoveUpstreamNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *RemoveUpstreamNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveUpstreamConflict creates a RemoveUpstreamConflict with default headers values
+func NewRemoveUpstreamConflict() *RemoveUpstreamConflict {
+	return &RemoveUpstreamConflict{}
+}
+
+/*RemoveUpstreamConflict handles this case with default header values.
+
+conflict
+*/
+type RemoveUpstreamConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *RemoveUpstreamConflict) Error() string {
+	return fmt.Sprintf("[DELETE /upstream/{ups}][%d] removeUpstreamConflict  %+v", 409, o.Payload)
+}
+
+func (o *RemoveUpstreamConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *RemoveUpstreamConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveUpstreamInternalServerError creates a RemoveUpstreamInternalServerError with default headers values
+func NewRemoveUpstreamInternalServerError() *RemoveUpstreamInternalServerError {
+	return &RemoveUpstreamInternalServerError{}
+}
+
+/*RemoveUpstreamInternalServerError handles this case with default header values.
+
+internal error
+*/
+type RemoveUpstreamInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *RemoveUpstreamInternalServerError) Error() string {
+	return fmt.Sprintf("[DELETE /upstream/{ups}][%d] removeUpstreamInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *RemoveUpstreamInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *RemoveUpstreamInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

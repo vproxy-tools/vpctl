@@ -30,6 +30,24 @@ func (o *ListServerGroupReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewListServerGroupBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewListServerGroupConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewListServerGroupInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
@@ -61,6 +79,105 @@ func (o *ListServerGroupOK) readResponse(response runtime.ClientResponse, consum
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListServerGroupBadRequest creates a ListServerGroupBadRequest with default headers values
+func NewListServerGroupBadRequest() *ListServerGroupBadRequest {
+	return &ListServerGroupBadRequest{}
+}
+
+/*ListServerGroupBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type ListServerGroupBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *ListServerGroupBadRequest) Error() string {
+	return fmt.Sprintf("[GET /server-group][%d] listServerGroupBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *ListServerGroupBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *ListServerGroupBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListServerGroupConflict creates a ListServerGroupConflict with default headers values
+func NewListServerGroupConflict() *ListServerGroupConflict {
+	return &ListServerGroupConflict{}
+}
+
+/*ListServerGroupConflict handles this case with default header values.
+
+conflict
+*/
+type ListServerGroupConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *ListServerGroupConflict) Error() string {
+	return fmt.Sprintf("[GET /server-group][%d] listServerGroupConflict  %+v", 409, o.Payload)
+}
+
+func (o *ListServerGroupConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *ListServerGroupConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListServerGroupInternalServerError creates a ListServerGroupInternalServerError with default headers values
+func NewListServerGroupInternalServerError() *ListServerGroupInternalServerError {
+	return &ListServerGroupInternalServerError{}
+}
+
+/*ListServerGroupInternalServerError handles this case with default header values.
+
+internal error
+*/
+type ListServerGroupInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *ListServerGroupInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /server-group][%d] listServerGroupInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *ListServerGroupInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *ListServerGroupInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

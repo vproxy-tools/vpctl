@@ -30,8 +30,26 @@ func (o *GetSmartNodeDelegateReader) ReadResponse(response runtime.ClientRespons
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewGetSmartNodeDelegateBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewGetSmartNodeDelegateNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewGetSmartNodeDelegateConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewGetSmartNodeDelegateInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *GetSmartNodeDelegateOK) readResponse(response runtime.ClientResponse, c
 	return nil
 }
 
+// NewGetSmartNodeDelegateBadRequest creates a GetSmartNodeDelegateBadRequest with default headers values
+func NewGetSmartNodeDelegateBadRequest() *GetSmartNodeDelegateBadRequest {
+	return &GetSmartNodeDelegateBadRequest{}
+}
+
+/*GetSmartNodeDelegateBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type GetSmartNodeDelegateBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *GetSmartNodeDelegateBadRequest) Error() string {
+	return fmt.Sprintf("[GET /smart-node-delegate/{snd}][%d] getSmartNodeDelegateBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *GetSmartNodeDelegateBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *GetSmartNodeDelegateBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewGetSmartNodeDelegateNotFound creates a GetSmartNodeDelegateNotFound with default headers values
 func NewGetSmartNodeDelegateNotFound() *GetSmartNodeDelegateNotFound {
 	return &GetSmartNodeDelegateNotFound{}
@@ -82,16 +133,94 @@ func NewGetSmartNodeDelegateNotFound() *GetSmartNodeDelegateNotFound {
 
 /*GetSmartNodeDelegateNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type GetSmartNodeDelegateNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *GetSmartNodeDelegateNotFound) Error() string {
-	return fmt.Sprintf("[GET /smart-node-delegate/{snd}][%d] getSmartNodeDelegateNotFound ", 404)
+	return fmt.Sprintf("[GET /smart-node-delegate/{snd}][%d] getSmartNodeDelegateNotFound  %+v", 404, o.Payload)
+}
+
+func (o *GetSmartNodeDelegateNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *GetSmartNodeDelegateNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetSmartNodeDelegateConflict creates a GetSmartNodeDelegateConflict with default headers values
+func NewGetSmartNodeDelegateConflict() *GetSmartNodeDelegateConflict {
+	return &GetSmartNodeDelegateConflict{}
+}
+
+/*GetSmartNodeDelegateConflict handles this case with default header values.
+
+conflict
+*/
+type GetSmartNodeDelegateConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *GetSmartNodeDelegateConflict) Error() string {
+	return fmt.Sprintf("[GET /smart-node-delegate/{snd}][%d] getSmartNodeDelegateConflict  %+v", 409, o.Payload)
+}
+
+func (o *GetSmartNodeDelegateConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *GetSmartNodeDelegateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetSmartNodeDelegateInternalServerError creates a GetSmartNodeDelegateInternalServerError with default headers values
+func NewGetSmartNodeDelegateInternalServerError() *GetSmartNodeDelegateInternalServerError {
+	return &GetSmartNodeDelegateInternalServerError{}
+}
+
+/*GetSmartNodeDelegateInternalServerError handles this case with default header values.
+
+internal error
+*/
+type GetSmartNodeDelegateInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *GetSmartNodeDelegateInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /smart-node-delegate/{snd}][%d] getSmartNodeDelegateInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *GetSmartNodeDelegateInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *GetSmartNodeDelegateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
