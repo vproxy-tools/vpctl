@@ -57,7 +57,7 @@ func main() {
 			}
 			if line == Separator {
 				if cmd != "" {
-					err = execute(cmd, stdout)
+					err = execute(filename, cmd, stdout)
 					if err != nil {
 						errMsg := fmt.Sprintf("test failed in file: %s, cmd: %s, err: %v", filename, cmd, err)
 						panic(errMsg)
@@ -92,8 +92,8 @@ func main() {
 	os.Exit(0)
 }
 
-func execute(cmd string, expectedStdout string) error {
-	fmt.Printf("testing %s\n", cmd)
+func execute(filename string, cmd string, expectedStdout string) error {
+	fmt.Printf("[%s] testing %s\n", filename, cmd)
 	c := exec.Command("../../vpctl", strings.Split(cmd, " ")...)
 	c.Env = append(os.Environ(), "VPCTL_WORKING_DIRECTORY=/tmp/vpctl_test")
 	c.Dir = "./test/samples"
