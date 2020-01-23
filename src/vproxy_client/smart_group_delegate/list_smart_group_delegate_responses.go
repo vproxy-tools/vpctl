@@ -30,6 +30,24 @@ func (o *ListSmartGroupDelegateReader) ReadResponse(response runtime.ClientRespo
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewListSmartGroupDelegateBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewListSmartGroupDelegateConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewListSmartGroupDelegateInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
@@ -61,6 +79,105 @@ func (o *ListSmartGroupDelegateOK) readResponse(response runtime.ClientResponse,
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSmartGroupDelegateBadRequest creates a ListSmartGroupDelegateBadRequest with default headers values
+func NewListSmartGroupDelegateBadRequest() *ListSmartGroupDelegateBadRequest {
+	return &ListSmartGroupDelegateBadRequest{}
+}
+
+/*ListSmartGroupDelegateBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type ListSmartGroupDelegateBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *ListSmartGroupDelegateBadRequest) Error() string {
+	return fmt.Sprintf("[GET /smart-group-delegate][%d] listSmartGroupDelegateBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *ListSmartGroupDelegateBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *ListSmartGroupDelegateBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSmartGroupDelegateConflict creates a ListSmartGroupDelegateConflict with default headers values
+func NewListSmartGroupDelegateConflict() *ListSmartGroupDelegateConflict {
+	return &ListSmartGroupDelegateConflict{}
+}
+
+/*ListSmartGroupDelegateConflict handles this case with default header values.
+
+conflict
+*/
+type ListSmartGroupDelegateConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *ListSmartGroupDelegateConflict) Error() string {
+	return fmt.Sprintf("[GET /smart-group-delegate][%d] listSmartGroupDelegateConflict  %+v", 409, o.Payload)
+}
+
+func (o *ListSmartGroupDelegateConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *ListSmartGroupDelegateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListSmartGroupDelegateInternalServerError creates a ListSmartGroupDelegateInternalServerError with default headers values
+func NewListSmartGroupDelegateInternalServerError() *ListSmartGroupDelegateInternalServerError {
+	return &ListSmartGroupDelegateInternalServerError{}
+}
+
+/*ListSmartGroupDelegateInternalServerError handles this case with default header values.
+
+internal error
+*/
+type ListSmartGroupDelegateInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *ListSmartGroupDelegateInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /smart-group-delegate][%d] listSmartGroupDelegateInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *ListSmartGroupDelegateInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *ListSmartGroupDelegateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

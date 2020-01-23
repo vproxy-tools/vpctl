@@ -30,8 +30,26 @@ func (o *DescribeServerGroupReader) ReadResponse(response runtime.ClientResponse
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewDescribeServerGroupBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewDescribeServerGroupNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewDescribeServerGroupConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewDescribeServerGroupInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *DescribeServerGroupOK) readResponse(response runtime.ClientResponse, co
 	return nil
 }
 
+// NewDescribeServerGroupBadRequest creates a DescribeServerGroupBadRequest with default headers values
+func NewDescribeServerGroupBadRequest() *DescribeServerGroupBadRequest {
+	return &DescribeServerGroupBadRequest{}
+}
+
+/*DescribeServerGroupBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type DescribeServerGroupBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *DescribeServerGroupBadRequest) Error() string {
+	return fmt.Sprintf("[GET /server-group/{sg}/detail][%d] describeServerGroupBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *DescribeServerGroupBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *DescribeServerGroupBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewDescribeServerGroupNotFound creates a DescribeServerGroupNotFound with default headers values
 func NewDescribeServerGroupNotFound() *DescribeServerGroupNotFound {
 	return &DescribeServerGroupNotFound{}
@@ -82,16 +133,94 @@ func NewDescribeServerGroupNotFound() *DescribeServerGroupNotFound {
 
 /*DescribeServerGroupNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type DescribeServerGroupNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *DescribeServerGroupNotFound) Error() string {
-	return fmt.Sprintf("[GET /server-group/{sg}/detail][%d] describeServerGroupNotFound ", 404)
+	return fmt.Sprintf("[GET /server-group/{sg}/detail][%d] describeServerGroupNotFound  %+v", 404, o.Payload)
+}
+
+func (o *DescribeServerGroupNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *DescribeServerGroupNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewDescribeServerGroupConflict creates a DescribeServerGroupConflict with default headers values
+func NewDescribeServerGroupConflict() *DescribeServerGroupConflict {
+	return &DescribeServerGroupConflict{}
+}
+
+/*DescribeServerGroupConflict handles this case with default header values.
+
+conflict
+*/
+type DescribeServerGroupConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *DescribeServerGroupConflict) Error() string {
+	return fmt.Sprintf("[GET /server-group/{sg}/detail][%d] describeServerGroupConflict  %+v", 409, o.Payload)
+}
+
+func (o *DescribeServerGroupConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *DescribeServerGroupConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewDescribeServerGroupInternalServerError creates a DescribeServerGroupInternalServerError with default headers values
+func NewDescribeServerGroupInternalServerError() *DescribeServerGroupInternalServerError {
+	return &DescribeServerGroupInternalServerError{}
+}
+
+/*DescribeServerGroupInternalServerError handles this case with default header values.
+
+internal error
+*/
+type DescribeServerGroupInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *DescribeServerGroupInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /server-group/{sg}/detail][%d] describeServerGroupInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *DescribeServerGroupInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *DescribeServerGroupInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

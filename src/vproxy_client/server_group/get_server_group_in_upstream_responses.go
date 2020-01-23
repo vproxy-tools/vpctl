@@ -30,8 +30,26 @@ func (o *GetServerGroupInUpstreamReader) ReadResponse(response runtime.ClientRes
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewGetServerGroupInUpstreamBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewGetServerGroupInUpstreamNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewGetServerGroupInUpstreamConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewGetServerGroupInUpstreamInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *GetServerGroupInUpstreamOK) readResponse(response runtime.ClientRespons
 	return nil
 }
 
+// NewGetServerGroupInUpstreamBadRequest creates a GetServerGroupInUpstreamBadRequest with default headers values
+func NewGetServerGroupInUpstreamBadRequest() *GetServerGroupInUpstreamBadRequest {
+	return &GetServerGroupInUpstreamBadRequest{}
+}
+
+/*GetServerGroupInUpstreamBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type GetServerGroupInUpstreamBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *GetServerGroupInUpstreamBadRequest) Error() string {
+	return fmt.Sprintf("[GET /upstream/{ups}/server-group/{sg}][%d] getServerGroupInUpstreamBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *GetServerGroupInUpstreamBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *GetServerGroupInUpstreamBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewGetServerGroupInUpstreamNotFound creates a GetServerGroupInUpstreamNotFound with default headers values
 func NewGetServerGroupInUpstreamNotFound() *GetServerGroupInUpstreamNotFound {
 	return &GetServerGroupInUpstreamNotFound{}
@@ -82,16 +133,94 @@ func NewGetServerGroupInUpstreamNotFound() *GetServerGroupInUpstreamNotFound {
 
 /*GetServerGroupInUpstreamNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type GetServerGroupInUpstreamNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *GetServerGroupInUpstreamNotFound) Error() string {
-	return fmt.Sprintf("[GET /upstream/{ups}/server-group/{sg}][%d] getServerGroupInUpstreamNotFound ", 404)
+	return fmt.Sprintf("[GET /upstream/{ups}/server-group/{sg}][%d] getServerGroupInUpstreamNotFound  %+v", 404, o.Payload)
+}
+
+func (o *GetServerGroupInUpstreamNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *GetServerGroupInUpstreamNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetServerGroupInUpstreamConflict creates a GetServerGroupInUpstreamConflict with default headers values
+func NewGetServerGroupInUpstreamConflict() *GetServerGroupInUpstreamConflict {
+	return &GetServerGroupInUpstreamConflict{}
+}
+
+/*GetServerGroupInUpstreamConflict handles this case with default header values.
+
+conflict
+*/
+type GetServerGroupInUpstreamConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *GetServerGroupInUpstreamConflict) Error() string {
+	return fmt.Sprintf("[GET /upstream/{ups}/server-group/{sg}][%d] getServerGroupInUpstreamConflict  %+v", 409, o.Payload)
+}
+
+func (o *GetServerGroupInUpstreamConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *GetServerGroupInUpstreamConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetServerGroupInUpstreamInternalServerError creates a GetServerGroupInUpstreamInternalServerError with default headers values
+func NewGetServerGroupInUpstreamInternalServerError() *GetServerGroupInUpstreamInternalServerError {
+	return &GetServerGroupInUpstreamInternalServerError{}
+}
+
+/*GetServerGroupInUpstreamInternalServerError handles this case with default header values.
+
+internal error
+*/
+type GetServerGroupInUpstreamInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *GetServerGroupInUpstreamInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /upstream/{ups}/server-group/{sg}][%d] getServerGroupInUpstreamInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *GetServerGroupInUpstreamInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *GetServerGroupInUpstreamInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

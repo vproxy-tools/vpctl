@@ -7,10 +7,13 @@ package dns_server
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // RemoveDNSServerReader is a Reader for the RemoveDNSServer structure.
@@ -35,6 +38,18 @@ func (o *RemoveDNSServerReader) ReadResponse(response runtime.ClientResponse, co
 		return nil, result
 	case 404:
 		result := NewRemoveDNSServerNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewRemoveDNSServerConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewRemoveDNSServerInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewRemoveDNSServerBadRequest() *RemoveDNSServerBadRequest {
 
 /*RemoveDNSServerBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type RemoveDNSServerBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *RemoveDNSServerBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /dns-server/{dns}][%d] removeDnsServerBadRequest ", 400)
+	return fmt.Sprintf("[DELETE /dns-server/{dns}][%d] removeDnsServerBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *RemoveDNSServerBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *RemoveDNSServerBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewRemoveDNSServerNotFound() *RemoveDNSServerNotFound {
 
 /*RemoveDNSServerNotFound handles this case with default header values.
 
-DnsServer not found
+resource not found
 */
 type RemoveDNSServerNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *RemoveDNSServerNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /dns-server/{dns}][%d] removeDnsServerNotFound ", 404)
+	return fmt.Sprintf("[DELETE /dns-server/{dns}][%d] removeDnsServerNotFound  %+v", 404, o.Payload)
+}
+
+func (o *RemoveDNSServerNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *RemoveDNSServerNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveDNSServerConflict creates a RemoveDNSServerConflict with default headers values
+func NewRemoveDNSServerConflict() *RemoveDNSServerConflict {
+	return &RemoveDNSServerConflict{}
+}
+
+/*RemoveDNSServerConflict handles this case with default header values.
+
+conflict
+*/
+type RemoveDNSServerConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *RemoveDNSServerConflict) Error() string {
+	return fmt.Sprintf("[DELETE /dns-server/{dns}][%d] removeDnsServerConflict  %+v", 409, o.Payload)
+}
+
+func (o *RemoveDNSServerConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *RemoveDNSServerConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveDNSServerInternalServerError creates a RemoveDNSServerInternalServerError with default headers values
+func NewRemoveDNSServerInternalServerError() *RemoveDNSServerInternalServerError {
+	return &RemoveDNSServerInternalServerError{}
+}
+
+/*RemoveDNSServerInternalServerError handles this case with default header values.
+
+internal error
+*/
+type RemoveDNSServerInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *RemoveDNSServerInternalServerError) Error() string {
+	return fmt.Sprintf("[DELETE /dns-server/{dns}][%d] removeDnsServerInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *RemoveDNSServerInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *RemoveDNSServerInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

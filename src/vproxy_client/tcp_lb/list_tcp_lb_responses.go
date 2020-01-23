@@ -30,6 +30,24 @@ func (o *ListTCPLbReader) ReadResponse(response runtime.ClientResponse, consumer
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewListTCPLbBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewListTCPLbConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewListTCPLbInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
@@ -61,6 +79,105 @@ func (o *ListTCPLbOK) readResponse(response runtime.ClientResponse, consumer run
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListTCPLbBadRequest creates a ListTCPLbBadRequest with default headers values
+func NewListTCPLbBadRequest() *ListTCPLbBadRequest {
+	return &ListTCPLbBadRequest{}
+}
+
+/*ListTCPLbBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type ListTCPLbBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *ListTCPLbBadRequest) Error() string {
+	return fmt.Sprintf("[GET /tcp-lb][%d] listTcpLbBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *ListTCPLbBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *ListTCPLbBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListTCPLbConflict creates a ListTCPLbConflict with default headers values
+func NewListTCPLbConflict() *ListTCPLbConflict {
+	return &ListTCPLbConflict{}
+}
+
+/*ListTCPLbConflict handles this case with default header values.
+
+conflict
+*/
+type ListTCPLbConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *ListTCPLbConflict) Error() string {
+	return fmt.Sprintf("[GET /tcp-lb][%d] listTcpLbConflict  %+v", 409, o.Payload)
+}
+
+func (o *ListTCPLbConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *ListTCPLbConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListTCPLbInternalServerError creates a ListTCPLbInternalServerError with default headers values
+func NewListTCPLbInternalServerError() *ListTCPLbInternalServerError {
+	return &ListTCPLbInternalServerError{}
+}
+
+/*ListTCPLbInternalServerError handles this case with default header values.
+
+internal error
+*/
+type ListTCPLbInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *ListTCPLbInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /tcp-lb][%d] listTcpLbInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *ListTCPLbInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *ListTCPLbInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

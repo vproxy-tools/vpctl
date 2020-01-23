@@ -30,8 +30,26 @@ func (o *DescribeSocks5ServerReader) ReadResponse(response runtime.ClientRespons
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewDescribeSocks5ServerBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewDescribeSocks5ServerNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewDescribeSocks5ServerConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewDescribeSocks5ServerInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *DescribeSocks5ServerOK) readResponse(response runtime.ClientResponse, c
 	return nil
 }
 
+// NewDescribeSocks5ServerBadRequest creates a DescribeSocks5ServerBadRequest with default headers values
+func NewDescribeSocks5ServerBadRequest() *DescribeSocks5ServerBadRequest {
+	return &DescribeSocks5ServerBadRequest{}
+}
+
+/*DescribeSocks5ServerBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type DescribeSocks5ServerBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *DescribeSocks5ServerBadRequest) Error() string {
+	return fmt.Sprintf("[GET /socks5-server/{socks5}/detail][%d] describeSocks5ServerBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *DescribeSocks5ServerBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *DescribeSocks5ServerBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewDescribeSocks5ServerNotFound creates a DescribeSocks5ServerNotFound with default headers values
 func NewDescribeSocks5ServerNotFound() *DescribeSocks5ServerNotFound {
 	return &DescribeSocks5ServerNotFound{}
@@ -82,16 +133,94 @@ func NewDescribeSocks5ServerNotFound() *DescribeSocks5ServerNotFound {
 
 /*DescribeSocks5ServerNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type DescribeSocks5ServerNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *DescribeSocks5ServerNotFound) Error() string {
-	return fmt.Sprintf("[GET /socks5-server/{socks5}/detail][%d] describeSocks5ServerNotFound ", 404)
+	return fmt.Sprintf("[GET /socks5-server/{socks5}/detail][%d] describeSocks5ServerNotFound  %+v", 404, o.Payload)
+}
+
+func (o *DescribeSocks5ServerNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *DescribeSocks5ServerNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewDescribeSocks5ServerConflict creates a DescribeSocks5ServerConflict with default headers values
+func NewDescribeSocks5ServerConflict() *DescribeSocks5ServerConflict {
+	return &DescribeSocks5ServerConflict{}
+}
+
+/*DescribeSocks5ServerConflict handles this case with default header values.
+
+conflict
+*/
+type DescribeSocks5ServerConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *DescribeSocks5ServerConflict) Error() string {
+	return fmt.Sprintf("[GET /socks5-server/{socks5}/detail][%d] describeSocks5ServerConflict  %+v", 409, o.Payload)
+}
+
+func (o *DescribeSocks5ServerConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *DescribeSocks5ServerConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewDescribeSocks5ServerInternalServerError creates a DescribeSocks5ServerInternalServerError with default headers values
+func NewDescribeSocks5ServerInternalServerError() *DescribeSocks5ServerInternalServerError {
+	return &DescribeSocks5ServerInternalServerError{}
+}
+
+/*DescribeSocks5ServerInternalServerError handles this case with default header values.
+
+internal error
+*/
+type DescribeSocks5ServerInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *DescribeSocks5ServerInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /socks5-server/{socks5}/detail][%d] describeSocks5ServerInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *DescribeSocks5ServerInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *DescribeSocks5ServerInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

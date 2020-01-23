@@ -30,6 +30,24 @@ func (o *ListServerGroupInUpstreamReader) ReadResponse(response runtime.ClientRe
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewListServerGroupInUpstreamBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewListServerGroupInUpstreamConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewListServerGroupInUpstreamInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
@@ -61,6 +79,105 @@ func (o *ListServerGroupInUpstreamOK) readResponse(response runtime.ClientRespon
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListServerGroupInUpstreamBadRequest creates a ListServerGroupInUpstreamBadRequest with default headers values
+func NewListServerGroupInUpstreamBadRequest() *ListServerGroupInUpstreamBadRequest {
+	return &ListServerGroupInUpstreamBadRequest{}
+}
+
+/*ListServerGroupInUpstreamBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type ListServerGroupInUpstreamBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *ListServerGroupInUpstreamBadRequest) Error() string {
+	return fmt.Sprintf("[GET /upstream/{ups}/server-group][%d] listServerGroupInUpstreamBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *ListServerGroupInUpstreamBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *ListServerGroupInUpstreamBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListServerGroupInUpstreamConflict creates a ListServerGroupInUpstreamConflict with default headers values
+func NewListServerGroupInUpstreamConflict() *ListServerGroupInUpstreamConflict {
+	return &ListServerGroupInUpstreamConflict{}
+}
+
+/*ListServerGroupInUpstreamConflict handles this case with default header values.
+
+conflict
+*/
+type ListServerGroupInUpstreamConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *ListServerGroupInUpstreamConflict) Error() string {
+	return fmt.Sprintf("[GET /upstream/{ups}/server-group][%d] listServerGroupInUpstreamConflict  %+v", 409, o.Payload)
+}
+
+func (o *ListServerGroupInUpstreamConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *ListServerGroupInUpstreamConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListServerGroupInUpstreamInternalServerError creates a ListServerGroupInUpstreamInternalServerError with default headers values
+func NewListServerGroupInUpstreamInternalServerError() *ListServerGroupInUpstreamInternalServerError {
+	return &ListServerGroupInUpstreamInternalServerError{}
+}
+
+/*ListServerGroupInUpstreamInternalServerError handles this case with default header values.
+
+internal error
+*/
+type ListServerGroupInUpstreamInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *ListServerGroupInUpstreamInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /upstream/{ups}/server-group][%d] listServerGroupInUpstreamInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *ListServerGroupInUpstreamInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *ListServerGroupInUpstreamInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

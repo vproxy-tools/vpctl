@@ -30,6 +30,24 @@ func (o *ListEventLoopReader) ReadResponse(response runtime.ClientResponse, cons
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewListEventLoopBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewListEventLoopConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewListEventLoopInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	default:
 		return nil, runtime.NewAPIError("unknown error", response, response.Code())
@@ -61,6 +79,105 @@ func (o *ListEventLoopOK) readResponse(response runtime.ClientResponse, consumer
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListEventLoopBadRequest creates a ListEventLoopBadRequest with default headers values
+func NewListEventLoopBadRequest() *ListEventLoopBadRequest {
+	return &ListEventLoopBadRequest{}
+}
+
+/*ListEventLoopBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type ListEventLoopBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *ListEventLoopBadRequest) Error() string {
+	return fmt.Sprintf("[GET /event-loop-group/{elg}/event-loop][%d] listEventLoopBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *ListEventLoopBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *ListEventLoopBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListEventLoopConflict creates a ListEventLoopConflict with default headers values
+func NewListEventLoopConflict() *ListEventLoopConflict {
+	return &ListEventLoopConflict{}
+}
+
+/*ListEventLoopConflict handles this case with default header values.
+
+conflict
+*/
+type ListEventLoopConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *ListEventLoopConflict) Error() string {
+	return fmt.Sprintf("[GET /event-loop-group/{elg}/event-loop][%d] listEventLoopConflict  %+v", 409, o.Payload)
+}
+
+func (o *ListEventLoopConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *ListEventLoopConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewListEventLoopInternalServerError creates a ListEventLoopInternalServerError with default headers values
+func NewListEventLoopInternalServerError() *ListEventLoopInternalServerError {
+	return &ListEventLoopInternalServerError{}
+}
+
+/*ListEventLoopInternalServerError handles this case with default header values.
+
+internal error
+*/
+type ListEventLoopInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *ListEventLoopInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /event-loop-group/{elg}/event-loop][%d] listEventLoopInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *ListEventLoopInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *ListEventLoopInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

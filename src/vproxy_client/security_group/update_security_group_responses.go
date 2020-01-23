@@ -7,10 +7,13 @@ package security_group
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // UpdateSecurityGroupReader is a Reader for the UpdateSecurityGroup structure.
@@ -35,6 +38,18 @@ func (o *UpdateSecurityGroupReader) ReadResponse(response runtime.ClientResponse
 		return nil, result
 	case 404:
 		result := NewUpdateSecurityGroupNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewUpdateSecurityGroupConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewUpdateSecurityGroupInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewUpdateSecurityGroupBadRequest() *UpdateSecurityGroupBadRequest {
 
 /*UpdateSecurityGroupBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type UpdateSecurityGroupBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *UpdateSecurityGroupBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /security-group/{secg}][%d] updateSecurityGroupBadRequest ", 400)
+	return fmt.Sprintf("[PUT /security-group/{secg}][%d] updateSecurityGroupBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *UpdateSecurityGroupBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *UpdateSecurityGroupBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewUpdateSecurityGroupNotFound() *UpdateSecurityGroupNotFound {
 
 /*UpdateSecurityGroupNotFound handles this case with default header values.
 
-SecurityGroup not found
+resource not found
 */
 type UpdateSecurityGroupNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *UpdateSecurityGroupNotFound) Error() string {
-	return fmt.Sprintf("[PUT /security-group/{secg}][%d] updateSecurityGroupNotFound ", 404)
+	return fmt.Sprintf("[PUT /security-group/{secg}][%d] updateSecurityGroupNotFound  %+v", 404, o.Payload)
+}
+
+func (o *UpdateSecurityGroupNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *UpdateSecurityGroupNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewUpdateSecurityGroupConflict creates a UpdateSecurityGroupConflict with default headers values
+func NewUpdateSecurityGroupConflict() *UpdateSecurityGroupConflict {
+	return &UpdateSecurityGroupConflict{}
+}
+
+/*UpdateSecurityGroupConflict handles this case with default header values.
+
+conflict
+*/
+type UpdateSecurityGroupConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *UpdateSecurityGroupConflict) Error() string {
+	return fmt.Sprintf("[PUT /security-group/{secg}][%d] updateSecurityGroupConflict  %+v", 409, o.Payload)
+}
+
+func (o *UpdateSecurityGroupConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *UpdateSecurityGroupConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewUpdateSecurityGroupInternalServerError creates a UpdateSecurityGroupInternalServerError with default headers values
+func NewUpdateSecurityGroupInternalServerError() *UpdateSecurityGroupInternalServerError {
+	return &UpdateSecurityGroupInternalServerError{}
+}
+
+/*UpdateSecurityGroupInternalServerError handles this case with default header values.
+
+internal error
+*/
+type UpdateSecurityGroupInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *UpdateSecurityGroupInternalServerError) Error() string {
+	return fmt.Sprintf("[PUT /security-group/{secg}][%d] updateSecurityGroupInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *UpdateSecurityGroupInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *UpdateSecurityGroupInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

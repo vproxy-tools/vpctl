@@ -30,8 +30,26 @@ func (o *DescribeCertKeyReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewDescribeCertKeyBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewDescribeCertKeyNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewDescribeCertKeyConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewDescribeCertKeyInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *DescribeCertKeyOK) readResponse(response runtime.ClientResponse, consum
 	return nil
 }
 
+// NewDescribeCertKeyBadRequest creates a DescribeCertKeyBadRequest with default headers values
+func NewDescribeCertKeyBadRequest() *DescribeCertKeyBadRequest {
+	return &DescribeCertKeyBadRequest{}
+}
+
+/*DescribeCertKeyBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type DescribeCertKeyBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *DescribeCertKeyBadRequest) Error() string {
+	return fmt.Sprintf("[GET /cert-key/{ck}/detail][%d] describeCertKeyBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *DescribeCertKeyBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *DescribeCertKeyBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewDescribeCertKeyNotFound creates a DescribeCertKeyNotFound with default headers values
 func NewDescribeCertKeyNotFound() *DescribeCertKeyNotFound {
 	return &DescribeCertKeyNotFound{}
@@ -82,16 +133,94 @@ func NewDescribeCertKeyNotFound() *DescribeCertKeyNotFound {
 
 /*DescribeCertKeyNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type DescribeCertKeyNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *DescribeCertKeyNotFound) Error() string {
-	return fmt.Sprintf("[GET /cert-key/{ck}/detail][%d] describeCertKeyNotFound ", 404)
+	return fmt.Sprintf("[GET /cert-key/{ck}/detail][%d] describeCertKeyNotFound  %+v", 404, o.Payload)
+}
+
+func (o *DescribeCertKeyNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *DescribeCertKeyNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewDescribeCertKeyConflict creates a DescribeCertKeyConflict with default headers values
+func NewDescribeCertKeyConflict() *DescribeCertKeyConflict {
+	return &DescribeCertKeyConflict{}
+}
+
+/*DescribeCertKeyConflict handles this case with default header values.
+
+conflict
+*/
+type DescribeCertKeyConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *DescribeCertKeyConflict) Error() string {
+	return fmt.Sprintf("[GET /cert-key/{ck}/detail][%d] describeCertKeyConflict  %+v", 409, o.Payload)
+}
+
+func (o *DescribeCertKeyConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *DescribeCertKeyConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewDescribeCertKeyInternalServerError creates a DescribeCertKeyInternalServerError with default headers values
+func NewDescribeCertKeyInternalServerError() *DescribeCertKeyInternalServerError {
+	return &DescribeCertKeyInternalServerError{}
+}
+
+/*DescribeCertKeyInternalServerError handles this case with default header values.
+
+internal error
+*/
+type DescribeCertKeyInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *DescribeCertKeyInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /cert-key/{ck}/detail][%d] describeCertKeyInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *DescribeCertKeyInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *DescribeCertKeyInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

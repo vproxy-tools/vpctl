@@ -7,10 +7,13 @@ package event_loop_group
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // RemoveEventLoopGroupReader is a Reader for the RemoveEventLoopGroup structure.
@@ -35,6 +38,18 @@ func (o *RemoveEventLoopGroupReader) ReadResponse(response runtime.ClientRespons
 		return nil, result
 	case 404:
 		result := NewRemoveEventLoopGroupNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewRemoveEventLoopGroupConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewRemoveEventLoopGroupInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewRemoveEventLoopGroupBadRequest() *RemoveEventLoopGroupBadRequest {
 
 /*RemoveEventLoopGroupBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type RemoveEventLoopGroupBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *RemoveEventLoopGroupBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /event-loop-group/{elg}][%d] removeEventLoopGroupBadRequest ", 400)
+	return fmt.Sprintf("[DELETE /event-loop-group/{elg}][%d] removeEventLoopGroupBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *RemoveEventLoopGroupBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *RemoveEventLoopGroupBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewRemoveEventLoopGroupNotFound() *RemoveEventLoopGroupNotFound {
 
 /*RemoveEventLoopGroupNotFound handles this case with default header values.
 
-EventLoopGroup not found
+resource not found
 */
 type RemoveEventLoopGroupNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *RemoveEventLoopGroupNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /event-loop-group/{elg}][%d] removeEventLoopGroupNotFound ", 404)
+	return fmt.Sprintf("[DELETE /event-loop-group/{elg}][%d] removeEventLoopGroupNotFound  %+v", 404, o.Payload)
+}
+
+func (o *RemoveEventLoopGroupNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *RemoveEventLoopGroupNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveEventLoopGroupConflict creates a RemoveEventLoopGroupConflict with default headers values
+func NewRemoveEventLoopGroupConflict() *RemoveEventLoopGroupConflict {
+	return &RemoveEventLoopGroupConflict{}
+}
+
+/*RemoveEventLoopGroupConflict handles this case with default header values.
+
+conflict
+*/
+type RemoveEventLoopGroupConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *RemoveEventLoopGroupConflict) Error() string {
+	return fmt.Sprintf("[DELETE /event-loop-group/{elg}][%d] removeEventLoopGroupConflict  %+v", 409, o.Payload)
+}
+
+func (o *RemoveEventLoopGroupConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *RemoveEventLoopGroupConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveEventLoopGroupInternalServerError creates a RemoveEventLoopGroupInternalServerError with default headers values
+func NewRemoveEventLoopGroupInternalServerError() *RemoveEventLoopGroupInternalServerError {
+	return &RemoveEventLoopGroupInternalServerError{}
+}
+
+/*RemoveEventLoopGroupInternalServerError handles this case with default header values.
+
+internal error
+*/
+type RemoveEventLoopGroupInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *RemoveEventLoopGroupInternalServerError) Error() string {
+	return fmt.Sprintf("[DELETE /event-loop-group/{elg}][%d] removeEventLoopGroupInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *RemoveEventLoopGroupInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *RemoveEventLoopGroupInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

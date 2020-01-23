@@ -7,10 +7,13 @@ package tcp_lb
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // RemoveTCPLbReader is a Reader for the RemoveTCPLb structure.
@@ -35,6 +38,18 @@ func (o *RemoveTCPLbReader) ReadResponse(response runtime.ClientResponse, consum
 		return nil, result
 	case 404:
 		result := NewRemoveTCPLbNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewRemoveTCPLbConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewRemoveTCPLbInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewRemoveTCPLbBadRequest() *RemoveTCPLbBadRequest {
 
 /*RemoveTCPLbBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type RemoveTCPLbBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *RemoveTCPLbBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /tcp-lb/{tl}][%d] removeTcpLbBadRequest ", 400)
+	return fmt.Sprintf("[DELETE /tcp-lb/{tl}][%d] removeTcpLbBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *RemoveTCPLbBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *RemoveTCPLbBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewRemoveTCPLbNotFound() *RemoveTCPLbNotFound {
 
 /*RemoveTCPLbNotFound handles this case with default header values.
 
-TcpLb not found
+resource not found
 */
 type RemoveTCPLbNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *RemoveTCPLbNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /tcp-lb/{tl}][%d] removeTcpLbNotFound ", 404)
+	return fmt.Sprintf("[DELETE /tcp-lb/{tl}][%d] removeTcpLbNotFound  %+v", 404, o.Payload)
+}
+
+func (o *RemoveTCPLbNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *RemoveTCPLbNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveTCPLbConflict creates a RemoveTCPLbConflict with default headers values
+func NewRemoveTCPLbConflict() *RemoveTCPLbConflict {
+	return &RemoveTCPLbConflict{}
+}
+
+/*RemoveTCPLbConflict handles this case with default header values.
+
+conflict
+*/
+type RemoveTCPLbConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *RemoveTCPLbConflict) Error() string {
+	return fmt.Sprintf("[DELETE /tcp-lb/{tl}][%d] removeTcpLbConflict  %+v", 409, o.Payload)
+}
+
+func (o *RemoveTCPLbConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *RemoveTCPLbConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveTCPLbInternalServerError creates a RemoveTCPLbInternalServerError with default headers values
+func NewRemoveTCPLbInternalServerError() *RemoveTCPLbInternalServerError {
+	return &RemoveTCPLbInternalServerError{}
+}
+
+/*RemoveTCPLbInternalServerError handles this case with default header values.
+
+internal error
+*/
+type RemoveTCPLbInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *RemoveTCPLbInternalServerError) Error() string {
+	return fmt.Sprintf("[DELETE /tcp-lb/{tl}][%d] removeTcpLbInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *RemoveTCPLbInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *RemoveTCPLbInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

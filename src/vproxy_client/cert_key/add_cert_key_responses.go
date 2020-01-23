@@ -7,10 +7,13 @@ package cert_key
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // AddCertKeyReader is a Reader for the AddCertKey structure.
@@ -29,6 +32,24 @@ func (o *AddCertKeyReader) ReadResponse(response runtime.ClientResponse, consume
 		return result, nil
 	case 400:
 		result := NewAddCertKeyBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 404:
+		result := NewAddCertKeyNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewAddCertKeyConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewAddCertKeyInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -67,16 +88,127 @@ func NewAddCertKeyBadRequest() *AddCertKeyBadRequest {
 
 /*AddCertKeyBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type AddCertKeyBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *AddCertKeyBadRequest) Error() string {
-	return fmt.Sprintf("[POST /cert-key][%d] addCertKeyBadRequest ", 400)
+	return fmt.Sprintf("[POST /cert-key][%d] addCertKeyBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *AddCertKeyBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *AddCertKeyBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddCertKeyNotFound creates a AddCertKeyNotFound with default headers values
+func NewAddCertKeyNotFound() *AddCertKeyNotFound {
+	return &AddCertKeyNotFound{}
+}
+
+/*AddCertKeyNotFound handles this case with default header values.
+
+resource not found
+*/
+type AddCertKeyNotFound struct {
+	Payload *vproxy_client_model.Error404
+}
+
+func (o *AddCertKeyNotFound) Error() string {
+	return fmt.Sprintf("[POST /cert-key][%d] addCertKeyNotFound  %+v", 404, o.Payload)
+}
+
+func (o *AddCertKeyNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
+}
+
+func (o *AddCertKeyNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddCertKeyConflict creates a AddCertKeyConflict with default headers values
+func NewAddCertKeyConflict() *AddCertKeyConflict {
+	return &AddCertKeyConflict{}
+}
+
+/*AddCertKeyConflict handles this case with default header values.
+
+conflict
+*/
+type AddCertKeyConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *AddCertKeyConflict) Error() string {
+	return fmt.Sprintf("[POST /cert-key][%d] addCertKeyConflict  %+v", 409, o.Payload)
+}
+
+func (o *AddCertKeyConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *AddCertKeyConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddCertKeyInternalServerError creates a AddCertKeyInternalServerError with default headers values
+func NewAddCertKeyInternalServerError() *AddCertKeyInternalServerError {
+	return &AddCertKeyInternalServerError{}
+}
+
+/*AddCertKeyInternalServerError handles this case with default header values.
+
+internal error
+*/
+type AddCertKeyInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *AddCertKeyInternalServerError) Error() string {
+	return fmt.Sprintf("[POST /cert-key][%d] addCertKeyInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *AddCertKeyInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *AddCertKeyInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

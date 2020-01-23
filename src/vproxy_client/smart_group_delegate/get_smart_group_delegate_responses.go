@@ -30,8 +30,26 @@ func (o *GetSmartGroupDelegateReader) ReadResponse(response runtime.ClientRespon
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewGetSmartGroupDelegateBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewGetSmartGroupDelegateNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewGetSmartGroupDelegateConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewGetSmartGroupDelegateInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +93,39 @@ func (o *GetSmartGroupDelegateOK) readResponse(response runtime.ClientResponse, 
 	return nil
 }
 
+// NewGetSmartGroupDelegateBadRequest creates a GetSmartGroupDelegateBadRequest with default headers values
+func NewGetSmartGroupDelegateBadRequest() *GetSmartGroupDelegateBadRequest {
+	return &GetSmartGroupDelegateBadRequest{}
+}
+
+/*GetSmartGroupDelegateBadRequest handles this case with default header values.
+
+invalid input parameters
+*/
+type GetSmartGroupDelegateBadRequest struct {
+	Payload *vproxy_client_model.Error400
+}
+
+func (o *GetSmartGroupDelegateBadRequest) Error() string {
+	return fmt.Sprintf("[GET /smart-group-delegate/{sgd}][%d] getSmartGroupDelegateBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *GetSmartGroupDelegateBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
+}
+
+func (o *GetSmartGroupDelegateBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewGetSmartGroupDelegateNotFound creates a GetSmartGroupDelegateNotFound with default headers values
 func NewGetSmartGroupDelegateNotFound() *GetSmartGroupDelegateNotFound {
 	return &GetSmartGroupDelegateNotFound{}
@@ -82,16 +133,94 @@ func NewGetSmartGroupDelegateNotFound() *GetSmartGroupDelegateNotFound {
 
 /*GetSmartGroupDelegateNotFound handles this case with default header values.
 
-not found
+resource not found
 */
 type GetSmartGroupDelegateNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *GetSmartGroupDelegateNotFound) Error() string {
-	return fmt.Sprintf("[GET /smart-group-delegate/{sgd}][%d] getSmartGroupDelegateNotFound ", 404)
+	return fmt.Sprintf("[GET /smart-group-delegate/{sgd}][%d] getSmartGroupDelegateNotFound  %+v", 404, o.Payload)
+}
+
+func (o *GetSmartGroupDelegateNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *GetSmartGroupDelegateNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetSmartGroupDelegateConflict creates a GetSmartGroupDelegateConflict with default headers values
+func NewGetSmartGroupDelegateConflict() *GetSmartGroupDelegateConflict {
+	return &GetSmartGroupDelegateConflict{}
+}
+
+/*GetSmartGroupDelegateConflict handles this case with default header values.
+
+conflict
+*/
+type GetSmartGroupDelegateConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *GetSmartGroupDelegateConflict) Error() string {
+	return fmt.Sprintf("[GET /smart-group-delegate/{sgd}][%d] getSmartGroupDelegateConflict  %+v", 409, o.Payload)
+}
+
+func (o *GetSmartGroupDelegateConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *GetSmartGroupDelegateConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewGetSmartGroupDelegateInternalServerError creates a GetSmartGroupDelegateInternalServerError with default headers values
+func NewGetSmartGroupDelegateInternalServerError() *GetSmartGroupDelegateInternalServerError {
+	return &GetSmartGroupDelegateInternalServerError{}
+}
+
+/*GetSmartGroupDelegateInternalServerError handles this case with default header values.
+
+internal error
+*/
+type GetSmartGroupDelegateInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *GetSmartGroupDelegateInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /smart-group-delegate/{sgd}][%d] getSmartGroupDelegateInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *GetSmartGroupDelegateInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *GetSmartGroupDelegateInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

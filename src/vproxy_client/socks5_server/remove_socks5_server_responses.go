@@ -7,10 +7,13 @@ package socks5_server
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	vproxy_client_model "vproxy_client_model"
 )
 
 // RemoveSocks5ServerReader is a Reader for the RemoveSocks5Server structure.
@@ -35,6 +38,18 @@ func (o *RemoveSocks5ServerReader) ReadResponse(response runtime.ClientResponse,
 		return nil, result
 	case 404:
 		result := NewRemoveSocks5ServerNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 409:
+		result := NewRemoveSocks5ServerConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewRemoveSocks5ServerInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -73,16 +88,28 @@ func NewRemoveSocks5ServerBadRequest() *RemoveSocks5ServerBadRequest {
 
 /*RemoveSocks5ServerBadRequest handles this case with default header values.
 
-Invalid input
+invalid input parameters
 */
 type RemoveSocks5ServerBadRequest struct {
+	Payload *vproxy_client_model.Error400
 }
 
 func (o *RemoveSocks5ServerBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /socks5-server/{socks5}][%d] removeSocks5ServerBadRequest ", 400)
+	return fmt.Sprintf("[DELETE /socks5-server/{socks5}][%d] removeSocks5ServerBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *RemoveSocks5ServerBadRequest) GetPayload() *vproxy_client_model.Error400 {
+	return o.Payload
 }
 
 func (o *RemoveSocks5ServerBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error400)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -94,16 +121,94 @@ func NewRemoveSocks5ServerNotFound() *RemoveSocks5ServerNotFound {
 
 /*RemoveSocks5ServerNotFound handles this case with default header values.
 
-Socks5Server not found
+resource not found
 */
 type RemoveSocks5ServerNotFound struct {
+	Payload *vproxy_client_model.Error404
 }
 
 func (o *RemoveSocks5ServerNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /socks5-server/{socks5}][%d] removeSocks5ServerNotFound ", 404)
+	return fmt.Sprintf("[DELETE /socks5-server/{socks5}][%d] removeSocks5ServerNotFound  %+v", 404, o.Payload)
+}
+
+func (o *RemoveSocks5ServerNotFound) GetPayload() *vproxy_client_model.Error404 {
+	return o.Payload
 }
 
 func (o *RemoveSocks5ServerNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error404)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveSocks5ServerConflict creates a RemoveSocks5ServerConflict with default headers values
+func NewRemoveSocks5ServerConflict() *RemoveSocks5ServerConflict {
+	return &RemoveSocks5ServerConflict{}
+}
+
+/*RemoveSocks5ServerConflict handles this case with default header values.
+
+conflict
+*/
+type RemoveSocks5ServerConflict struct {
+	Payload *vproxy_client_model.Error409
+}
+
+func (o *RemoveSocks5ServerConflict) Error() string {
+	return fmt.Sprintf("[DELETE /socks5-server/{socks5}][%d] removeSocks5ServerConflict  %+v", 409, o.Payload)
+}
+
+func (o *RemoveSocks5ServerConflict) GetPayload() *vproxy_client_model.Error409 {
+	return o.Payload
+}
+
+func (o *RemoveSocks5ServerConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error409)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewRemoveSocks5ServerInternalServerError creates a RemoveSocks5ServerInternalServerError with default headers values
+func NewRemoveSocks5ServerInternalServerError() *RemoveSocks5ServerInternalServerError {
+	return &RemoveSocks5ServerInternalServerError{}
+}
+
+/*RemoveSocks5ServerInternalServerError handles this case with default header values.
+
+internal error
+*/
+type RemoveSocks5ServerInternalServerError struct {
+	Payload *vproxy_client_model.Error500
+}
+
+func (o *RemoveSocks5ServerInternalServerError) Error() string {
+	return fmt.Sprintf("[DELETE /socks5-server/{socks5}][%d] removeSocks5ServerInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *RemoveSocks5ServerInternalServerError) GetPayload() *vproxy_client_model.Error500 {
+	return o.Payload
+}
+
+func (o *RemoveSocks5ServerInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(vproxy_client_model.Error500)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
