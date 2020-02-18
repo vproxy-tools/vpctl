@@ -28,6 +28,7 @@ status:
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
 ***********
 apply -f server-group/sg-default.yaml
 ServerGroup:sg001 unchanged (text)

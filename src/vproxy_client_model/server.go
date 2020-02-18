@@ -22,6 +22,9 @@ type Server struct {
 	// l4addr or hostname:port
 	Address string `json:"address,omitempty"`
 
+	// the milliseconds cost for one successful health check
+	Cost int64 `json:"cost,omitempty"`
+
 	// l3addr
 	CurrentIP string `json:"currentIp,omitempty"`
 

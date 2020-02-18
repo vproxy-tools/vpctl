@@ -50,11 +50,13 @@ status:
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
 ***********
 get server-group
 NAME    SERVERS   UP   DOWN
@@ -111,11 +113,13 @@ status:
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
 ***********
 apply -f server-group/sg002-add-annotation.yaml
 ServerGroup:sg002 configured
@@ -150,11 +154,13 @@ status:
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
 ***********
 apply -f server-group/sg002-add-annotation.yaml
 ServerGroup:sg002 unchanged
@@ -206,16 +212,19 @@ status:
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
   - name: svr3
     address: 127.0.0.1:10003
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
 ***********
 delete sg sg002
 ServerGroup:sg002 deleted
@@ -274,11 +283,13 @@ status:
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
 ***********
 delete sg sg002
 ServerGroup:sg002 deleted
@@ -322,11 +333,13 @@ status:
     weight: 20
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
   - name: svr1
     address: 127.0.0.1:10011
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
 ***********
 delete sg sg002
 ServerGroup:sg002 deleted
@@ -373,11 +386,13 @@ status:
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
 
 ---
 apiVersion: vproxy/v1alpha1
@@ -407,11 +422,13 @@ status:
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
+    cost: -1
 ***********
 delete -f server-group/sg001-002.yaml
 ServerGroup:sg001 deleted

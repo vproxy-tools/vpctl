@@ -81,6 +81,7 @@ func (o *ServerGroup) from(x *model.ServerGroup, y []*model.Server) {
 			Weight:    int(z.Weight),
 			CurrentIp: z.CurrentIP,
 			Status:    z.Status,
+			Cost:      int(z.Cost),
 		}
 		o.Status.Servers[idx] = a
 	}
