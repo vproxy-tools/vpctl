@@ -100,6 +100,7 @@ type ServerStatus struct {
 	Weight    int    `json:"weight" yaml:"weight"`
 	CurrentIp string `json:"currentIp" yaml:"currentIp"`
 	Status    string `json:"status" yaml:"status"`
+	Cost      int    `json:"cost" yaml:"cost"`
 }
 
 type ServerGroupStatus struct {
