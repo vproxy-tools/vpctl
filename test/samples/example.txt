@@ -11,7 +11,6 @@ CertKey:ck-payment created
 Upstream:sites created
 Upstream/ServerGroup:sites/main created
 Upstream/ServerGroup:sites/payment created
-SmartGroupDelegate:payment-delegate created
 TcpLb:lb-http created
 TcpLb:lb-https created
 Socks5Server:admin-socks5 created
@@ -24,7 +23,6 @@ SecurityGroup:work-area unchanged
 CertKey:ck-main unchanged
 CertKey:ck-payment unchanged
 Upstream:sites unchanged (text)
-SmartGroupDelegate:payment-delegate unchanged
 TcpLb:lb-http unchanged
 TcpLb:lb-https unchanged
 Socks5Server:admin-socks5 unchanged
@@ -61,16 +59,11 @@ NAME
 ck-main
 ck-payment
 ***********
-get sgd
-NAME               SERVICE           ZONE        HANDLED-GROUP
-payment-delegate   service-payment   cn-east-1   payment
-***********
 delete -f example.yaml
 DnsServer:self-resolver deleted
 Socks5Server:admin-socks5 deleted
 TcpLb:lb-http deleted
 TcpLb:lb-https deleted
-SmartGroupDelegate:payment-delegate deleted
 Upstream:sites deleted
 CertKey:ck-main deleted
 CertKey:ck-payment deleted
@@ -83,7 +76,6 @@ DnsServer:self-resolver not found
 Socks5Server:admin-socks5 not found
 TcpLb:lb-http not found
 TcpLb:lb-https not found
-SmartGroupDelegate:payment-delegate not found
 Upstream:sites not found
 CertKey:ck-main not found
 CertKey:ck-payment not found
@@ -111,6 +103,3 @@ NAME   DEFAULT-RULE   RULES
 ***********
 get ck
 NAME
-***********
-get sgd
-NAME   SERVICE   ZONE   HANDLED-GROUP

@@ -28,6 +28,9 @@ type Server struct {
 	// l3addr
 	CurrentIP string `json:"currentIp,omitempty"`
 
+	// reason for the last failed health check
+	DownReason string `json:"downReason,omitempty"`
+
 	// name
 	Name string `json:"name,omitempty"`
 

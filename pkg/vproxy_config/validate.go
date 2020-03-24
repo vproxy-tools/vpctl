@@ -22,7 +22,6 @@ var AvailableKind = []string{
 	"ServerGroup", "server-group", "sg",
 	"SecurityGroup", "security-group", "secg",
 	"CertKey", "cert-key", "ck",
-	"SmartGroupDelegate", "smart-group-delegate", "sgd",
 }
 
 var KindMap = map[string]string{
@@ -37,9 +36,6 @@ var KindMap = map[string]string{
 
 	"upstream": "Upstream",
 	"ups":      "Upstream",
-
-	"smart-group-delegate": "SmartGroupDelegate",
-	"sgd":                  "SmartGroupDelegate",
 
 	"tcp-lb": "TcpLb",
 	"tl":     "TcpLb",
@@ -392,36 +388,6 @@ func (o *CertKey) validateForUpdating(old *CertKey) (bool, error) {
 	}
 	if sha1(strings.TrimSpace(o.Spec.Pem.Key)) != old.Status.KeySHA1 {
 		return false, fmt.Errorf("cannot modify immutable field spec.pem.key in %s from %s to %s", ref, old.Spec.Pem.Key, o.Spec.Pem.Key)
-	}
-	update := false
-	//noinspection GoBoolExpressions
-	return update, nil
-}
-
-func (o *SmartGroupDelegate) Validate() error {
-	ref := fmt.Sprintf("%s:%s", "SmartGroupDelegate", o.Metadata.Name)
-	if o.Spec.Service == "" {
-		return fmt.Errorf("missing spec.service in %s", ref)
-	}
-	if o.Spec.Zone == "" {
-		return fmt.Errorf("missing spec.zone in %s", ref)
-	}
-	if o.Spec.HandledGroup == "" {
-		return fmt.Errorf("missing spec.handledGroup in %s", ref)
-	}
-	return nil
-}
-
-func (o *SmartGroupDelegate) validateForUpdating(old *SmartGroupDelegate) (bool, error) {
-	ref := fmt.Sprintf("%s:%s", "SmartGroupDelegate", o.Metadata.Name)
-	if o.Spec.Service != old.Spec.Service {
-		return false, fmt.Errorf("cannot modify immutable field spec.pem.service in %s from %s to %s", ref, old.Spec.Service, o.Spec.Service)
-	}
-	if o.Spec.Zone != old.Spec.Zone {
-		return false, fmt.Errorf("cannot modify immutable field spec.pem.zone in %s from %s to %s", ref, old.Spec.Zone, o.Spec.Zone)
-	}
-	if o.Spec.HandledGroup != old.Spec.HandledGroup {
-		return false, fmt.Errorf("cannot modify immutable field spec.pem.handledGroup in %s from %s to %s", ref, old.Spec.HandledGroup, o.Spec.HandledGroup)
 	}
 	update := false
 	//noinspection GoBoolExpressions

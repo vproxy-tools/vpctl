@@ -95,12 +95,13 @@ type ServerGroupSpec struct {
 }
 
 type ServerStatus struct {
-	Name      string `json:"name" yaml:"name"`
-	Address   string `json:"address" yaml:"address"`
-	Weight    int    `json:"weight" yaml:"weight"`
-	CurrentIp string `json:"currentIp" yaml:"currentIp"`
-	Status    string `json:"status" yaml:"status"`
-	Cost      int    `json:"cost" yaml:"cost"`
+	Name       string `json:"name" yaml:"name"`
+	Address    string `json:"address" yaml:"address"`
+	Weight     int    `json:"weight" yaml:"weight"`
+	CurrentIp  string `json:"currentIp" yaml:"currentIp"`
+	Status     string `json:"status" yaml:"status"`
+	Cost       int    `json:"cost" yaml:"cost"`
+	DownReason string `json:"downReason" yaml:"downReason"`
 }
 
 type ServerGroupStatus struct {
@@ -184,21 +185,6 @@ func (o *CertKey) GetBase() Base {
 	return o.Base
 }
 
-type SmartGroupDelegateSpec struct {
-	Service      string `json:"service" yaml:"service"`
-	Zone         string `json:"zone" yaml:"zone"`
-	HandledGroup string `json:"handledGroup" yaml:"handledGroup"`
-}
-
-type SmartGroupDelegate struct {
-	Base `yaml:",inline"`
-	Spec SmartGroupDelegateSpec `json:"spec" yaml:"spec"`
-}
-
-func (o *SmartGroupDelegate) GetBase() Base {
-	return o.Base
-}
-
 func NewEntity(kind string) (Config, error) {
 	switch kind {
 	case "TcpLb":
@@ -215,8 +201,6 @@ func NewEntity(kind string) (Config, error) {
 		return &SecurityGroup{}, nil
 	case "CertKey":
 		return &CertKey{}, nil
-	case "SmartGroupDelegate":
-		return &SmartGroupDelegate{}, nil
 	default:
 		return nil, fmt.Errorf("unrecognized kind: %s", kind)
 	}
@@ -230,7 +214,6 @@ var TypeOrderForApplying = []string{
 
 	// depends on server-group
 	"Upstream",
-	"SmartGroupDelegate",
 
 	// depends on multi
 	"TcpLb",

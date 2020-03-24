@@ -51,12 +51,14 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 get server-group
 NAME    SERVERS   UP   DOWN
@@ -114,12 +116,14 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 apply -f server-group/sg002-add-annotation.yaml
 ServerGroup:sg002 configured
@@ -155,12 +159,14 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 apply -f server-group/sg002-add-annotation.yaml
 ServerGroup:sg002 unchanged
@@ -213,18 +219,21 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
   - name: svr3
     address: 127.0.0.1:10003
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 delete sg sg002
 ServerGroup:sg002 deleted
@@ -284,12 +293,14 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 delete sg sg002
 ServerGroup:sg002 deleted
@@ -334,12 +345,14 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
   - name: svr1
     address: 127.0.0.1:10011
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 delete sg sg002
 ServerGroup:sg002 deleted
@@ -387,12 +400,14 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 
 ---
 apiVersion: vproxy/v1alpha1
@@ -423,12 +438,14 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
   - name: svr2
     address: 127.0.0.1:10002
     weight: 10
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 delete -f server-group/sg001-002.yaml
 ServerGroup:sg001 deleted

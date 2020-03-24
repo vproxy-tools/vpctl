@@ -285,32 +285,6 @@ func PrintCertKey(list []*CertKey, yaml bool) {
 	printTable(ret)
 }
 
-func PrintOneSmartGroupDelegate(sgd *SmartGroupDelegate, yaml bool) {
-	PrintSmartGroupDelegate([]*SmartGroupDelegate{sgd}, yaml)
-}
-
-func PrintSmartGroupDelegate(list []*SmartGroupDelegate, yaml bool) {
-	if yaml {
-		PrintYaml(list)
-		return
-	}
-
-	cols := []string{"NAME", "SERVICE", "ZONE", "HANDLED-GROUP"}
-	ret := make([][]string, len(cols))
-	for i := 0; i < len(cols); i += 1 {
-		ret[i] = make([]string, 1+len(list))
-		ret[i][0] = cols[i]
-	}
-	for i, sgd := range list {
-		idx := i + 1
-		ret[0][idx] = sgd.Metadata.Name
-		ret[1][idx] = sgd.Spec.Service
-		ret[2][idx] = sgd.Spec.Zone
-		ret[3][idx] = sgd.Spec.HandledGroup
-	}
-	printTable(ret)
-}
-
 func UtilGetAndPrintOne(typ string, name string, yaml bool) error {
 	switch typ {
 	case "TcpLb":
@@ -383,16 +357,6 @@ func UtilGetAndPrintOne(typ string, name string, yaml bool) error {
 			return err
 		}
 		PrintOneCertKey(one, yaml)
-	case "SmartGroupDelegate":
-		fallthrough
-	case "smart-group-delegate":
-		fallthrough
-	case "sgd":
-		list, err := GetSmartGroupDelegate(name)
-		if err != nil {
-			return err
-		}
-		PrintOneSmartGroupDelegate(list, yaml)
 	default:
 		return fmt.Errorf("unknown type %s", typ)
 	}
@@ -471,16 +435,6 @@ func UtilGetAndPrintList(typ string, yaml bool) error {
 			return err
 		}
 		PrintCertKey(list, yaml)
-	case "SmartGroupDelegate":
-		fallthrough
-	case "smart-group-delegate":
-		fallthrough
-	case "sgd":
-		list, err := ListSmartGroupDelegate()
-		if err != nil {
-			return err
-		}
-		PrintSmartGroupDelegate(list, yaml)
 	default:
 		return fmt.Errorf("unknown type %s", typ)
 	}

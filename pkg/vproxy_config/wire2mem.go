@@ -76,12 +76,13 @@ func (o *ServerGroup) from(x *model.ServerGroup, y []*model.Server) {
 	o.Status.Servers = make([]ServerStatus, len(y))
 	for idx, z := range y {
 		a := ServerStatus{
-			Name:      z.Name,
-			Address:   z.Address,
-			Weight:    int(z.Weight),
-			CurrentIp: z.CurrentIP,
-			Status:    z.Status,
-			Cost:      int(z.Cost),
+			Name:       z.Name,
+			Address:    z.Address,
+			Weight:     int(z.Weight),
+			CurrentIp:  z.CurrentIP,
+			Status:     z.Status,
+			Cost:       int(z.Cost),
+			DownReason: z.DownReason,
 		}
 		o.Status.Servers[idx] = a
 	}
@@ -121,13 +122,4 @@ func (o *CertKey) from(x *model.CertKeyDetail) {
 	}
 	o.Status.KeyFile = x.Key
 	o.Status.KeySHA1 = x.KeySHA1
-}
-
-func (o *SmartGroupDelegate) from(x *model.SmartGroupDelegate) {
-	o.ApiVersion = CurrentVersion
-	o.Kind = "SmartGroupDelegate"
-	o.Metadata.Name = x.Name
-	o.Spec.Service = x.Service
-	o.Spec.Zone = x.Zone
-	o.Spec.HandledGroup = x.HandledGroup
 }

@@ -5,7 +5,6 @@ import (
 	"vproxy_client/dns_server"
 	"vproxy_client/security_group"
 	"vproxy_client/server_group"
-	"vproxy_client/smart_group_delegate"
 	"vproxy_client/socks5_server"
 	"vproxy_client/tcp_lb"
 	"vproxy_client/upstream"
@@ -127,22 +126,6 @@ func ListCertKey() ([]*CertKey, error) {
 			return nil, err
 		}
 		ret[idx] = ck
-	}
-	return ret, nil
-}
-
-func ListSmartGroupDelegate() ([]*SmartGroupDelegate, error) {
-	params := smart_group_delegate.NewListSmartGroupDelegateParams()
-	resp, err := getClient().SmartGroupDelegate.ListSmartGroupDelegate(params)
-	if err != nil {
-		return nil, err
-	}
-	payloadList := resp.GetPayload()
-	ret := make([]*SmartGroupDelegate, len(payloadList))
-	for idx, payload := range payloadList {
-		sgd := SmartGroupDelegate{}
-		sgd.from(payload)
-		ret[idx] = &sgd
 	}
 	return ret, nil
 }
