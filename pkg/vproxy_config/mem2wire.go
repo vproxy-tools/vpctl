@@ -170,12 +170,3 @@ func (o *CertKey) toCreate() model.CertKeyCreate {
 		Name:  &o.Metadata.Name,
 	}
 }
-
-func (o *SmartGroupDelegate) toCreate() model.SmartGroupDelegateCreate {
-	return model.SmartGroupDelegateCreate{
-		HandledGroup: &o.Spec.HandledGroup,
-		Name:         &o.Metadata.Name,
-		Service:      &o.Spec.Service,
-		Zone:         &o.Spec.Zone,
-	}
-}

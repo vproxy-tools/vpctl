@@ -12,7 +12,6 @@ import (
 	"vproxy_client/dns_server"
 	"vproxy_client/security_group"
 	"vproxy_client/server_group"
-	"vproxy_client/smart_group_delegate"
 	"vproxy_client/socks5_server"
 	"vproxy_client/tcp_lb"
 	"vproxy_client/upstream"
@@ -61,8 +60,6 @@ func applyOneConfig(config Config, client *client.Vproxy) ([]*Todo, error) {
 		return applySecurityGroup(v, client)
 	} else if v, ok := config.(*CertKey); ok {
 		return applyCertKey(v, client)
-	} else if v, ok := config.(*SmartGroupDelegate); ok {
-		return applySmartGroupDelegate(v, client)
 	} else {
 		return nil, fmt.Errorf("BUG: unknown config %s", config)
 	}
@@ -613,43 +610,6 @@ func applyCertKey(ck *CertKey, client *client.Vproxy) ([]*Todo, error) {
 	}
 }
 
-func applySmartGroupDelegate(sgd *SmartGroupDelegate, client *client.Vproxy) ([]*Todo, error) {
-	ref := fmt.Sprintf("%s:%s", "SmartGroupDelegate", sgd.Metadata.Name)
-	old, err := GetSmartGroupDelegate(sgd.Metadata.Name)
-	if err != nil {
-		if _, ok := err.(*smart_group_delegate.GetSmartGroupDelegateNotFound); ok {
-			// should create
-			return []*Todo{
-				{
-					client: client,
-					op:     OpCreate,
-					Ref:    ref,
-					object: sgd,
-					F:      createSmartGroupDelegate,
-				},
-			}, nil
-		}
-		return nil, err
-	}
-	update, err := sgd.validateForUpdating(old)
-	if err != nil {
-		return nil, err
-	}
-	if update {
-		return []*Todo{
-			{
-				client: client,
-				op:     OpUpdate,
-				Ref:    ref,
-				object: sgd,
-				F:      updateSmartGroupDelegate,
-			},
-		}, nil
-	} else {
-		return buildNoneOp(ref)
-	}
-}
-
 func ApplyByConfig(configs []Config) ([]*Todo, error) {
 	// validate
 	for idx, c := range configs {
@@ -727,12 +687,6 @@ func deleteOneConfig(config Config, client *client.Vproxy) ([]*Todo, error) {
 		fallthrough
 	case "ck":
 		return checkDeleteCertKey(config, client)
-	case "SmartGroupDelegate":
-		fallthrough
-	case "smart-group-delegate":
-		fallthrough
-	case "sgd":
-		return checkDeleteSmartGroupDelegate(config, client)
 	default:
 		return nil, fmt.Errorf("BUG: unknown config %s", config)
 	}
@@ -888,28 +842,6 @@ func checkDeleteCertKey(config Config, client *client.Vproxy) ([]*Todo, error) {
 			Ref:    ref,
 			object: config,
 			F:      deleteCertKey,
-		},
-	}, nil
-}
-
-func checkDeleteSmartGroupDelegate(config Config, client *client.Vproxy) ([]*Todo, error) {
-	ref := fmt.Sprintf("%s:%s", config.GetBase().Kind, config.GetBase().Metadata.Name)
-	name := config.GetBase().Metadata.Name
-	_, err := GetSmartGroupDelegate(name)
-	if err != nil {
-		if _, ok := err.(*smart_group_delegate.GetSmartGroupDelegateNotFound); ok {
-			// not found, so nothing to do
-			return build404Op(ref)
-		}
-		return nil, err
-	}
-	return []*Todo{
-		{
-			client: client,
-			op:     OpDelete,
-			Ref:    ref,
-			object: config,
-			F:      deleteSmartGroupDelegate,
 		},
 	}, nil
 }

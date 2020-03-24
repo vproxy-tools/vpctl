@@ -12,7 +12,6 @@ import (
 	"vproxy_client/security_group_rule"
 	"vproxy_client/server"
 	"vproxy_client/server_group"
-	"vproxy_client/smart_group_delegate"
 	"vproxy_client/socks5_server"
 	"vproxy_client/tcp_lb"
 	"vproxy_client/upstream"
@@ -385,31 +384,5 @@ func deleteCertKey(todo *Todo) error {
 	params := cert_key.NewRemoveCertKeyParams()
 	params.SetCk(ckName)
 	_, err = todo.client.CertKey.RemoveCertKey(params)
-	return err
-}
-
-func createSmartGroupDelegate(todo *Todo) error {
-	sgd := todo.object.(*SmartGroupDelegate)
-	params := smart_group_delegate.NewAddSmartGroupDelegateParams()
-	params.SetBody(&vproxy_client_model.SmartGroupDelegateCreate{
-		HandledGroup: &sgd.Spec.HandledGroup,
-		Name:         &sgd.Metadata.Name,
-		Service:      &sgd.Spec.Service,
-		Zone:         &sgd.Spec.Zone,
-	})
-	_, err := todo.client.SmartGroupDelegate.AddSmartGroupDelegate(params)
-	return err
-}
-
-func updateSmartGroupDelegate(todo *Todo) error {
-	_ = todo.object.(*SmartGroupDelegate)
-	return fmt.Errorf("BUG: should not reach here: updateSmartGroupDelegate")
-}
-
-func deleteSmartGroupDelegate(todo *Todo) error {
-	sgd := todo.object.(Config)
-	params := smart_group_delegate.NewRemoveSmartGroupDelegateParams()
-	params.SetSgd(sgd.GetBase().Metadata.Name)
-	_, err := todo.client.SmartGroupDelegate.RemoveSmartGroupDelegate(params)
 	return err
 }

@@ -31,6 +31,7 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 apply -f server-group/sg-weight-0.yaml
 ServerGroup:sg001 unchanged
@@ -65,6 +66,7 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 apply -f server-group/sg-weight-0.yaml
 ServerGroup/Server:sg001/svr1 configured
@@ -96,6 +98,7 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 # create server-group in upstream with weight 0
 # update server-group in upstream with weight 0

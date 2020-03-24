@@ -19,8 +19,6 @@ import (
 	"vproxy_client/security_group_rule"
 	"vproxy_client/server"
 	"vproxy_client/server_group"
-	"vproxy_client/smart_group_delegate"
-	"vproxy_client/smart_node_delegate"
 	"vproxy_client/socks5_server"
 	"vproxy_client/tcp_lb"
 	"vproxy_client/upstream"
@@ -84,10 +82,6 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *Vproxy {
 	cli.Server = server.New(transport, formats)
 
 	cli.ServerGroup = server_group.New(transport, formats)
-
-	cli.SmartGroupDelegate = smart_group_delegate.New(transport, formats)
-
-	cli.SmartNodeDelegate = smart_node_delegate.New(transport, formats)
 
 	cli.Socks5Server = socks5_server.New(transport, formats)
 
@@ -155,10 +149,6 @@ type Vproxy struct {
 
 	ServerGroup *server_group.Client
 
-	SmartGroupDelegate *smart_group_delegate.Client
-
-	SmartNodeDelegate *smart_node_delegate.Client
-
 	Socks5Server *socks5_server.Client
 
 	TCPLb *tcp_lb.Client
@@ -187,10 +177,6 @@ func (c *Vproxy) SetTransport(transport runtime.ClientTransport) {
 	c.Server.SetTransport(transport)
 
 	c.ServerGroup.SetTransport(transport)
-
-	c.SmartGroupDelegate.SetTransport(transport)
-
-	c.SmartNodeDelegate.SetTransport(transport)
 
 	c.Socks5Server.SetTransport(transport)
 

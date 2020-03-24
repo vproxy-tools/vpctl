@@ -18,6 +18,3 @@ SecurityGroup:lkwjfklawjelf not found
 ***********
 delete ck lkwjfklawjelf
 CertKey:lkwjfklawjelf not found
-***********
-delete sgd lkwjfklawjelf
-SmartGroupDelegate:lkwjfklawjelf not found

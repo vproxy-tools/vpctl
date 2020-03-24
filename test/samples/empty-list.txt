@@ -57,6 +57,7 @@ status:
     currentIp: 127.0.0.1
     status: DOWN
     cost: -1
+    downReason: 'ConnectException: Connection refused'
 ***********
 apply -f server-group/sg-empty-list.yaml
 ServerGroup/Server:sg001/svr1 deleted

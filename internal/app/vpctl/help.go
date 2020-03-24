@@ -24,5 +24,4 @@ Resource Types:
 	| ServerGroup        | server-group         | sg         |
 	| SecurityGroup      | security-group       | secg       |
 	| CertKey            | cert-key             | ck         |
-	| SmartGroupDelegate | smart-group-delegate | sgd        |
 	+--------------------+----------------------+------------+`

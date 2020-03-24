@@ -89,7 +89,7 @@ spec:
   protocol: tcp
   method: wrr
   servers:
-    static: [] # use smart-group-delegate to fill the servers list
+    static: [] # use [] to represent an empty list
 
 ---
 apiVersion: vproxy/v1alpha1
@@ -111,16 +111,6 @@ spec:
       serverPortMin: 40443
       serverPortMax: 40443
       rule: allow
-
----
-apiVersion: vproxy/v1alpha1
-kind: SmartGroupDelegate
-metadata:
-  name: payment-delegate
-spec:
-  service: service-payment
-  zone: cn-east-1
-  handledGroup: payment
 
 ---
 apiVersion: vproxy/v1alpha1

@@ -7,7 +7,6 @@ import (
 	"vproxy_client/security_group_rule"
 	"vproxy_client/server"
 	"vproxy_client/server_group"
-	"vproxy_client/smart_group_delegate"
 	"vproxy_client/socks5_server"
 	"vproxy_client/tcp_lb"
 	"vproxy_client/upstream"
@@ -113,16 +112,4 @@ func GetCertKey(name string) (*CertKey, error) {
 	ck := CertKey{}
 	ck.from(resp.GetPayload())
 	return &ck, nil
-}
-
-func GetSmartGroupDelegate(name string) (*SmartGroupDelegate, error) {
-	params := smart_group_delegate.NewGetSmartGroupDelegateParams()
-	params.SetSgd(name)
-	resp, err := getClient().SmartGroupDelegate.GetSmartGroupDelegate(params)
-	if err != nil {
-		return nil, err
-	}
-	sgd := SmartGroupDelegate{}
-	sgd.from(resp.GetPayload())
-	return &sgd, nil
 }
