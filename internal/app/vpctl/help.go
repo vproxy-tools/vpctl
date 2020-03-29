@@ -24,4 +24,10 @@ Resource Types:
 	| ServerGroup        | server-group         | sg         |
 	| SecurityGroup      | security-group       | secg       |
 	| CertKey            | cert-key             | ck         |
+	+--------------------+----------------------+------------+
+Watchable Types:
+	+--------------------+----------------------+------------+
+	| TYPE               | ALIAS                | SHORT      |
+	+--------------------+----------------------+------------+
+	| HealthCheck        | health-check         | hc         |
 	+--------------------+----------------------+------------+`
