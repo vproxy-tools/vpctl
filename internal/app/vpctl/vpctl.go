@@ -170,6 +170,21 @@ func Main(args []string) int {
 				return 1
 			}
 		}
+	case "watch":
+		if len(args) < 2 {
+			_, _ = fmt.Fprintln(os.Stderr, "too few arguments for command 'watch'")
+			return 1
+		}
+		if len(args) > 2 {
+			_, _ = fmt.Fprintln(os.Stderr, "too many arguments for command 'watch'")
+			return 1
+		}
+		typ := args[1]
+		err := vp.UtilWatchAndPrint(typ)
+		if err != nil {
+			_, _ = fmt.Fprintln(os.Stderr, err.Error())
+			return 1
+		}
 	default:
 		_, _ = fmt.Fprintln(os.Stderr, "unknown command '"+cmd+"'")
 	}

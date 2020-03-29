@@ -1,6 +1,7 @@
 package vproxy_config
 
 import "fmt"
+import "vproxy_client_model"
 
 type Config interface {
 	GetBase() Base
@@ -260,4 +261,9 @@ func (arr ConfigSortingArrayForDeleting) Swap(i, j int) {
 	c := arr[i]
 	arr[i] = arr[j]
 	arr[j] = c
+}
+
+type HealthCheckEvent struct {
+	Server      vproxy_client_model.Server      `json:"server"`
+	ServerGroup vproxy_client_model.ServerGroup `json:"serverGroup"`
 }

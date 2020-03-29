@@ -1,6 +1,7 @@
 package vproxy_config
 
 import (
+	"encoding/json"
 	"fmt"
 	yamllib "gopkg.in/yaml.v2"
 	"reflect"
@@ -435,6 +436,51 @@ func UtilGetAndPrintList(typ string, yaml bool) error {
 			return err
 		}
 		PrintCertKey(list, yaml)
+	default:
+		return fmt.Errorf("unknown type %s", typ)
+	}
+	return nil
+}
+
+func UtilWatchAndPrint(typ string) error {
+	switch typ {
+	case "HealthCheck":
+	case "health-check":
+	case "hc":
+		stop := make(chan bool)
+		chnl := make(chan *HealthCheckEventChannelMessage)
+		defer close(chnl)
+		err := WatchHealthCheck(chnl, stop)
+		if err != nil {
+			return err
+		}
+		defer func() {
+			stop <- true
+			close(stop)
+		}()
+		for {
+			msg := <-chnl
+			if msg == nil {
+				break
+			}
+			if msg.err != nil {
+				return msg.err
+			}
+			bytes, err := json.Marshal(msg.evt)
+			if err != nil { // should not happen
+				return err
+			}
+			m := map[string]interface{}{}
+			err = json.Unmarshal(bytes, &m)
+			if err != nil { // should not happen
+				return err
+			}
+			bytes, err = yamllib.Marshal(m)
+			if err != nil { // should not happen
+				return err
+			}
+			fmt.Println("---\n" + string(bytes))
+		}
 	default:
 		return fmt.Errorf("unknown type %s", typ)
 	}
