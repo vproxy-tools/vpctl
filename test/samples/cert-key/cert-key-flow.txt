@@ -21,7 +21,7 @@ CertKey:ck001 unchanged
 ***********
 get ck ck001 -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: CertKey
 metadata:
   name: ck001
@@ -105,7 +105,7 @@ ck002
 ***********
 get ck -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: CertKey
 metadata:
   name: ck001
@@ -169,7 +169,7 @@ status:
   keySHA1: n+AA84hc9XTtxn3cvg6p1705/uI=
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: CertKey
 metadata:
   name: ck002

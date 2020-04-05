@@ -32,7 +32,7 @@ Case: You have two app servers, 10.0.10.1, 10.0.10.2. Proxy incoming connections
 ```yaml
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: my-lb
@@ -42,7 +42,7 @@ spec:
   protocol: tcp
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
@@ -52,7 +52,7 @@ spec:
       weight: 10
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg001
@@ -85,7 +85,7 @@ Case: You have two app servers, 10.0.10.1, 10.0.10.2, both running stateless htt
 ```yaml
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: my-lb
@@ -95,7 +95,7 @@ spec:
   protocol: http
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
@@ -105,7 +105,7 @@ spec:
       weight: 10
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg001
@@ -138,7 +138,7 @@ Case: You have two servers (10.0.10.1:80, 10.0.10.2:80) receiving http flow, and
 ```yaml
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: my-lb
@@ -150,7 +150,7 @@ spec:
     - cert-xxx.com
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
@@ -160,7 +160,7 @@ spec:
       weight: 10
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg001
@@ -181,7 +181,7 @@ spec:
         weight: 10
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: CertKey
 metadata:
   name: cert-xxx.com
@@ -279,7 +279,7 @@ Case: You have several servers and want to access them through ssh, and only all
 ```yaml
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Socks5Server
 metadata:
   name: socks5-001
@@ -289,7 +289,7 @@ spec:
   securityGroup: work-place
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: SecurityGroup
 metadata:
   name: work-place
@@ -317,7 +317,7 @@ Case: You have multiple groups of http servers and each group serving one host (
 ```yaml
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: tl001
@@ -330,7 +330,7 @@ spec:
     - cert-foo.bar.com
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
@@ -342,7 +342,7 @@ spec:
       weight: 10
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg-example
@@ -365,7 +365,7 @@ spec:
         weight: 10
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg-foo.bar
@@ -403,7 +403,7 @@ Case: You have deployed one app, and need to make requests to a internal service
 ```yaml
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: tl001
@@ -413,7 +413,7 @@ spec:
   protocol: http
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: DnsServer
 metadata:
   name: dns001
@@ -423,7 +423,7 @@ spec:
   ttl: 0
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
@@ -433,7 +433,7 @@ spec:
       weight: 10
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: service1
@@ -450,7 +450,7 @@ spec:
     static: []
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: SmartGroupDelegate
 metadata:
   name: sgd-service1

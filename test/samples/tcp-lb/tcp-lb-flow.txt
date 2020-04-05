@@ -38,7 +38,7 @@ tl001   127.0.0.1:50001   ups001    tcp        FALSE   secg001
 ***********
 get tl -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: tl001
@@ -71,7 +71,7 @@ tl002   127.0.0.1:50002   ups002    http       TRUE   secg002
 ***********
 get tl tl002 -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: tl002
@@ -116,7 +116,7 @@ tl002   127.0.0.1:50002   ups002    http       TRUE    secg002
 ***********
 get tl -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: tl001
@@ -129,7 +129,7 @@ spec:
   securityGroup: secg001
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: tl002

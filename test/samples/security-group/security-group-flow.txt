@@ -12,7 +12,7 @@ secg001   allow          2
 ***********
 get secg -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: SecurityGroup
 metadata:
   name: secg001
@@ -53,7 +53,7 @@ SecurityGroup:secg002 configured
 ***********
 get secg secg002 -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: SecurityGroup
 metadata:
   name: secg002
@@ -101,7 +101,7 @@ secg002   deny           3
 ***********
 get secg secg002 -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: SecurityGroup
 metadata:
   name: secg002
@@ -160,7 +160,7 @@ secg002   deny           3
 ***********
 get secg -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: SecurityGroup
 metadata:
   name: secg001
@@ -182,7 +182,7 @@ spec:
     rule: deny
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: SecurityGroup
 metadata:
   name: secg002

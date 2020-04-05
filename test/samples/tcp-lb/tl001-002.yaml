@@ -1,5 +1,5 @@
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: tl001
@@ -10,7 +10,7 @@ spec:
   securityGroup: secg001
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: tl002
