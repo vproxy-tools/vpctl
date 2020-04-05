@@ -1,5 +1,5 @@
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: lb-http
@@ -9,7 +9,7 @@ spec:
   protocol: http
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: TcpLb
 metadata:
   name: lb-https
@@ -22,7 +22,7 @@ spec:
     - ck-payment
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Socks5Server
 metadata:
   name: admin-socks5
@@ -33,7 +33,7 @@ spec:
   allowNonBackend: false
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: DnsServer
 metadata:
   name: self-resolver
@@ -43,7 +43,7 @@ spec:
   ttl: 600
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: sites
@@ -53,7 +53,7 @@ spec:
     - name: payment
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: main
@@ -75,7 +75,7 @@ spec:
         weight: 10
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: payment
@@ -92,7 +92,7 @@ spec:
     static: [] # use [] to represent an empty list
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: SecurityGroup
 metadata:
   name: work-area
@@ -113,7 +113,7 @@ spec:
       rule: allow
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: CertKey
 metadata:
   name: ck-main
@@ -198,7 +198,7 @@ spec:
       -----END PRIVATE KEY-----
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: CertKey
 metadata:
   name: ck-payment

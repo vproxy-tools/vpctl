@@ -1,5 +1,5 @@
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups001

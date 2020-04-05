@@ -1,5 +1,5 @@
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg001
@@ -20,7 +20,7 @@ spec:
         weight: 10
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg002

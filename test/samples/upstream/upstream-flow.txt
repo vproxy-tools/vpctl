@@ -23,7 +23,7 @@ ups001   1
 ***********
 get ups ups001 -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
@@ -51,7 +51,7 @@ ups002   2
 ***********
 get ups ups002 -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups002
@@ -71,7 +71,7 @@ Upstream/ServerGroup:ups002/sg002 configured
 ***********
 get ups ups002 -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups002
@@ -124,7 +124,7 @@ ups001   1
 ***********
 get ups -o yaml
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups002
@@ -139,7 +139,7 @@ spec:
     annotations: {}
 
 ---
-apiVersion: vproxy/v1alpha1
+apiVersion: vproxy.cc/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
