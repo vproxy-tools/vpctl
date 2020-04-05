@@ -123,3 +123,17 @@ func (o *CertKey) from(x *model.CertKeyDetail) {
 	o.Status.KeyFile = x.Key
 	o.Status.KeySHA1 = x.KeySHA1
 }
+
+func (o *HealthCheckEvent) from(x *HealthCheckEventOnWire) {
+	sg := ServerGroup{}
+	sg.from(&x.ServerGroup, []*model.Server{&x.Server})
+
+	o.ApiVersion = CurrentVersion
+	o.Kind = "HealthCheck"
+	o.Metadata.Name = "event"
+	o.Server = sg.Status.Servers[0]
+	o.ServerGroup = ServerGroupInHC{
+		Base: sg.Base,
+		Spec: sg.Spec.ServerGroupSelfSpec,
+	}
+}

@@ -1,7 +1,6 @@
 package vproxy_config
 
 import (
-	"encoding/json"
 	"fmt"
 	yamllib "gopkg.in/yaml.v2"
 	"reflect"
@@ -466,16 +465,7 @@ func UtilWatchAndPrint(typ string) error {
 			if msg.err != nil {
 				return msg.err
 			}
-			bytes, err := json.Marshal(msg.evt)
-			if err != nil { // should not happen
-				return err
-			}
-			m := map[string]interface{}{}
-			err = json.Unmarshal(bytes, &m)
-			if err != nil { // should not happen
-				return err
-			}
-			bytes, err = yamllib.Marshal(m)
+			bytes, err := yamllib.Marshal(msg.evt)
 			if err != nil { // should not happen
 				return err
 			}

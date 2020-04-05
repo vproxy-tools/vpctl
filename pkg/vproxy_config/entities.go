@@ -1,7 +1,6 @@
 package vproxy_config
 
 import "fmt"
-import "vproxy_client_model"
 
 type Config interface {
 	GetBase() Base
@@ -86,13 +85,17 @@ type ServerInServerGroup struct {
 }
 
 type ServerGroupSpec struct {
-	Timeout  int                 `json:"timeout" yaml:"timeout"`
-	Period   int                 `json:"period" yaml:"period"`
-	Up       int                 `json:"up" yaml:"up"`
-	Down     int                 `json:"down" yaml:"down"`
-	Protocol string              `json:"protocol" yaml:"protocol"`
-	Method   string              `json:"method" yaml:"method"`
-	Servers  ServerInServerGroup `json:"servers" yaml:"servers"`
+	ServerGroupSelfSpec `yaml:",inline"`
+	Servers             ServerInServerGroup `json:"servers" yaml:"servers"`
+}
+
+type ServerGroupSelfSpec struct {
+	Timeout  int    `json:"timeout" yaml:"timeout"`
+	Period   int    `json:"period" yaml:"period"`
+	Up       int    `json:"up" yaml:"up"`
+	Down     int    `json:"down" yaml:"down"`
+	Protocol string `json:"protocol" yaml:"protocol"`
+	Method   string `json:"method" yaml:"method"`
 }
 
 type ServerStatus struct {
@@ -263,7 +266,13 @@ func (arr ConfigSortingArrayForDeleting) Swap(i, j int) {
 	arr[j] = c
 }
 
+type ServerGroupInHC struct {
+	Base `yaml:",inline"`
+	Spec ServerGroupSelfSpec `json:"spec" yaml:"spec"`
+}
+
 type HealthCheckEvent struct {
-	Server      vproxy_client_model.Server      `json:"server"`
-	ServerGroup vproxy_client_model.ServerGroup `json:"serverGroup"`
+	Base        `yaml:",inline"`
+	ServerGroup ServerGroupInHC `json:"serverGroup" yaml:"serverGroup"`
+	Server      ServerStatus    `json:"server" yaml:"server"`
 }
