@@ -10,19 +10,19 @@ import (
 func RunTodoListAndPrint(todo []*Todo) error {
 	for _, t := range todo {
 		err := t.F(t)
-		if t.op == OpCreate {
+		if t.Op == OpCreate {
 			if err != nil {
 				return fmt.Errorf("creating %s failed: %s", t.Ref, err.Error())
 			} else {
 				fmt.Println(t.Ref + " created")
 			}
-		} else if t.op == OpUpdate {
+		} else if t.Op == OpUpdate {
 			if err != nil {
 				return fmt.Errorf("updating %s failed: %s", t.Ref, err.Error())
 			} else {
 				fmt.Println(t.Ref + " configured")
 			}
-		} else if t.op == OpDelete {
+		} else if t.Op == OpDelete {
 			if err != nil {
 				return fmt.Errorf("deleting %s failed: %s", t.Ref, err.Error())
 			} else {
@@ -32,9 +32,9 @@ func RunTodoListAndPrint(todo []*Todo) error {
 			if err != nil {
 				return fmt.Errorf("BUG: should not happen")
 			} else {
-				if t.op == Op404 {
+				if t.Op == Op404 {
 					fmt.Println(t.Ref + " not found")
-				} else if t.op == OpText {
+				} else if t.Op == OpText {
 					fmt.Println(t.Ref + " unchanged (text)")
 				} else {
 					fmt.Println(t.Ref + " unchanged")

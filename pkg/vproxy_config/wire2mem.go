@@ -111,7 +111,7 @@ func (o *CertKey) from(x *model.CertKeyDetail) {
 	o.ApiVersion = CurrentVersion
 	o.Kind = "CertKey"
 	o.Metadata.Name = x.Name
-	o.Spec.Pem.Certs = make([]string, len(x.Certs))
+	o.Spec.Pem.Certs = make([]string, len(x.CertPemList))
 	for idx, z := range x.CertPemList {
 		o.Spec.Pem.Certs[idx] = strings.TrimSpace(z)
 	}

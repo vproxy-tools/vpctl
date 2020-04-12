@@ -383,7 +383,9 @@ func (o *CertKey) validateForUpdating(old *CertKey) (bool, error) {
 	for idx, cert := range o.Spec.Pem.Certs {
 		o.Spec.Pem.Certs[idx] = strings.TrimSpace(cert)
 	}
-	if !reflect.DeepEqual(o.Spec.Pem.Certs, old.Spec.Pem.Certs) {
+	newStr := strings.Join(o.Spec.Pem.Certs, "\n")
+	oldStr := strings.Join(old.Spec.Pem.Certs, "\n")
+	if newStr != oldStr {
 		return false, fmt.Errorf("cannot modify immutable field spec.pem.certs in %s from %s to %s", ref, old.Spec.Pem.Certs, o.Spec.Pem.Certs)
 	}
 	if sha1(strings.TrimSpace(o.Spec.Pem.Key)) != old.Status.KeySHA1 {
