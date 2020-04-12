@@ -187,6 +187,7 @@ func Main(args []string) int {
 		}
 	default:
 		_, _ = fmt.Fprintln(os.Stderr, "unknown command '"+cmd+"'")
+		return 1
 	}
 	return 0
 }

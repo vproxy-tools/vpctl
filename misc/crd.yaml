@@ -1,0 +1,315 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: tcp-lb.vproxy.cc
+spec:
+  group: vproxy.cc
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+  scope: Namespaced
+  names:
+    plural: tcp-lb
+    singular: tcp-lb
+    kind: TcpLb
+    shortNames:
+    - tl
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      type: object
+      required:
+      - selector
+      - spec
+      properties:
+        selector:
+          type: object
+          additionalProperties:
+            type: string
+        spec:
+          type: object
+          required:
+          - address
+          - backend
+          properties:
+            address:
+              type: string
+            backend:
+              type: string
+            protocol:
+              type: string
+            listOfCertKey:
+              type: array
+              items:
+                type: string
+            securityGroup:
+              type: string
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: socks5-server.vproxy.cc
+spec:
+  group: vproxy.cc
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+  scope: Namespaced
+  names:
+    plural: socks5-server
+    singular: socks5-server
+    kind: Socks5Server
+    shortNames:
+    - socks5
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      type: object
+      required:
+      - selector
+      - spec
+      properties:
+        selector:
+          type: object
+          additionalProperties:
+            type: string
+        spec:
+          type: object
+          required:
+          - address
+          - backend
+          properties:
+            address:
+              type: string
+            backend:
+              type: string
+            securityGroup:
+              type: string
+            allowNonBackend:
+              type: boolean
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: dns-server.vproxy.cc
+spec:
+  group: vproxy.cc
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+  scope: Namespaced
+  names:
+    plural: dns-server
+    singular: dns-server
+    kind: DnsServer
+    shortNames:
+    - dns
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      type: object
+      required:
+      - selector
+      - spec
+      properties:
+        selector:
+          type: object
+          additionalProperties:
+            type: string
+        spec:
+          type: object
+          required:
+          - address
+          - rrsets
+          properties:
+            address:
+              type: string
+            rrsets:
+              type: string
+            ttl:
+              type: integer
+              minimum: 0
+            securityGroup:
+              type: string
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: upstream.vproxy.cc
+spec:
+  group: vproxy.cc
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+  scope: Namespaced
+  names:
+    plural: upstream
+    singular: upstream
+    kind: Upstream
+    shortNames:
+    - ups
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      type: object
+      required:
+      - spec
+      properties:
+        spec:
+          type: object
+          required:
+          - serverGroups
+          properties:
+            serverGroups:
+              type: array
+              items:
+                type: object
+                required:
+                - name
+                properties:
+                  name:
+                    type: string
+                  weight:
+                    type: integer
+                    minimum: 0
+                  annotations:
+                    type: object
+                    additionalProperties:
+                      type: string
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: server-group.vproxy.cc
+spec:
+  group: vproxy.cc
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+  scope: Namespaced
+  names:
+    plural: server-group
+    singular: server-group
+    kind: ServerGroup
+    shortNames:
+    - sg
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      type: object
+      required:
+      - spec
+      properties:
+        spec:
+          type: object
+          required:
+          - timeout
+          - period
+          - up
+          - down
+          - servers
+          properties:
+            timeout:
+              type: integer
+              minimum: 1
+            period:
+              type: integer
+              minimum: 1
+            up:
+              type: integer
+              minimum: 1
+            down:
+              type: integer
+              minimum: 1
+            protocol:
+              type: string
+            method:
+              type: string
+            servers:
+              type: object
+              required:
+              - services
+              properties:
+                services:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - name
+                    properties:
+                      name:
+                        type: string
+                      weight:
+                        type: integer
+                        minimum: 0
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: security-group.vproxy.cc
+spec:
+  group: vproxy.cc
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+  scope: Namespaced
+  names:
+    plural: security-group
+    singular: security-group
+    kind: SecurityGroup
+    shortNames:
+    - secg
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      type: object
+      required:
+      - spec
+      properties:
+        spec:
+          type: object
+          required:
+          - rules
+          properties:
+            defaultRule:
+              type: string
+            rules:
+              type: array
+              items:
+                type: object
+                required:
+                - name
+                - clientNetwork
+                - protocol
+                - serverPortMin
+                - serverPortMax
+                - rule
+                properties:
+                  name:
+                    type: string
+                  clientNetwork:
+                    type: string
+                  protocol:
+                    type: string
+                  serverPortMin:
+                    type: integer
+                    minimum: 1
+                    maximum: 65535
+                  serverPortMax:
+                    type: integer
+                    minimum: 1
+                    maximum: 65535
+                  rule:
+                    type: string

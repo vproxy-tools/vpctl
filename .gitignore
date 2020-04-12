@@ -1,5 +1,6 @@
 .idea
 /vpctl
 /vpctl_test
+/controller
 darwin_amd64
 .DS_Store

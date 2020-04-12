@@ -157,7 +157,7 @@ loop:
 			} else if isWhiteSpace(b) {
 				state = 0
 			} else {
-				return 0, fmt.Errorf("invalid protocol, chunk should start with hex")
+				return 0, fmt.Errorf("invalid protocol, chunk should start with hex, but got %s", string([]byte{b}))
 			}
 		case 1:
 			if b == ';' || isWhiteSpace(b) || b == '\r' {

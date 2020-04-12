@@ -38,7 +38,7 @@ const (
 
 type Todo struct {
 	client *client.Vproxy
-	op     Op
+	Op     Op
 	Ref    string
 	parent interface{}
 	object interface{}
@@ -69,7 +69,7 @@ func buildNoneOp(ref string) ([]*Todo, error) {
 	return []*Todo{
 		{
 			client: nil,
-			op:     OpNone,
+			Op:     OpNone,
 			Ref:    ref,
 			object: nil,
 			F: func(todo *Todo) error {
@@ -83,7 +83,7 @@ func build404Op(ref string) ([]*Todo, error) {
 	return []*Todo{
 		{
 			client: nil,
-			op:     Op404,
+			Op:     Op404,
 			Ref:    ref,
 			object: nil,
 			F: func(todo *Todo) error {
@@ -96,7 +96,7 @@ func build404Op(ref string) ([]*Todo, error) {
 func buildTextOp(ref string) *Todo {
 	return &Todo{
 		client: nil,
-		op:     OpText,
+		Op:     OpText,
 		Ref:    ref,
 		object: nil,
 		F: func(todo *Todo) error {
@@ -114,7 +114,7 @@ func applyTcpLb(tl *TcpLb, client *client.Vproxy) ([]*Todo, error) {
 			return []*Todo{
 				{
 					client: client,
-					op:     OpCreate,
+					Op:     OpCreate,
 					Ref:    ref,
 					object: tl,
 					F:      createTcpLb,
@@ -131,7 +131,7 @@ func applyTcpLb(tl *TcpLb, client *client.Vproxy) ([]*Todo, error) {
 		return []*Todo{
 			{
 				client: client,
-				op:     OpUpdate,
+				Op:     OpUpdate,
 				Ref:    ref,
 				object: tl,
 				F:      updateTcpLb,
@@ -151,7 +151,7 @@ func applySocks5Server(socks5 *Socks5Server, client *client.Vproxy) ([]*Todo, er
 			return []*Todo{
 				{
 					client: client,
-					op:     OpCreate,
+					Op:     OpCreate,
 					Ref:    ref,
 					object: socks5,
 					F:      createSocks5Server,
@@ -168,7 +168,7 @@ func applySocks5Server(socks5 *Socks5Server, client *client.Vproxy) ([]*Todo, er
 		return []*Todo{
 			{
 				client: client,
-				op:     OpUpdate,
+				Op:     OpUpdate,
 				Ref:    ref,
 				object: socks5,
 				F:      updateSocks5Server,
@@ -188,7 +188,7 @@ func applyDnsServer(dns *DnsServer, client *client.Vproxy) ([]*Todo, error) {
 			return []*Todo{
 				{
 					client: client,
-					op:     OpCreate,
+					Op:     OpCreate,
 					Ref:    ref,
 					object: dns,
 					F:      createDnsServer,
@@ -205,7 +205,7 @@ func applyDnsServer(dns *DnsServer, client *client.Vproxy) ([]*Todo, error) {
 		return []*Todo{
 			{
 				client: client,
-				op:     OpUpdate,
+				Op:     OpUpdate,
 				Ref:    ref,
 				object: dns,
 				F:      updateDnsServer,
@@ -235,7 +235,7 @@ func buildServerGroupUpdateList(client *client.Vproxy, now *Upstream, old *Upstr
 			// should delete
 			ret = append(ret, &Todo{
 				client: client,
-				op:     OpDelete,
+				Op:     OpDelete,
 				Ref:    ref,
 				parent: old,
 				object: &x,
@@ -252,7 +252,7 @@ func buildServerGroupUpdateList(client *client.Vproxy, now *Upstream, old *Upstr
 			// should create
 			ret = append(ret, &Todo{
 				client: client,
-				op:     OpCreate,
+				Op:     OpCreate,
 				Ref:    ref,
 				parent: now,
 				object: &x,
@@ -263,7 +263,7 @@ func buildServerGroupUpdateList(client *client.Vproxy, now *Upstream, old *Upstr
 				// should update
 				ret = append(ret, &Todo{
 					client: client,
-					op:     OpUpdate,
+					Op:     OpUpdate,
 					Ref:    ref,
 					parent: now,
 					object: &x,
@@ -285,7 +285,7 @@ func applyUpstream(ups *Upstream, client *client.Vproxy) ([]*Todo, error) {
 			ret := make([]*Todo, 1+len(ups.Spec.ServerGroups))
 			ret[0] = &Todo{
 				client: client,
-				op:     OpCreate,
+				Op:     OpCreate,
 				Ref:    refTop,
 				object: ups,
 				F:      createUpstream,
@@ -295,7 +295,7 @@ func applyUpstream(ups *Upstream, client *client.Vproxy) ([]*Todo, error) {
 				x := sg
 				ret[idx+1] = &Todo{
 					client: client,
-					op:     OpCreate,
+					Op:     OpCreate,
 					Ref:    ref,
 					parent: ups,
 					object: &x,
@@ -314,7 +314,7 @@ func applyUpstream(ups *Upstream, client *client.Vproxy) ([]*Todo, error) {
 			ret = []*Todo{
 				{
 					client: client,
-					op:     OpUpdate,
+					Op:     OpUpdate,
 					Ref:    refTop,
 					object: ups,
 					F:      updateUpstream,
@@ -354,7 +354,7 @@ func buildStaticServerInServerGroupUpdateList(client *client.Vproxy, now *Server
 			// should delete
 			ret = append(ret, &Todo{
 				client: client,
-				op:     OpDelete,
+				Op:     OpDelete,
 				Ref:    ref,
 				parent: old,
 				object: &x,
@@ -371,7 +371,7 @@ func buildStaticServerInServerGroupUpdateList(client *client.Vproxy, now *Server
 			// should create
 			ret = append(ret, &Todo{
 				client: client,
-				op:     OpCreate,
+				Op:     OpCreate,
 				Ref:    ref,
 				parent: now,
 				object: &x,
@@ -382,7 +382,7 @@ func buildStaticServerInServerGroupUpdateList(client *client.Vproxy, now *Server
 				// should update
 				ret = append(ret, &Todo{
 					client: client,
-					op:     OpUpdate,
+					Op:     OpUpdate,
 					Ref:    ref,
 					parent: now,
 					object: &x,
@@ -404,7 +404,7 @@ func applyServerGroup(sg *ServerGroup, client *client.Vproxy) ([]*Todo, error) {
 			ret := make([]*Todo, 1+len(sg.Spec.Servers.Static))
 			ret[0] = &Todo{
 				client: client,
-				op:     OpCreate,
+				Op:     OpCreate,
 				Ref:    refTop,
 				object: sg,
 				F:      createServerGroup,
@@ -414,7 +414,7 @@ func applyServerGroup(sg *ServerGroup, client *client.Vproxy) ([]*Todo, error) {
 				x := svr
 				ret[idx+1] = &Todo{
 					client: client,
-					op:     OpCreate,
+					Op:     OpCreate,
 					Ref:    refSub,
 					parent: sg,
 					object: &x,
@@ -433,7 +433,7 @@ func applyServerGroup(sg *ServerGroup, client *client.Vproxy) ([]*Todo, error) {
 			ret = []*Todo{
 				{
 					client: client,
-					op:     OpUpdate,
+					Op:     OpUpdate,
 					Ref:    refTop,
 					object: sg,
 					F:      updateServerGroup,
@@ -473,7 +473,7 @@ func buildSecurityGroupRuleInSecurityGroupUpdateList(client *client.Vproxy, now 
 			// should delete
 			ret = append(ret, &Todo{
 				client: client,
-				op:     OpDelete,
+				Op:     OpDelete,
 				Ref:    ref,
 				parent: old,
 				object: &x,
@@ -490,7 +490,7 @@ func buildSecurityGroupRuleInSecurityGroupUpdateList(client *client.Vproxy, now 
 			// should create
 			ret = append(ret, &Todo{
 				client: client,
-				op:     OpCreate,
+				Op:     OpCreate,
 				Ref:    ref,
 				parent: now,
 				object: &x,
@@ -501,7 +501,7 @@ func buildSecurityGroupRuleInSecurityGroupUpdateList(client *client.Vproxy, now 
 				// should update
 				ret = append(ret, &Todo{
 					client: client,
-					op:     OpUpdate,
+					Op:     OpUpdate,
 					Ref:    ref,
 					parent: now,
 					object: &x,
@@ -523,7 +523,7 @@ func applySecurityGroup(secg *SecurityGroup, client *client.Vproxy) ([]*Todo, er
 			ret := make([]*Todo, 1+len(secg.Spec.Rules))
 			ret[0] = &Todo{
 				client: client,
-				op:     OpCreate,
+				Op:     OpCreate,
 				Ref:    refTop,
 				object: secg,
 				F:      createSecurityGroup,
@@ -533,7 +533,7 @@ func applySecurityGroup(secg *SecurityGroup, client *client.Vproxy) ([]*Todo, er
 				x := secgr
 				ret[idx+1] = &Todo{
 					client: client,
-					op:     OpCreate,
+					Op:     OpCreate,
 					Ref:    refSub,
 					parent: secg,
 					object: &x,
@@ -552,7 +552,7 @@ func applySecurityGroup(secg *SecurityGroup, client *client.Vproxy) ([]*Todo, er
 			ret = []*Todo{
 				{
 					client: client,
-					op:     OpUpdate,
+					Op:     OpUpdate,
 					Ref:    refTop,
 					object: secg,
 					F:      updateSecurityGroup,
@@ -582,7 +582,7 @@ func applyCertKey(ck *CertKey, client *client.Vproxy) ([]*Todo, error) {
 			return []*Todo{
 				{
 					client: client,
-					op:     OpCreate,
+					Op:     OpCreate,
 					Ref:    ref,
 					object: ck,
 					F:      createCertKey,
@@ -599,7 +599,7 @@ func applyCertKey(ck *CertKey, client *client.Vproxy) ([]*Todo, error) {
 		return []*Todo{
 			{
 				client: client,
-				op:     OpUpdate,
+				Op:     OpUpdate,
 				Ref:    ref,
 				object: ck,
 				F:      updateCertKey,
@@ -706,7 +706,7 @@ func checkDeleteTcpLb(config Config, client *client.Vproxy) ([]*Todo, error) {
 	return []*Todo{
 		{
 			client: client,
-			op:     OpDelete,
+			Op:     OpDelete,
 			Ref:    ref,
 			object: config,
 			F:      deleteTcpLb,
@@ -728,7 +728,7 @@ func checkDeleteSocks5Server(config Config, client *client.Vproxy) ([]*Todo, err
 	return []*Todo{
 		{
 			client: client,
-			op:     OpDelete,
+			Op:     OpDelete,
 			Ref:    ref,
 			object: config,
 			F:      deleteSocks5Server,
@@ -750,7 +750,7 @@ func checkDeleteDnsServer(config Config, client *client.Vproxy) ([]*Todo, error)
 	return []*Todo{
 		{
 			client: client,
-			op:     OpDelete,
+			Op:     OpDelete,
 			Ref:    ref,
 			object: config,
 			F:      deleteDnsServer,
@@ -772,7 +772,7 @@ func checkDeleteUpstream(config Config, client *client.Vproxy) ([]*Todo, error) 
 	return []*Todo{
 		{
 			client: client,
-			op:     OpDelete,
+			Op:     OpDelete,
 			Ref:    ref,
 			object: config,
 			F:      deleteUpstream,
@@ -794,7 +794,7 @@ func checkDeleteServerGroup(config Config, client *client.Vproxy) ([]*Todo, erro
 	return []*Todo{
 		{
 			client: client,
-			op:     OpDelete,
+			Op:     OpDelete,
 			Ref:    ref,
 			object: config,
 			F:      deleteServerGroup,
@@ -816,7 +816,7 @@ func checkDeleteSecurityGroup(config Config, client *client.Vproxy) ([]*Todo, er
 	return []*Todo{
 		{
 			client: client,
-			op:     OpDelete,
+			Op:     OpDelete,
 			Ref:    ref,
 			object: config,
 			F:      deleteSecurityGroup,
@@ -838,7 +838,7 @@ func checkDeleteCertKey(config Config, client *client.Vproxy) ([]*Todo, error) {
 	return []*Todo{
 		{
 			client: client,
-			op:     OpDelete,
+			Op:     OpDelete,
 			Ref:    ref,
 			object: config,
 			F:      deleteCertKey,
