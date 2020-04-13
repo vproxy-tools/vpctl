@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -45,9 +46,13 @@ func Main(args []string) int {
 
 	labels := map[string]string{}
 	useHttps := true
-	hostport := os.Getenv("$KUBERNETES_SERVICE_HOST") + ":" + os.Getenv("$KUBERNETES_SERVICE_PORT")
+	hostport := os.Getenv("KUBERNETES_SERVICE_HOST") + ":" + os.Getenv("KUBERNETES_SERVICE_PORT")
 	tokenFileName := "/var/run/secrets/kubernetes.io/serviceaccount/token"
 	caFileName := "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+	ignoreNs := []string{"kube-system"}
+	watchNs := make([]string, 0)
+	launchTime := 5
+	debug := false
 	for _, arg := range args {
 		if strings.HasPrefix(arg, "--labels=") {
 			labelsStr := arg[len("--labels="):]
@@ -78,6 +83,40 @@ func Main(args []string) int {
 			tokenFileName = arg[len("--token="):]
 		} else if strings.HasPrefix(arg, "--ca=") {
 			caFileName = arg[len("--ca="):]
+		} else if strings.HasPrefix(arg, "--ignore-ns=") {
+			ignoreNs = make([]string, 0)
+			str := arg[len("--ignore-ns="):]
+			arr := strings.Split(str, ",")
+			for _, s := range arr {
+				s = strings.TrimSpace(s)
+				if s == "" {
+					continue
+				}
+				ignoreNs = append(ignoreNs, s)
+			}
+		} else if strings.HasPrefix(arg, "--watch-ns=") {
+			watchNs = make([]string, 0)
+			str := arg[len("--watch-ns="):]
+			if str != "all" {
+				arr := strings.Split(str, ",")
+				for _, s := range arr {
+					s = strings.TrimSpace(s)
+					if s == "" {
+						continue
+					}
+					watchNs = append(watchNs, s)
+				}
+			}
+		} else if strings.HasPrefix(arg, "--launch-time=") {
+			s := arg[len("--launch-time="):]
+			i, err := strconv.ParseInt(s, 10, 32)
+			if err != nil {
+				_, _ = fmt.Fprintln(os.Stderr, "invalid launch-time, not number: "+s)
+				return 1
+			}
+			launchTime = int(i)
+		} else if arg == "--debug" {
+			debug = true
 		} else {
 			_, _ = fmt.Fprintln(os.Stderr, "unknown command '"+arg+"'")
 			return 1
@@ -167,12 +206,17 @@ func Main(args []string) int {
 	}
 
 	// launch
+	vproxy_controller.DebugEnabled = debug
 	connInfo := vproxy_controller.WatchConfig{
 		UseHttps: useHttps,
 		HostPort: hostport,
 		Token:    token,
 		CaRoots:  roots,
 		Labels:   labels,
+
+		IgnoreNs:   ignoreNs,
+		WatchNs:    watchNs,
+		LaunchTime: launchTime,
 	}
 	vproxy_controller.Launch(connInfo)
 

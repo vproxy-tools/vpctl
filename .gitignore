@@ -1,6 +1,12 @@
 .idea
 /vpctl
+/vpctl-linux
 /vpctl_test
 /controller
+/controller-linux
 darwin_amd64
 .DS_Store
+/misc/dockerfiles/vproxy/vproxy.jar
+/misc/dockerfiles/vproxy/vproxy-runtime-linux
+/misc/dockerfiles/vpctl/controller
+/misc/dockerfiles/vpctl/vpctl

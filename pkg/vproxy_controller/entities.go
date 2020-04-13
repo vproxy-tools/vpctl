@@ -23,8 +23,7 @@ type Chunk struct {
 type Selector map[string]string
 
 type Meta struct {
-	Pending bool // the resource watcher is re-syncing
-	Version int  // the version of latest related event
+	Pending int64 // the timestamp of the resource first appear to be in pending state
 }
 
 type TcpLb struct {

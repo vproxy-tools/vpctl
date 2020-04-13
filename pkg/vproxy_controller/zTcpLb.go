@@ -2,10 +2,13 @@ package vproxy_controller
 import (
 	"../vproxy_config"
 	"encoding/json"
+	"reflect"
+	"time"
 )
+
 func DefineTcpLbFunc(pool Pool) func([]byte, *meta) {
 	return func(str []byte, meta *meta) {
-		pool.UpdateTcpLb(meta.ns, func(resources []*TcpLb) ([]*TcpLb, int) {
+		pool.UpdateTcpLb(meta.ns, func(resources []*TcpLb) ([]*TcpLb, bool) {
 			index := -1
 			for i, x := range resources {
 				if x.Metadata.Name == meta.name {
@@ -17,29 +20,31 @@ func DefineTcpLbFunc(pool Pool) func([]byte, *meta) {
 			err := json.Unmarshal(str, &res)
 			if err != nil {
 				Log("deserialize TcpLb failed: %v", err)
-				return resources, -1
+				return resources, false
 			}
-			res.M.Version = meta.ver
 			if index == -1 {
 				resources = append(resources, &res)
 			} else {
+				if reflect.DeepEqual(resources[index], &res) {
+					return resources, false
+				}
 				resources[index] = &res
 			}
-			return resources, meta.ver
+			return resources, true
 		})
 	}
 }
 
 func DeleteTcpLbFunc(pool Pool) func(string, string) {
 	return func(ns string, n string) {
-		pool.UpdateTcpLb(ns, func(resource []*TcpLb) ([]*TcpLb, int) {
+		pool.UpdateTcpLb(ns, func(resource []*TcpLb) ([]*TcpLb, bool) {
 			for i, x := range resource {
 				if x.Metadata.Name == n {
 					resource = append(resource[:i], resource[i+1:]...)
-					break
+					return resource, true
 				}
 			}
-			return resource, -1
+			return resource, false
 		})
 	}
 }
@@ -48,15 +53,56 @@ func ClearTcpLbFunc(pool Pool) func() {
 	return func() {
 		namespaces := pool.GetNamespaces()
 		for _, ns := range namespaces {
-			pool.UpdateTcpLb(ns, func(resource []*TcpLb) ([]*TcpLb, int) {
+			pool.UpdateTcpLb(ns, func(resource []*TcpLb) ([]*TcpLb, bool) {
 				for _, x := range resource {
-					x.M.Pending = true
+					x.M.Pending = time.Now().Unix()
 				}
-				return resource, -1
+				return resource, false
 			})
 		}
 	}
 }
+
+func (p *_pool) UpdateTcpLb(namespace string, f func([]*TcpLb) ([]*TcpLb, bool)) {
+	p.lock.Lock()
+	rp := p.ensureAndGetNamespace(namespace)
+	res, changed := f(rp.tl)
+	if changed {
+		rp.tl = res
+	}
+	p.trimNamespace(namespace)
+	p.lock.Unlock()
+	if changed {
+		p.trigger()
+	}
+}
+
+func (p *_pool) ClearPendingTcpLb(namespace string) {
+	p.lock.RLock()
+	rp := p.ensureAndGetNamespace(namespace)
+	now := time.Now().Unix()
+	needUpdate := false
+	for _, tl := range rp.tl {
+		if tl.M.Pending != 0 && now-tl.M.Pending > ClearPendingTimeoutSeconds {
+			needUpdate = true
+			break
+		}
+	}
+	p.lock.RUnlock()
+	if needUpdate {
+		p.UpdateTcpLb(namespace, func(resource []*TcpLb) ([]*TcpLb, bool) {
+			newList := make([]*TcpLb, 0)
+			for _, tl := range rp.tl {
+				if tl.M.Pending != 0 && now-tl.M.Pending > ClearPendingTimeoutSeconds {
+					continue
+				}
+				newList = append(newList, tl)
+			}
+			return newList, true
+		})
+	}
+}
+
 func GcTcpLb(configs []vproxy_config.Config) ([]*vproxy_config.Todo, error) {
 	list, err := vproxy_config.ListTcpLb()
 	if err != nil {

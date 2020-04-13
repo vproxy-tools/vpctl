@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+var DebugEnabled = false
+
 func Log(f string, args ...interface{}) {
 	for i, a := range args {
 		if _, ok := a.(error); ok {
@@ -28,7 +30,9 @@ func Log(f string, args ...interface{}) {
 }
 
 func Debug(f string, args ...interface{}) {
-	return
+	if !DebugEnabled {
+		return
+	}
 	for i, a := range args {
 		if _, ok := a.(error); ok {
 			continue
