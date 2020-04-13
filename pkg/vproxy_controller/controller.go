@@ -2,7 +2,11 @@ package vproxy_controller
 
 import (
 	"crypto/x509"
+	"time"
 )
+
+const ReSyncPeriod = 20 * time.Second
+const ClearPendingTimeoutSeconds = 20
 
 type WatchConfig struct {
 	UseHttps bool
@@ -11,7 +15,9 @@ type WatchConfig struct {
 	CaRoots  *x509.CertPool
 	Labels   map[string]string
 
-	lastVer string
+	IgnoreNs   []string
+	WatchNs    []string
+	LaunchTime int
 }
 
 type meta struct {
@@ -22,7 +28,6 @@ type meta struct {
 
 func Launch(conf WatchConfig) {
 	pool := NewPool()
-	pool.RegisterEventHandler(NewVpctl(conf.Labels))
 	go watchTcpLb(&conf, pool)
 	go watchSocks5Server(&conf, pool)
 	go watchDnsServer(&conf, pool)
@@ -31,6 +36,28 @@ func Launch(conf WatchConfig) {
 	go watchSecurityGroup(&conf, pool)
 	go watchEndpoints(&conf, pool)
 	go watchSecrets(&conf, pool)
+
+	go func() {
+		Log("wait for %v seconds before configuring vproxy", conf.LaunchTime)
+		time.Sleep(time.Duration(conf.LaunchTime) * time.Second)
+		pool.SetAndTriggerEventHandler(NewVpctl(conf.Labels))
+	}()
+	go func() {
+		for {
+			time.Sleep(ReSyncPeriod)
+			namespaces := pool.GetNamespaces()
+			for _, ns := range namespaces {
+				pool.ClearPendingTcpLb(ns)
+				pool.ClearPendingSocks5Server(ns)
+				pool.ClearPendingDnsServer(ns)
+				pool.ClearPendingUpstream(ns)
+				pool.ClearPendingServerGroup(ns)
+				pool.ClearPendingSecurityGroup(ns)
+				pool.ClearPendingEndpoints(ns)
+				pool.ClearPendingSecret(ns)
+			}
+		}
+	}()
 }
 
 func watchTcpLb(conf *WatchConfig, pool Pool) {
