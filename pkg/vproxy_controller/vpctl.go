@@ -78,7 +78,8 @@ func (a *Vpctl) Handle(pool *NamespacedResourcePool) (err error) {
 		return
 	}
 
-	allTodoList := merge(deleteTodoList, applyTodoList)
+	// delete after all applied
+	allTodoList := merge(applyTodoList, deleteTodoList)
 
 	hasChanges := false
 	for _, task := range allTodoList {

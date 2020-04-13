@@ -111,11 +111,18 @@ func (o *TcpLb) validateForUpdating(old *TcpLb) (bool, error) {
 	if o.Spec.Protocol != "" && o.Spec.Protocol != old.Spec.Protocol {
 		return false, fmt.Errorf("cannot modify immutable field spec.protocol in %s from %s to %s", ref, old.Spec.Protocol, o.Spec.Protocol)
 	}
-	if (len(o.Spec.ListOfCertKey) != 0 || len(old.Spec.ListOfCertKey) != 0) &&
-		!reflect.DeepEqual(o.Spec.ListOfCertKey, old.Spec.ListOfCertKey) {
-		return false, fmt.Errorf("cannot modify immutable field spec.listOfCertKey in %s from %v to %v", ref, old.Spec.ListOfCertKey, o.Spec.ListOfCertKey)
-	}
 	update := false
+	if len(o.Spec.ListOfCertKey) != 0 && len(old.Spec.ListOfCertKey) != 0 {
+		if !reflect.DeepEqual(o.Spec.ListOfCertKey, old.Spec.ListOfCertKey) {
+			update = true
+		}
+	} else if len(o.Spec.ListOfCertKey) != 0 {
+		// old == 0
+		return false, fmt.Errorf("cannot modify an empty spec.listOfCertKey to a non-empty one")
+	} else if len(old.Spec.ListOfCertKey) != 0 {
+		// new == 0
+		return false, fmt.Errorf("cannot modify a non-empty spec.listOfCertKey to an empty one")
+	}
 	if o.Spec.SecurityGroup != "" && o.Spec.SecurityGroup != old.Spec.SecurityGroup {
 		update = true
 	}
