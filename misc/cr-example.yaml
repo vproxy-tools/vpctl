@@ -169,6 +169,64 @@ data:
 type: kubernetes.io/tls
 
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: util-scripts
+data:
+  simple-http-server.sh: |
+    #!/bin/bash
+
+    port="$1"
+    body="$2"
+
+    if [ -z "$port" ]
+    then
+      echo "The first argument should be the port to listen on"
+    exit 1
+    fi
+
+    if [ -z "$body" ]
+    then
+      echo "The second argument should be the body to output"
+      exit 1
+    fi
+
+    if [ ! -z "$3" ]
+    then
+      echo "Too many arguments"
+      exit 1
+    fi
+
+    oLang=$LANG oLcAll=$LC_ALL
+    LANG=C LC_ALL=C
+    len=${#body}
+    LANG=$oLang LC_ALL=$oLcAll
+
+    len=$(($len + 2))
+
+    child=""
+
+    exit_func() {
+      if [ ! -z "$child" ]
+      then
+        echo "kill nc: $child"
+        kill -TERM "$child"
+      fi
+      exit 130
+    }
+
+    trap 'exit_func' SIGINT
+
+    while [ 1 ]
+    do
+      printf "HTTP/1.0 200 OK\r\nConnection: Close\r\nContent-Length: $len\r\n\r\n$body\r\n" | nc -l -p  "$port" 1>/dev/null &
+      child=$!
+      wait "$child"
+      child=""
+    done
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -187,9 +245,25 @@ spec:
     spec:
       containers:
         - name: http
-          image: docker.io/kennethreitz/httpbin
+          image: wkgcass/vproxy-base:latest
+          imagePullPolicy: IfNotPresent
+          args:
+          - '/bin/bash'
+          - '/script/simple-http-server.sh'
+          - '80'
+          - 'example:v1'
           ports:
             - containerPort: 80
+          volumeMounts:
+          - name: script
+            mountPath: /script
+      volumes:
+        - name: script
+          configMap:
+            name: util-scripts
+            items:
+            - key: simple-http-server.sh
+              path: simple-http-server.sh
 
 ---
 apiVersion: apps/v1
@@ -210,9 +284,25 @@ spec:
     spec:
       containers:
         - name: http
-          image: docker.io/kennethreitz/httpbin
+          image: wkgcass/vproxy-base:latest
+          imagePullPolicy: IfNotPresent
+          args:
+          - '/bin/bash'
+          - '/script/simple-http-server.sh'
+          - '80'
+          - 'example:v2'
           ports:
             - containerPort: 80
+          volumeMounts:
+          - name: script
+            mountPath: /script
+      volumes:
+        - name: script
+          configMap:
+            name: util-scripts
+            items:
+            - key: simple-http-server.sh
+              path: simple-http-server.sh
 
 ---
 apiVersion: apps/v1
@@ -231,6 +321,22 @@ spec:
     spec:
       containers:
         - name: http
-          image: docker.io/kennethreitz/httpbin
+          image: wkgcass/vproxy-base:latest
+          imagePullPolicy: IfNotPresent
+          args:
+          - '/bin/bash'
+          - '/script/simple-http-server.sh'
+          - '80'
+          - 'example2'
           ports:
             - containerPort: 80
+          volumeMounts:
+          - name: script
+            mountPath: /script
+      volumes:
+        - name: script
+          configMap:
+            name: util-scripts
+            items:
+            - key: simple-http-server.sh
+              path: simple-http-server.sh

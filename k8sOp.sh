@@ -4,7 +4,7 @@ op="$1"
 
 if [ -z "$op" ]
 then
-	echo "First argument should be the operation you want to perform: get|apply|stop|log-ctl|log-vp|exec-tl|exec-vp"
+	echo "First argument should be the operation you want to perform: get|apply|stop|log-ctl|log-vp|exec-ctl|exec-vp"
 	exit 1
 fi
 
@@ -23,7 +23,7 @@ then
 elif [ "$op" == "stop" ]
 then
 	kubectl -n vproxy-system delete deployment vproxy-gateway
-elif [ "$op" == "log-ctl" ] || [ "$op" == "log-vp" ] || [ "$op" == "exec-tl" ] || [ "$op" == "exec-vp" ]
+elif [ "$op" == "log-ctl" ] || [ "$op" == "log-vp" ] || [ "$op" == "exec-ctl" ] || [ "$op" == "exec-vp" ]
 then
 	pod=`kubectl -n vproxy-system get pod | grep vproxy-gateway | grep Running | awk '{print $1}'`
 	c=`echo "$pod" | wc -l`
@@ -47,7 +47,7 @@ then
 		kubectl -n vproxy-system exec -it "$pod" --container=controller /bin/bash
 	elif [ "$op" == "exec-vp" ]
 	then
-		kubectl -n vproxy-system exec -it "$pod" --container=vproxy /bin/bash
+		kubectl -n vproxy-system exec -it "$pod" --container=vproxy sh
 	else
 		echo "BUG"
 		exit 1
