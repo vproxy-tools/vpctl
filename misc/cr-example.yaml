@@ -6,7 +6,7 @@ metadata:
 selector:
   app: vproxy-gateway
 spec:
-  address: 0.0.0.0:50080
+  address: 0.0.0.0:80
   backend: my-services
   protocol: http
 
@@ -18,7 +18,7 @@ metadata:
 selector:
   app: vproxy-gateway
 spec:
-  address: 0.0.0.0:50443
+  address: 0.0.0.0:443
   backend: my-services
   protocol: http
   listOfCertKey:
@@ -33,7 +33,7 @@ metadata:
 selector:
   app: vproxy-gateway
 spec:
-  address: 0.0.0.0:51080
+  address: 0.0.0.0:1080
   backend: my-services
   securityGroup: work-area-only
 
@@ -45,7 +45,7 @@ metadata:
 selector:
   app: vproxy-gateway
 spec:
-  address: 0.0.0.0:50053
+  address: 0.0.0.0:53
   rrsets: my-services
 
 ---
