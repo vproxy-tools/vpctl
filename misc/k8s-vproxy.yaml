@@ -66,7 +66,8 @@ spec:
         emptyDir: {}
       containers:
       - name: controller
-        image: vpctl:local
+        image: wkgcass/vpctl:latest
+        imagePullPolicy: IfNotPresent
         args:
         - '--labels={"app":"vproxy-gateway"}'
         volumeMounts:
@@ -81,7 +82,8 @@ spec:
         volumeMounts:
         - name: vpctl
           mountPath: /root/vpctl
-        image: vproxy:local
+        image: wkgcass/vproxy:latest
+        imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
             command:
