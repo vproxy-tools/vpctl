@@ -1,16 +1,19 @@
 # vpctl
 
-This is a tool for controlling the local vproxy instance.
+This is a tool for controlling the local vproxy instance both on command line and in a Kubernetes cluster.
 
 ## compile
 
 ```
 GOPATH=`pwd` go build -o vpctl cmd/vpctl/main.go
+GOPATH=`pwd` go build -o controller cmd/controller/main.go
 ```
 
 If you are using windows, you may have to replace `pwd` with full path to the project root directory.
 
 ## usage
+
+<details><summary><code>vpctl</code> command line tool</summary>
 
 ```
 vpctl apply -f {filename}
@@ -19,9 +22,105 @@ vpctl delete -f {filename}
 vpctl delete {type} {name}
 ```
 
+</details>
+
+<details><summary><code>controller</code> for k8s</summary>
+
+<br>
+
+Apply the following yamls:
+
+1. the CRDs of vproxy
+2. launch a vproxy instance and controller in namespace `vproxy-system`
+
+```
+kubectl apply -f https://raw.githubusercontent.com/vproxy-tools/vpctl/master/misc/crd.yaml
+kubectl apply -f https://raw.githubusercontent.com/vproxy-tools/vpctl/master/misc/k8s-vproxy.yaml
+```
+
+and you may apply the example resources, which will start several services, and expose them via `TcpLb`, `Socks5Server` and `DnsServer`
+
+```
+kubectl apply -f https://raw.githubusercontent.com/vproxy-tools/vpctl/master/misc/cr-example.yaml
+```
+
+After the configuration, you may use various ways to access the vproxy gateway:
+
+```shell
+# exec into the vpctl container:
+kubectl -n vproxy-system exec -it --container=controller `kubectl -n vproxy-system get pod | grep vproxy-gateway | grep Running | awk '{print $1}'` /bin/bash
+# inside the container, you can run these commands multiple times:
+/vpctl get TcpLb
+curl 127.0.0.1
+curl -H 'Host: example.com' 127.0.0.1
+curl -H 'Host: example2.com' 127.0.0.1
+curl -k https://127.0.0.1
+curl -k -H 'Host: example.com' https://127.0.0.1
+curl -k -H 'Host: example2.com' https://127.0.0.1
+dig @127.0.0.1 example.com
+dig @127.0.0.1 example2.com
+
+# OR
+# expose the pod using nodePort
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: vproxy-gateway-service
+  namespace: vproxy-system
+spec:
+  selector:
+    app: vproxy-gateway
+  ports:
+  - port: 80
+    name: http
+    protocol: TCP
+    nodePort: 30080
+  - port: 443
+    name: https
+    protocol: TCP
+    nodePort: 30443
+  - port: 1080
+    name: socks5
+    protocol: TCP
+    nodePort: 31080
+  - port: 53
+    name: dns
+    protocol: UDP
+    nodePort: 30053
+  type: NodePort
+EOF
+# then you can access these services, e.g.
+curl 127.0.0.1:30080
+```
+
+Note: You will not be able to access the `Socks5Server manage-socks5` because your ip is not listed in the whitelist of the `SecurityGroup work-area-only`, modify the [cr-example.yaml#99](https://github.com/vproxy-tools/vpctl/blob/master/misc/cr-example.yaml#L99) to allow your ip and re-apply it, then you can use `curl --socks5 'socks5h://xxxxxx' http://example.com` on your services.
+
+</details>
+
 ## config
 
+There are 7 kinds of resources in the yaml configurations:
+
+* TcpLb: binds an address and dispatches requests
+* Socks5Server: runs a standard socks5 protocol for you to manage internal services
+* DnsServer: lets you customize A|AAAA records, usually used as a component of sidecar
+* ServerGroup: manages a list of addresses and other metadata of servers
+* Upstream: a collection of ServerGroup resources with metadata
+* SecurityGroup: white or black list of clientIp+serverPort tuples
+* CertKey: holds certificates chain and the private key for TLS
+
 You may refer to the yaml configurations in directory `test/samples/`, e.g. [example.yaml](https://github.com/vproxy-tools/vpctl/blob/master/test/samples/example.yaml).
+
+There are several use cases provided in this README doc for you to refer to.
+
+## kubernetes
+
+We defined a few CRDs (Custom Resource Definitions) to integrate vproxy into Kubernetes. All of them share the same definitions with vpctl yaml configurations, except that:
+
+1. `TcpLb`, `Socks5Server` and `DnsServer` have an extra field called `selector` which selects vproxy controllers, and only the controllers whose labels match the selector would launch the corresponding services.
+2. No `CertKey` definition because k8s already provides `Secret` resource to manage certificates and keys.
+3. The pods may change at any time, so the static address configuration for `ServerGroup` would be useless. As a result, we let users to set k8s `Service`s in the `ServerGroup` resource, you may refer to the [cr-example.yaml#L62](https://github.com/vproxy-tools/vpctl/blob/master/misc/cr-example.yaml#L62). Addresses are dynamically updated according to the `Endpoints` resource backing the `Service`.
 
 ## examples
 
@@ -386,78 +485,6 @@ spec:
       - name: svr2
         address: 10.0.10.2:8989
         weight: 10
-
-```
-
-</details>
-
-<details><summary>sidecar</summary>
-
-Case: You have deployed one app, and need to make requests to a internal service. You may use vproxy as a sidecar.
-
-> You may also use Socks5Server instead of TcpLb if you code supports socks5.  
-> The DnsServer is optional. It can respond A/AAAA records based on Upstream configuration.
-
-**on your app:**
-
-```yaml
-
----
-apiVersion: vproxy.cc/v1alpha1
-kind: TcpLb
-metadata:
-  name: tl001
-spec:
-  address: 127.0.0.1:10080
-  backend: ups001
-  protocol: http
-
----
-apiVersion: vproxy.cc/v1alpha1
-kind: DnsServer
-metadata:
-  name: dns001
-spec:
-  address: 127.0.0.1:53
-  rrsets: ups001
-  ttl: 0
-
----
-apiVersion: vproxy.cc/v1alpha1
-kind: Upstream
-metadata:
-  name: ups001
-spec:
-  serverGroups:
-    - name: service1
-      weight: 10
-
----
-apiVersion: vproxy.cc/v1alpha1
-kind: ServerGroup
-metadata:
-  name: service1
-  annotations:
-    host: service1.svc.local
-spec:
-  timeout: 1000
-  period: 5000
-  up: 2
-  down: 3
-  protocol: tcp
-  method: wrr
-  servers:
-    static: []
-
----
-apiVersion: vproxy.cc/v1alpha1
-kind: SmartGroupDelegate
-metadata:
-  name: sgd-service1
-spec:
-  service: service1
-  zone: my-zone
-  handledGroup: service1
 
 ```
 
