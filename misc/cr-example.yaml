@@ -106,8 +106,8 @@ spec:
   - name: area-1
     clientNetwork: 59.1.2.0/24
     protocol: TCP
-    serverPortMin: 51080
-    serverPortMax: 51080
+    serverPortMin: 1080
+    serverPortMax: 1080
     rule: allow
 
 ---
@@ -183,7 +183,7 @@ data:
     if [ -z "$port" ]
     then
       echo "The first argument should be the port to listen on"
-    exit 1
+      exit 1
     fi
 
     if [ -z "$body" ]
