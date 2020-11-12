@@ -1,6 +1,6 @@
 .PHONY: all main vpctl controller test vpctl_test clean docker_dev_vpctl docker_dev_vproxy
 
-main: vpctl controller vpctl-linux controller-linux
+main: vpctl controller
 all: main test
 vpctl:
 	GOPATH=`pwd` go build -o vpctl cmd/vpctl/main.go
