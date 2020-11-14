@@ -1,14 +1,24 @@
-.PHONY: all main vpctl controller test vpctl_test clean docker_dev_vpctl docker_dev_vproxy
+SHELL := /bin/bash
+.DEFAULT: jar
 
+OS := $(shell uname)
+
+.PHONY: main
 main: vpctl controller
-all: main test
+.PHONY: all
+all: clean main test docker-vpctl docker-vproxy
+.PHONY: vpctl
 vpctl:
 	GOPATH=`pwd` go build -o vpctl cmd/vpctl/main.go
+.PHONY: test
 test: vpctl_test
+.PHONY: vpctl_test
 vpctl_test: vpctl
 	GOPATH=`pwd` go build -o vpctl_test test/vpctl/main.go
+.PHONY: controller
 controller:
 	GOPATH=`pwd` go build -o controller cmd/controller/main.go
+.PHONY: clean
 clean:
 	rm -f vpctl
 	rm -f vpctl-linux
@@ -18,7 +28,13 @@ clean:
 	rm -f misc/dockerfiles/vpctl/vpctl
 	rm -f misc/dockerfiles/vpctl/controller
 
-docker_dev_vpctl:
+.PHONY: docker-vproxy-base
+docker-vproxy-base:
+	docker rmi -f vproxy-base:latest
+	docker build --no-cache -t vproxy-base:latest ./misc/dockerfiles/vproxy-base
+
+.PHONY: docker-vpctl
+docker-vpctl:
 	docker rmi -f wkgcass/vpctl:latest
 	env GOOS=linux GOARCH=amd64 GOPATH=`pwd` go build -o vpctl-linux cmd/vpctl/main.go
 	cp ./vpctl-linux misc/dockerfiles/vpctl/vpctl
@@ -26,7 +42,24 @@ docker_dev_vpctl:
 	cp ./controller-linux misc/dockerfiles/vpctl/controller
 	docker build --no-cache -t wkgcass/vpctl:latest ./misc/dockerfiles/vpctl
 
-docker_dev_vproxy:
+.PHONY: docker-vproxy
+docker-vproxy:
+ifeq ($(OS),Linux)
+	cd ../vproxy && make jlink
+	rm -rf misc/dockerfiles/vproxy/vproxy-runtime-linux/
+	cp -r ../vproxy/build/image misc/dockerfiles/vproxy/vproxy-runtime-linux
+endif
 	docker rmi -f wkgcass/vproxy:latest
 	cp ../vproxy/build/libs/vproxy.jar ./misc/dockerfiles/vproxy/vproxy.jar
 	docker build --no-cache -t wkgcass/vproxy:latest ./misc/dockerfiles/vproxy
+
+.PHONY: bundle
+bundle: vproxy-runtime-linux
+
+.PHONY: vproxy-runtime-linux
+vproxy-runtime-linux:
+	wget https://github.com/wkgcass/vproxy/releases/download/1.0.0-BETA-5/vproxy-runtime-linux.tar.gz
+	tar zxf vproxy-runtime-linux.tar.gz
+	rm -f vproxy-runtime-linux.tar.gz
+	rm -rf misc/dockerfiles/vproxy/vproxy-runtime-linux/
+	mv vproxy-runtime-linux misc/dockerfiles/vproxy/
