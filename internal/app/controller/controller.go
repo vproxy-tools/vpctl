@@ -185,7 +185,7 @@ func Main(args []string) int {
 	if token != "" {
 		req.Header.Add("Authorization", "Bearer "+token)
 	}
-	resp, err := httpClient.Get(url)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "requesting k8s failed: %s, error: %v\n", url, err)
 		return 1
