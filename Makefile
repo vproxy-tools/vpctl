@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.DEFAULT: jar
+.DEFAULT: main
 
 OS := $(shell uname)
 
