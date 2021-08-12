@@ -33,6 +33,11 @@ docker-vproxy-base:
 	docker rmi -f vproxy-base:latest
 	docker build --no-cache -t vproxy-base:latest ./misc/dockerfiles/vproxy-base
 
+.PHONY: docker-vproxy-compile
+docker-vproxy-compile:
+	docker rmi -f vproxy-compile:latest
+	docker build --no-cache -t vproxy-compile:latest ./misc/dockerfiles/vproxy-compile
+
 .PHONY: docker-vproxy-test
 docker-vproxy-test:
 	docker rmi -f vproxy-test:latest
