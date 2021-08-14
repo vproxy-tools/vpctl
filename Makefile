@@ -28,6 +28,11 @@ clean:
 	rm -f misc/dockerfiles/vpctl/vpctl
 	rm -f misc/dockerfiles/vpctl/controller
 
+.PHONY: docker-vproxy-runtime
+docker-vproxy-runtime:
+	docker rmi -f vproxy-runtime:latest
+	docker build --no-cache -t vproxy-runtime:latest ./misc/dockerfiles/vproxy-runtime
+
 .PHONY: docker-vproxy-base
 docker-vproxy-base:
 	docker rmi -f vproxy-base:latest
