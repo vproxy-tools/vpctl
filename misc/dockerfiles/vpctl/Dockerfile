@@ -1,5 +1,4 @@
-FROM vproxy-base:latest
+FROM ubuntu:20.04
 
 ADD controller /controller
 ADD vpctl /vpctl
-ENTRYPOINT ["/controller"]
