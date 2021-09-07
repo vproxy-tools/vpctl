@@ -61,32 +61,32 @@ func Launch(conf WatchConfig) {
 }
 
 func watchTcpLb(conf *WatchConfig, pool Pool) {
-	watch("TcpLb", conf, "/apis/vproxy.cc/v1alpha1/tcp-lb",
+	watch("TcpLb", conf, "/apis/vproxy.io/v1alpha1/tcp-lb",
 		DefineTcpLbFunc(pool), DeleteTcpLbFunc(pool), ClearTcpLbFunc(pool))
 }
 
 func watchSocks5Server(conf *WatchConfig, pool Pool) {
-	watch("Socks5Server", conf, "/apis/vproxy.cc/v1alpha1/socks5-server",
+	watch("Socks5Server", conf, "/apis/vproxy.io/v1alpha1/socks5-server",
 		DefineSocks5ServerFunc(pool), DeleteSocks5ServerFunc(pool), ClearSocks5ServerFunc(pool))
 }
 
 func watchDnsServer(conf *WatchConfig, pool Pool) {
-	watch("DnsServer", conf, "/apis/vproxy.cc/v1alpha1/dns-server",
+	watch("DnsServer", conf, "/apis/vproxy.io/v1alpha1/dns-server",
 		DefineDnsServerFunc(pool), DeleteDnsServerFunc(pool), ClearDnsServerFunc(pool))
 }
 
 func watchUpstream(conf *WatchConfig, pool Pool) {
-	watch("Upstream", conf, "/apis/vproxy.cc/v1alpha1/upstream",
+	watch("Upstream", conf, "/apis/vproxy.io/v1alpha1/upstream",
 		DefineUpstreamFunc(pool), DeleteUpstreamFunc(pool), ClearUpstreamFunc(pool))
 }
 
 func watchServerGroup(conf *WatchConfig, pool Pool) {
-	watch("ServerGroup", conf, "/apis/vproxy.cc/v1alpha1/server-group",
+	watch("ServerGroup", conf, "/apis/vproxy.io/v1alpha1/server-group",
 		DefineServerGroupFunc(pool), DeleteServerGroupFunc(pool), ClearServerGroupFunc(pool))
 }
 
 func watchSecurityGroup(conf *WatchConfig, pool Pool) {
-	watch("ServerGroup", conf, "/apis/vproxy.cc/v1alpha1/security-group",
+	watch("ServerGroup", conf, "/apis/vproxy.io/v1alpha1/security-group",
 		DefineSecurityGroupFunc(pool), DeleteSecurityGroupFunc(pool), ClearSecurityGroupFunc(pool))
 }
 

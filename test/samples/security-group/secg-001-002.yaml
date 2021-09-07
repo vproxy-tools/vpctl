@@ -1,5 +1,5 @@
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: SecurityGroup
 metadata:
   name: secg001
@@ -20,7 +20,7 @@ spec:
       rule: deny
 
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: SecurityGroup
 metadata:
   name: secg002

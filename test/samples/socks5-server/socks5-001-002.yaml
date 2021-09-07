@@ -1,5 +1,5 @@
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Socks5Server
 metadata:
   name: socks5-001
@@ -10,7 +10,7 @@ spec:
   allowNonBackend: false
 
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Socks5Server
 metadata:
   name: socks5-002

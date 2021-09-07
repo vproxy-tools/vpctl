@@ -24,7 +24,7 @@ rules:
   - secrets
   verbs: [get, list, watch]
 - apiGroups:
-  - "vproxy.cc"
+  - "vproxy.io"
   resources:
   - "*"
   verbs: [get, list, watch]
