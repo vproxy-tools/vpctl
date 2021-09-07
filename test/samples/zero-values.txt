@@ -6,7 +6,7 @@ ServerGroup/Server:sg001/svr1 created
 ***********
 get sg -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg001
@@ -41,7 +41,7 @@ ServerGroup/Server:sg001/svr1 configured
 ***********
 get sg sg001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg001
@@ -73,7 +73,7 @@ ServerGroup/Server:sg001/svr1 configured
 ***********
 get sg sg001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: ServerGroup
 metadata:
   name: sg001
@@ -108,7 +108,7 @@ Upstream/ServerGroup:ups001/sg001 created
 ***********
 get ups ups001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
@@ -127,7 +127,7 @@ Upstream/ServerGroup:ups001/sg001 configured
 ***********
 get ups ups001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
@@ -143,7 +143,7 @@ Upstream/ServerGroup:ups001/sg001 configured
 ***********
 get ups ups001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Upstream
 metadata:
   name: ups001
@@ -161,7 +161,7 @@ DnsServer:dns001 created
 ***********
 get dns dns001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: DnsServer
 metadata:
   name: dns001
@@ -180,7 +180,7 @@ DnsServer:dns001 configured
 ***********
 get dns dns001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: DnsServer
 metadata:
   name: dns001
@@ -196,7 +196,7 @@ DnsServer:dns001 configured
 ***********
 get dns dns001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: DnsServer
 metadata:
   name: dns001
@@ -214,7 +214,7 @@ Socks5Server:socks5-001 created
 ***********
 get socks5 socks5-001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Socks5Server
 metadata:
   name: socks5-001
@@ -233,7 +233,7 @@ Socks5Server:socks5-001 configured
 ***********
 get socks5 socks5-001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Socks5Server
 metadata:
   name: socks5-001
@@ -249,7 +249,7 @@ Socks5Server:socks5-001 configured
 ***********
 get socks5 socks5-001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Socks5Server
 metadata:
   name: socks5-001

@@ -2,9 +2,9 @@
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: tcp-lb.vproxy.cc
+  name: tcp-lb.vproxy.io
 spec:
-  group: vproxy.cc
+  group: vproxy.io
   versions:
   - name: v1alpha1
     served: true
@@ -65,9 +65,9 @@ spec:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: socks5-server.vproxy.cc
+  name: socks5-server.vproxy.io
 spec:
-  group: vproxy.cc
+  group: vproxy.io
   versions:
   - name: v1alpha1
     served: true
@@ -125,9 +125,9 @@ spec:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: dns-server.vproxy.cc
+  name: dns-server.vproxy.io
 spec:
-  group: vproxy.cc
+  group: vproxy.io
   versions:
   - name: v1alpha1
     served: true
@@ -185,9 +185,9 @@ spec:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: upstream.vproxy.cc
+  name: upstream.vproxy.io
 spec:
-  group: vproxy.cc
+  group: vproxy.io
   versions:
   - name: v1alpha1
     served: true
@@ -232,9 +232,9 @@ spec:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: server-group.vproxy.cc
+  name: server-group.vproxy.io
 spec:
-  group: vproxy.cc
+  group: vproxy.io
   versions:
   - name: v1alpha1
     served: true
@@ -300,9 +300,9 @@ spec:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: security-group.vproxy.cc
+  name: security-group.vproxy.io
 spec:
-  group: vproxy.cc
+  group: vproxy.io
   versions:
   - name: v1alpha1
     served: true

@@ -1,5 +1,5 @@
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: DnsServer
 metadata:
   name: dns001
@@ -10,7 +10,7 @@ spec:
   securityGroup: secg001
 
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: DnsServer
 metadata:
   name: dns002

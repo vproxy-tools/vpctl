@@ -38,7 +38,7 @@ socks5-001   127.0.0.1:50001   ups001    secg001          FALSE
 ***********
 get socks5 socks5-001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Socks5Server
 metadata:
   name: socks5-001
@@ -106,7 +106,7 @@ socks5-002   127.0.0.1:50002   ups002    secg002          TRUE
 ***********
 get socks5 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Socks5Server
 metadata:
   name: socks5-001
@@ -118,7 +118,7 @@ spec:
   allowNonBackend: false
 
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: Socks5Server
 metadata:
   name: socks5-002

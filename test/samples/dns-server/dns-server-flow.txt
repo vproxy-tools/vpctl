@@ -38,7 +38,7 @@ dns001   127.0.0.1:23353   ups001   600   secg001
 ***********
 get dns dns001 -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: DnsServer
 metadata:
   name: dns001
@@ -110,7 +110,7 @@ dns001   127.0.0.1:23353   ups001   600   secg001
 ***********
 get dns -o yaml
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: DnsServer
 metadata:
   name: dns002
@@ -122,7 +122,7 @@ spec:
   securityGroup: secg002
 
 ---
-apiVersion: vproxy.cc/v1alpha1
+apiVersion: vproxy.io/v1alpha1
 kind: DnsServer
 metadata:
   name: dns001
