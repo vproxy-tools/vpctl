@@ -66,23 +66,25 @@ spec:
         emptyDir: {}
       containers:
       - name: controller
-        image: wkgcass/vpctl:latest
+        image: vproxyio/vpctl:latest
         imagePullPolicy: IfNotPresent
         args:
+        - '/controller'
         - '--labels={"app":"vproxy-gateway"}'
         volumeMounts:
         - name: vpctl
           mountPath: /root/vpctl
       - name: vproxy
         args:
-        - noLoadLast
+        - load
+        - '/preset/launch-http-controller'
         - noSave
         - sigIntDirectlyShutdown
         - noStdIOController
         volumeMounts:
         - name: vpctl
           mountPath: /root/vpctl
-        image: wkgcass/vproxy:latest
+        image: vproxyio/vproxy:latest
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:

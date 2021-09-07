@@ -245,7 +245,7 @@ spec:
     spec:
       containers:
         - name: http
-          image: wkgcass/vproxy-base:latest
+          image: vproxyio/base:latest
           imagePullPolicy: IfNotPresent
           args:
           - '/bin/bash'
@@ -284,7 +284,7 @@ spec:
     spec:
       containers:
         - name: http
-          image: wkgcass/vproxy-base:latest
+          image: vproxyio/base:latest
           imagePullPolicy: IfNotPresent
           args:
           - '/bin/bash'
@@ -321,7 +321,7 @@ spec:
     spec:
       containers:
         - name: http
-          image: wkgcass/vproxy-base:latest
+          image: vproxyio/base:latest
           imagePullPolicy: IfNotPresent
           args:
           - '/bin/bash'
