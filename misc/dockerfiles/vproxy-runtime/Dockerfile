@@ -10,4 +10,8 @@ RUN wget https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11
 ENV JAVA_HOME="/vproxy-runtime"
 ENV PATH="${PATH}:/vproxy-runtime/bin"
 
-ENTRYPOINT ["/usr/bin/env", "--", "java", "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED", "-XX:+CriticalJNINatives", "-Djava.library.path=-Djava.library.path=/usr/lib/`uname -m`-linux-gnu"]
+COPY init.sh /init.sh
+
+RUN chmod +x /init.sh
+
+ENTRYPOINT ["/init.sh"]
