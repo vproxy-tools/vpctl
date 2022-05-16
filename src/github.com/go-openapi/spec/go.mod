@@ -6,7 +6,7 @@ require (
 	github.com/go-openapi/swag v0.19.5
 	github.com/stretchr/testify v1.3.0
 	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297 // indirect
-	gopkg.in/yaml.v2 v2.2.4
+	gopkg.in/yaml.v2 v2.2.8
 )
 
 go 1.13
