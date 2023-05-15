@@ -18,12 +18,15 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-logr/logr"
 	c "github.com/vproxy-tools/vpctl/pkg/vproxy_config"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/tools/record"
+	"sync/atomic"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -38,7 +41,9 @@ type ServerGroupReconciler struct {
 	client.Client
 	Scheme   *runtime.Scheme
 	recorder record.EventRecorder
+	cache    *ObjectUsageCache
 
+	hcStarted atomic.Bool
 	hcChannel chan *c.HealthCheckEventChannelMessage
 }
 
@@ -108,11 +113,20 @@ func (r *ServerGroupReconciler) reconcile(ctx context.Context, logger logr.Logge
 	}
 
 	if o.DeletionTimestamp != nil {
+		r.cache.Remove(o)
 		err = removeFinalizer(ctx, r.Client, o, &logger)
 		if err != nil {
 			return
 		}
 	} else {
+		epNames := sets.Set[string]{}
+		for _, ep := range o.Spec.Servers.Endpoints {
+			epNames.Insert(ep.Name)
+		}
+		r.cache.Update(o.Namespace, epNames, o)
+
+		r.ensureHCLoop()
+
 		var sg *c.ServerGroup
 		name := formatResourceName(o.Namespace, o.Name)
 		sg, err = c.GetServerGroup(name)
@@ -137,6 +151,8 @@ func (r *ServerGroupReconciler) reconcile(ctx context.Context, logger logr.Logge
 // SetupWithManager sets up the controller with the Manager.
 func (r *ServerGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	r.recorder = mgr.GetEventRecorderFor("vpctl-controller")
+	r.cache = endpointsUsageCache
+	r.hcChannel = make(chan *c.HealthCheckEventChannelMessage)
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&m.ServerGroup{}).
 		Complete(r)
@@ -255,4 +271,64 @@ func (r *ServerGroupReconciler) buildServers(ctx context.Context, o *m.ServerGro
 		}
 	}
 	return
+}
+
+func (r *ServerGroupReconciler) ensureHCLoop() {
+	if !r.hcStarted.CompareAndSwap(false, true) {
+		return // already started
+	}
+	ctx := context.TODO()
+	logger := log.FromContext(context.WithValue(ctx, "loop", "hc"))
+	logger.Info("trying to start hc watching loop ...")
+	stop := make(chan bool)
+	err := c.WatchHealthCheck(r.hcChannel, stop)
+	if err != nil {
+		logger.Error(err, "failed to watch health check")
+		stop <- true
+		close(stop)
+		r.hcStarted.Store(false)
+		return
+	}
+	go func() {
+		for {
+			e := <-r.hcChannel
+			if e == nil || e.Err != nil {
+				if e == nil {
+					logger.Error(nil, "hc channel produced nil")
+				} else {
+					logger.Error(e.Err, "received error message from hc channel")
+				}
+				stop <- true
+				close(stop)
+				r.hcStarted.Store(false)
+				break
+			}
+			evt := e.Evt
+			name := evt.ServerGroup.Metadata.Name
+			if name == "" {
+				logger.Error(nil, "event from hc channel does not contain server group name: "+fmt.Sprintf("%+v", evt))
+				continue
+			}
+			ns, n, ok := extractNsName(name)
+			if !ok {
+				logger.Info("event from hc channel is not part of k8s: " + name)
+				continue
+			}
+			sg := m.ServerGroup{}
+			err = r.Get(ctx, types.NamespacedName{
+				Namespace: ns,
+				Name:      n,
+			}, &sg)
+			if err != nil {
+				logger.Error(err, "failed to retrieve server group from k8s: "+ns+"/"+n)
+				continue
+			}
+			sg.SyncId += 1
+			err = r.Update(ctx, &sg)
+			if err != nil {
+				logger.Error(err, "failed to update syncId of server group: "+ns+"/"+n)
+				continue
+			}
+		}
+	}()
 }

@@ -9,8 +9,8 @@ import (
 )
 
 type HealthCheckEventChannelMessage struct {
-	evt HealthCheckEvent
-	err error
+	Evt HealthCheckEvent
+	Err error
 }
 
 func WatchHealthCheck(chnl chan *HealthCheckEventChannelMessage, stop chan bool) error {
@@ -61,18 +61,18 @@ func WatchHealthCheck(chnl chan *HealthCheckEventChannelMessage, stop chan bool)
 			}
 			msg := HealthCheckEventChannelMessage{}
 			if err != nil {
-				msg.err = err
+				msg.Err = err
 				chnl <- &msg
 				return
 			}
 			wire := HealthCheckEventOnWire{}
 			err = json.Unmarshal(bytes, &wire)
 			if err != nil {
-				msg.err = err
+				msg.Err = err
 				chnl <- &msg
 				return
 			}
-			msg.evt.from(&wire)
+			msg.Evt.from(&wire)
 			chnl <- &msg
 		}
 	}()

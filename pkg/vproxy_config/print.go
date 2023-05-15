@@ -505,10 +505,10 @@ func UtilWatchAndPrint(typ string) error {
 			if msg == nil {
 				break
 			}
-			if msg.err != nil {
-				return msg.err
+			if msg.Err != nil {
+				return msg.Err
 			}
-			bytes, err := yamllib.Marshal(msg.evt)
+			bytes, err := yamllib.Marshal(msg.Evt)
 			if err != nil { // should not happen
 				return err
 			}

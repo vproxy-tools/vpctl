@@ -26,6 +26,23 @@ func addNsToResourceNameList(ns string, nn []string) {
 	}
 }
 
+func extractNsName(name string) (ns, n string, ok bool) {
+	if !strings.Contains(name, "@") {
+		return
+	}
+	split := strings.Split(name, "@")
+	if len(split) != 2 {
+		return
+	}
+	ns = strings.TrimSpace(split[0])
+	n = strings.TrimSpace(split[1])
+	if ns == "" || n == "" {
+		return
+	}
+	ok = true
+	return
+}
+
 func formatResourceBase(o metav1.ObjectMeta) c.Base {
 	return c.Base{
 		Metadata: c.Metadata{
@@ -74,37 +91,36 @@ func (cache *ObjectUsageCache) Get(ns string, n string) sets.Set[ObjectName] {
 	return ls.Clone()
 }
 
-func (cache *ObjectUsageCache) Add(ns string, n string, o client.Object) {
-	name := formatResourceName(ns, n)
+func (cache *ObjectUsageCache) Update(ns string, names sets.Set[string], o client.Object) {
 	obj := formatObjectName(o)
-	cache.lock.RLock()
-	if cache.m[name] != nil && cache.m[name].Has(obj) {
-		cache.lock.RUnlock()
-		return
-	}
-	cache.lock.RUnlock()
 	cache.lock.Lock()
 	defer cache.lock.Unlock()
-	if cache.m[name] == nil {
-		cache.m[name] = &sets.Set[ObjectName]{}
+
+	for s, v := range cache.m {
+		v.Delete(obj)
+		if v.Len() == 0 {
+			delete(cache.m, s)
+		}
 	}
-	cache.m[name].Insert(obj)
+	for n := range names {
+		name := formatResourceName(ns, n)
+		if cache.m[name] == nil {
+			cache.m[name] = &sets.Set[ObjectName]{}
+		}
+		cache.m[name].Insert(obj)
+	}
 }
 
-func (cache *ObjectUsageCache) Remove(ns string, n string, o client.Object) {
-	name := formatResourceName(ns, n)
+func (cache *ObjectUsageCache) Remove(o client.Object) {
 	obj := formatObjectName(o)
-	cache.lock.RLock()
-	if cache.m[name] == nil || !cache.m[name].Has(obj) {
-		cache.lock.RUnlock()
-		return
-	}
-	cache.lock.RUnlock()
 	cache.lock.Lock()
 	defer cache.lock.Unlock()
-	cache.m[name].Delete(obj)
-	if cache.m[name].Len() == 0 {
-		delete(cache.m, name)
+
+	for s, v := range cache.m {
+		v.Delete(obj)
+		if v.Len() == 0 {
+			delete(cache.m, s)
+		}
 	}
 }
 
