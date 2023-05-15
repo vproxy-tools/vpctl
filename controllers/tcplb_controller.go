@@ -113,6 +113,6 @@ func (r *TcpLbReconciler) reconcile(ctx context.Context, logger logr.Logger, o *
 func (r *TcpLbReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	r.recorder = mgr.GetEventRecorderFor("vpctl-controller")
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&m.Socks5Server{}).
+		For(&m.TcpLb{}).
 		Complete(r)
 }

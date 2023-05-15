@@ -328,6 +328,7 @@ func (o *SecurityGroupSpec) DeepCopyInto(out *SecurityGroupSpec) {
 			arr[i] = o
 		}(i, x)
 	}
+	out.Rules = arr
 }
 
 type SecurityGroup struct {

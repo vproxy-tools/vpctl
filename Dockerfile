@@ -1,6 +1,5 @@
-FROM gcr.io/distroless/static:nonroot
+FROM ubuntu:22.04
 WORKDIR /
 COPY bin/manager /manager
-USER 65532:65532
 
 ENTRYPOINT ["/manager"]

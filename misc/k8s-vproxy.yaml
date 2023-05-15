@@ -1,0 +1,356 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vproxy-system
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vproxy-service-account
+  namespace: vproxy-system
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vproxy-cluster-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - endpoints/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - endpoints/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - certkeys
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - certkeys/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - certkeys/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - dnsservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - dnsservers/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - dnsservers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - securitygroups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - securitygroups/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - securitygroups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - servergroups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - servergroups/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - servergroups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - socks5servers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - socks5servers/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - socks5servers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - tcplbs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - tcplbs/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - tcplbs/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - upstreams
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - upstreams/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - app.vproxy.io
+  resources:
+  - upstreams/status
+  verbs:
+  - get
+  - patch
+  - update
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vproxy-cluster-role-binding
+  namespace: vproxy-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vproxy-cluster-role
+subjects:
+- kind: ServiceAccount
+  name: vproxy-service-account
+  namespace: vproxy-system
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vproxy-gateway
+  namespace: vproxy-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vproxy-gateway
+  template:
+    metadata:
+      labels:
+        app: vproxy-gateway
+    spec:
+      serviceAccountName: vproxy-service-account
+      volumes:
+      - name: vpctl
+        emptyDir: {}
+      containers:
+      - name: controller
+        image: vproxyio/controller:latest
+        imagePullPolicy: IfNotPresent
+        args:
+        - --leader-elect
+        volumeMounts:
+        - name: vpctl
+          mountPath: /root/vpctl
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        # TODO(user): Configure the resources accordingly based on the project requirements.
+        # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+      - name: vproxy
+        args:
+        - load
+        - '/preset/launch-default-controllers'
+        - noSave
+        - sigIntDirectlyShutdown
+        - noStdIOController
+        volumeMounts:
+        - name: vpctl
+          mountPath: /root/vpctl
+        image: vproxyio/vproxy:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - curl
+            - --connect-timeout
+            - "1"
+            - --max-time
+            - "2"
+            - 127.0.0.1:18776/healthz
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        # TODO(user): Configure the resources accordingly based on the project requirements.
+        # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi

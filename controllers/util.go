@@ -13,29 +13,42 @@ import (
 )
 
 func formatResourceName(ns, n string) string {
-	return ns + "@" + n
+	if n == "" {
+		return ""
+	}
+	return n + "(" + ns + ")"
 }
 
 func addNsToResourceName(ns string, n *string) {
-	*n = ns + "@" + *n
+	if *n == "" {
+		return
+	}
+	*n = *n + "(" + ns + ")"
 }
 
 func addNsToResourceNameList(ns string, nn []string) {
 	for idx, n := range nn {
-		nn[idx] = ns + "@" + n
+		if n == "" {
+			continue
+		}
+		nn[idx] = n + "(" + ns + ")"
 	}
 }
 
 func extractNsName(name string) (ns, n string, ok bool) {
-	if !strings.Contains(name, "@") {
+	if !strings.HasSuffix(name, ")") {
 		return
 	}
-	split := strings.Split(name, "@")
+	if !strings.Contains(name, "(") {
+		return
+	}
+	name = name[0 : len(name)-1]
+	split := strings.Split(name, "(")
 	if len(split) != 2 {
 		return
 	}
-	ns = strings.TrimSpace(split[0])
-	n = strings.TrimSpace(split[1])
+	ns = strings.TrimSpace(split[1])
+	n = strings.TrimSpace(split[0])
 	if ns == "" || n == "" {
 		return
 	}
@@ -44,10 +57,25 @@ func extractNsName(name string) (ns, n string, ok bool) {
 }
 
 func formatResourceBase(o metav1.ObjectMeta) c.Base {
+	annos := map[string]string{}
+	for k, v := range o.Annotations {
+		if !strings.Contains(k, "/") {
+			continue
+		}
+		split := strings.Split(k, "/")
+		if len(split) < 1 {
+			continue
+		}
+		domain := strings.TrimSpace(split[0])
+		if domain != "vproxy" && domain != "vproxy.io" && !strings.HasSuffix(domain, ".vproxy.io") {
+			continue
+		}
+		annos[k] = v
+	}
 	return c.Base{
 		Metadata: c.Metadata{
 			Name:        formatResourceName(o.Namespace, o.Name),
-			Annotations: o.Annotations,
+			Annotations: annos,
 		},
 	}
 }

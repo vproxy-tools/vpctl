@@ -23,15 +23,16 @@ import (
 	c "github.com/vproxy-tools/vpctl/pkg/vproxy_config"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/tools/record"
-	"sync/atomic"
-
-	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	"strconv"
+	"sync/atomic"
+	"time"
 
 	m "github.com/vproxy-tools/vpctl/api/v1alpha1"
 )
@@ -159,12 +160,17 @@ func (r *ServerGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *ServerGroupReconciler) buildServers(ctx context.Context, o *m.ServerGroup) (ss []c.StaticServer, skip bool, err error) {
+	type nameaddr struct {
+		ep   string
+		name string
+		addr string
+	}
 	type tmp struct {
 		ep     *v1.Endpoints
 		port   int
 		weight int
 		size   int
-		addrs  []string
+		addrs  []nameaddr
 
 		multiplier int
 	}
@@ -184,16 +190,23 @@ func (r *ServerGroupReconciler) buildServers(ctx context.Context, o *m.ServerGro
 			}
 			return
 		}
-		addrs := []string{}
+		nameaddrs := sets.Set[nameaddr]{}
 		for _, s := range ep.Subsets {
 			for _, a := range s.Addresses {
 				if a.IP != "" {
-					addrs = append(addrs, a.IP)
-					break
+					name := ""
+					if a.TargetRef != nil {
+						name = a.TargetRef.Name
+					}
+					nameaddrs.Insert(nameaddr{
+						ep:   ep.Name,
+						name: name,
+						addr: a.IP,
+					})
 				}
 			}
 		}
-		if len(addrs) == 0 {
+		if nameaddrs.Len() == 0 {
 			continue
 		}
 		var w int
@@ -206,8 +219,8 @@ func (r *ServerGroupReconciler) buildServers(ctx context.Context, o *m.ServerGro
 			ep:     ep,
 			port:   x.Port,
 			weight: w,
-			size:   len(addrs),
-			addrs:  addrs,
+			size:   len(nameaddrs),
+			addrs:  nameaddrs.UnsortedList(),
 
 			multiplier: 1,
 		})
@@ -221,9 +234,15 @@ func (r *ServerGroupReconciler) buildServers(ctx context.Context, o *m.ServerGro
 	if len(ls) == 1 {
 		w := 1
 		for _, a := range ls[0].addrs {
+			l4addr := a.addr + ":" + strconv.Itoa(ls[0].port)
+			name := l4addr
+			if a.name != "" {
+				name = a.name + ":" + name
+			}
+			name = a.ep + ":" + name
 			ss = append(ss, c.StaticServer{
-				Name:    a,
-				Address: a,
+				Name:    name,
+				Address: l4addr,
 				Weight:  &w,
 			})
 		}
@@ -242,10 +261,16 @@ func (r *ServerGroupReconciler) buildServers(ctx context.Context, o *m.ServerGro
 
 	for _, e := range ls {
 		for _, a := range e.addrs {
+			l4addr := a.addr + ":" + strconv.Itoa(e.port)
+			name := l4addr
+			if a.name != "" {
+				name = a.name + ":" + name
+			}
+			name = a.ep + ":" + name
 			func(w int) {
 				ss = append(ss, c.StaticServer{
-					Name:    a,
-					Address: a,
+					Name:    name,
+					Address: l4addr,
 					Weight:  &w,
 				})
 			}(e.weight * e.multiplier)
@@ -290,6 +315,18 @@ func (r *ServerGroupReconciler) ensureHCLoop() {
 		return
 	}
 	go func() {
+		logger.Info("begin to watch hc events")
+		defer func() { // ensure restart
+			stop <- true
+			close(stop)
+			r.hcStarted.Store(false)
+
+			go func() {
+				time.Sleep(5 * time.Second)
+				r.ensureHCLoop()
+			}()
+		}()
+
 		for {
 			e := <-r.hcChannel
 			if e == nil || e.Err != nil {
@@ -298,9 +335,6 @@ func (r *ServerGroupReconciler) ensureHCLoop() {
 				} else {
 					logger.Error(e.Err, "received error message from hc channel")
 				}
-				stop <- true
-				close(stop)
-				r.hcStarted.Store(false)
 				break
 			}
 			evt := e.Evt
@@ -314,6 +348,7 @@ func (r *ServerGroupReconciler) ensureHCLoop() {
 				logger.Info("event from hc channel is not part of k8s: " + name)
 				continue
 			}
+			logger.Info("event from hc channel: ServerGroup " + ns + "/" + n)
 			sg := m.ServerGroup{}
 			err = r.Get(ctx, types.NamespacedName{
 				Namespace: ns,

@@ -85,7 +85,7 @@ then
 		then
 			exec_cmd="$@"
 		fi
-		kubectl -n vproxy-system exec -it "$pod" --container="$container" $exec_cmd
+		kubectl -n vproxy-system exec -it "$pod" --container="$container" -- $exec_cmd
 	else
 		echo "BUG 1"
 		exit 1
