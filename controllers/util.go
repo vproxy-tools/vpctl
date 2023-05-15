@@ -4,11 +4,13 @@ import (
 	"context"
 	"github.com/go-logr/logr"
 	c "github.com/vproxy-tools/vpctl/pkg/vproxy_config"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	cc "sigs.k8s.io/controller-runtime/pkg/client"
 	"strings"
 	"sync"
 )
@@ -189,7 +191,16 @@ func initControllerName() {
 		return
 	}
 	controllerName = name
-	finalizer = finalizer + "-" + name
+	finalizer = buildFinalizerName(name)
+}
+
+func buildFinalizerName(name string) string {
+	base := "vproxy.io/vpctl"
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return base
+	}
+	return base + "-" + name
 }
 
 func addFinalizer(ctx context.Context, client client.Client, o client.Object, logger *logr.Logger) error {
@@ -218,7 +229,19 @@ func addFinalizer(ctx context.Context, client client.Client, o client.Object, lo
 	return nil
 }
 
+const SystemNamespace = "vproxy-system"
+
 func removeFinalizer(ctx context.Context, client client.Client, o client.Object, logger *logr.Logger) error {
+	ls := v1.PodList{}
+	err := client.List(ctx, &ls, cc.InNamespace(SystemNamespace), cc.Limit(500), cc.MatchingLabels{"vproxy-app": "controller"})
+	if err != nil {
+		return err
+	}
+	podNames := map[string]bool{}
+	for _, p := range ls.Items {
+		podNames[buildFinalizerName(p.Name)] = true
+	}
+
 	finalizers := o.GetFinalizers()
 	if len(finalizers) == 0 {
 		return nil
@@ -227,10 +250,20 @@ func removeFinalizer(ctx context.Context, client client.Client, o client.Object,
 	for _, f := range finalizers {
 		m[f] = true
 	}
-	if !m[finalizer] {
+	deleted := false
+	if m[finalizer] {
+		deleted = true
+		delete(m, finalizer)
+	}
+	for f := range m {
+		if !podNames[f] {
+			deleted = true
+			delete(m, f)
+		}
+	}
+	if !deleted {
 		return nil
 	}
-	delete(m, finalizer)
 	now := make([]string, len(m))
 	idx := 0
 	for k := range m {
@@ -238,7 +271,7 @@ func removeFinalizer(ctx context.Context, client client.Client, o client.Object,
 		idx += 1
 	}
 	o.SetFinalizers(now)
-	err := client.Update(ctx, o)
+	err = client.Update(ctx, o)
 	if err != nil {
 		logger.Error(err, "failed to remove finalizer "+finalizer)
 		return err

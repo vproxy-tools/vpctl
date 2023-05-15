@@ -20,15 +20,11 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - configmaps
+  - pods
   verbs:
   - get
   - list
   - watch
-  - create
-  - update
-  - patch
-  - delete
 - apiGroups:
   - coordination.k8s.io
   resources:
@@ -287,6 +283,7 @@ spec:
     metadata:
       labels:
         app: vproxy-gateway
+        vproxy-app: controller
     spec:
       serviceAccountName: vproxy-service-account
       volumes:
