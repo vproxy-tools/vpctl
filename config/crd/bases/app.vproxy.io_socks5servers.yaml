@@ -45,9 +45,7 @@ spec:
                 type: string
             required:
             - address
-            - allowNonBackend
             - backend
-            - securityGroup
             type: object
           status:
             description: Socks5ServerStatus defines the observed state of Socks5Server

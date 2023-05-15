@@ -46,8 +46,6 @@ spec:
             required:
             - address
             - rrsets
-            - securityGroup
-            - ttl
             type: object
           status:
             description: DnsServerStatus defines the observed state of DnsServer

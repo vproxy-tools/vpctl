@@ -28,11 +28,17 @@ func (o *Base) GetBase() Base {
 }
 
 type TcpLbSpec struct {
-	Address       string   `json:"address" yaml:"address"`
-	Backend       string   `json:"backend" yaml:"backend"`
-	Protocol      string   `json:"protocol" yaml:"protocol"`
-	ListOfCertKey []string `json:"listOfCertKey" yaml:"listOfCertKey"`
-	SecurityGroup string   `json:"securityGroup" yaml:"securityGroup"`
+	Address string `json:"address" yaml:"address"`
+	Backend string `json:"backend" yaml:"backend"`
+
+	//+optional
+	Protocol string `json:"protocol,omitempty" yaml:"protocol,omitempty"`
+
+	//+optional
+	ListOfCertKey []string `json:"listOfCertKey,omitempty" yaml:"listOfCertKey,omitempty"`
+
+	//+optional
+	SecurityGroup string `json:"securityGroup,omitempty" yaml:"securityGroup,omitempty"`
 }
 
 func (o *TcpLbSpec) DeepCopyInto(out *TcpLbSpec) {
@@ -56,10 +62,14 @@ func (o *TcpLb) GetBase() Base {
 }
 
 type Socks5ServerSpec struct {
-	Address         string `json:"address" yaml:"address"`
-	Backend         string `json:"backend" yaml:"backend"`
-	SecurityGroup   string `json:"securityGroup" yaml:"securityGroup"`
-	AllowNonBackend *bool  `json:"allowNonBackend" yaml:"allowNonBackend"`
+	Address string `json:"address" yaml:"address"`
+	Backend string `json:"backend" yaml:"backend"`
+
+	//+optional
+	SecurityGroup string `json:"securityGroup,omitempty" yaml:"securityGroup,omitempty"`
+
+	//+optional
+	AllowNonBackend *bool `json:"allowNonBackend,omitempty" yaml:"allowNonBackend,omitempty"`
 }
 
 func (o *Socks5ServerSpec) DeepCopyInto(out *Socks5ServerSpec) {
@@ -87,10 +97,14 @@ func (o *Socks5Server) GetBase() Base {
 }
 
 type DnsServerSpec struct {
-	Address       string `json:"address" yaml:"address"`
-	RRSets        string `json:"rrsets" yaml:"rrsets"`
-	TTL           *int   `json:"ttl" yaml:"ttl"`
-	SecurityGroup string `json:"securityGroup" yaml:"securityGroup"`
+	Address string `json:"address" yaml:"address"`
+	RRSets  string `json:"rrsets" yaml:"rrsets"`
+
+	//+optional
+	TTL *int `json:"ttl,omitempty" yaml:"ttl,omitempty"`
+
+	//+optional
+	SecurityGroup string `json:"securityGroup,omitempty" yaml:"securityGroup,omitempty"`
 }
 
 func (o *DnsServerSpec) DeepCopyInto(out *DnsServerSpec) {
@@ -120,7 +134,9 @@ func (o *DnsServer) GetBase() Base {
 type StaticServer struct {
 	Name    string `json:"name" yaml:"name"`
 	Address string `json:"address" yaml:"address"`
-	Weight  *int   `json:"weight" yaml:"weight"`
+
+	//+optional
+	Weight *int `json:"weight,omitempty" yaml:"weight,omitempty"`
 }
 
 func (o *StaticServer) DeepCopyInto(out *StaticServer) {
@@ -161,12 +177,16 @@ func (o *ServerGroupSpec) DeepCopyInto(out *ServerGroupSpec) {
 }
 
 type ServerGroupSelfSpec struct {
-	Timeout  int    `json:"timeout" yaml:"timeout"`
-	Period   int    `json:"period" yaml:"period"`
-	Up       int    `json:"up" yaml:"up"`
-	Down     int    `json:"down" yaml:"down"`
-	Protocol string `json:"protocol" yaml:"protocol"`
-	Method   string `json:"method" yaml:"method"`
+	Timeout int `json:"timeout" yaml:"timeout"`
+	Period  int `json:"period" yaml:"period"`
+	Up      int `json:"up" yaml:"up"`
+	Down    int `json:"down" yaml:"down"`
+
+	//+optional
+	Protocol string `json:"protocol,omitempty" yaml:"protocol,omitempty"`
+
+	//+optional
+	Method string `json:"method,omitempty" yaml:"method,omitempty"`
 }
 
 func (o *ServerGroupSelfSpec) DeepCopyInto(out *ServerGroupSelfSpec) {
@@ -228,9 +248,13 @@ func (o *ServerGroup) GetBase() Base {
 }
 
 type ServerGroupInUpstream struct {
-	Name        string            `json:"name" yaml:"name"`
-	Weight      *int              `json:"weight" yaml:"weight"`
-	Annotations map[string]string `json:"annotations" yaml:"annotations"`
+	Name string `json:"name" yaml:"name"`
+
+	//+optional
+	Weight *int `json:"weight,omitempty" yaml:"weight,omitempty"`
+
+	//+optional
+	Annotations map[string]string `json:"annotations,omitempty" yaml:"annotations,omitempty"`
 }
 
 func (o *ServerGroupInUpstream) DeepCopyInto(out *ServerGroupInUpstream) {

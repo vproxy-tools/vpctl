@@ -68,9 +68,7 @@ spec:
                 type: integer
             required:
             - down
-            - method
             - period
-            - protocol
             - servers
             - timeout
             - up
