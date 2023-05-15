@@ -4,12 +4,11 @@ This is a tool for controlling the local vproxy instance both on command line an
 
 ## compile
 
+```bash
+make clean
+make vpctl   # command line
+make build   # k8s controller
 ```
-GOPATH=`pwd` go build -o vpctl cmd/vpctl/main.go
-GOPATH=`pwd` go build -o controller cmd/controller/main.go
-```
-
-If you are using windows, you may have to replace `pwd` with full path to the project root directory.
 
 ## usage
 
@@ -94,7 +93,7 @@ EOF
 curl 127.0.0.1:30080
 ```
 
-Note: You will not be able to access the `Socks5Server manage-socks5` because your ip is not listed in the whitelist of the `SecurityGroup work-area-only`, modify the [cr-example.yaml#99](https://github.com/vproxy-tools/vpctl/blob/master/misc/cr-example.yaml#L99) to allow your ip and re-apply it, then you can use `curl --socks5 'socks5h://xxxxxx' http://example.com` on your services.
+Note: You will not be able to access the `Socks5Server manage-socks5` because your ip is not listed in the whitelist of the `SecurityGroup work-area-only`, modify the [cr-example.yaml#94](https://github.com/vproxy-tools/vpctl/blob/master/misc/cr-example.yaml#L94) to allow your ip and re-apply it, then you can use `curl --socks5 'socks5h://xxxxxx' http://example.com` to access your services.
 
 </details>
 
@@ -118,9 +117,9 @@ There are several use cases provided in this README doc for you to refer to.
 
 We defined a few CRDs (Custom Resource Definitions) to integrate vproxy into Kubernetes. All of them share the same definitions with vpctl yaml configurations, except that:
 
-1. `TcpLb`, `Socks5Server` and `DnsServer` have an extra field called `selector` which selects vproxy controllers, and only the controllers whose labels match the selector would launch the corresponding services.
-2. No `CertKey` definition because k8s already provides `Secret` resource to manage certificates and keys.
-3. The pods may change at any time, so the static address configuration for `ServerGroup` would be useless. As a result, we let users to set k8s `Service`s in the `ServerGroup` resource, you may refer to the [cr-example.yaml#L62](https://github.com/vproxy-tools/vpctl/blob/master/misc/cr-example.yaml#L62). Addresses are dynamically updated according to the `Endpoints` resource backing the `Service`.
+1. The pods may change at any time, so the static address configuration for `ServerGroup` would be useless. As a result, we let users to set k8s `Endpoints` in the `ServerGroup` resource, you may refer to the [cr-example.yaml#L54](https://github.com/vproxy-tools/vpctl/blob/master/misc/cr-example.yaml#L54). Addresses are dynamically updated according to the `Endpoints` resources. You can create a `Service` resource with the `selectors` field to let k8s automatically find pods based on their labels.
+
+When using the vproxy gateway, you must put the gateway pods inside namespace `vproxy` and add labels `vproxy-app: controller` to it. Also the env variable `VPROXY_CONTROLLER_NAME` of the controller container must be set to the pod name. Finalizers will be added and removed based on the env variable and existing controller pods.
 
 ## examples
 
