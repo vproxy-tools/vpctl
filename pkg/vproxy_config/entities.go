@@ -112,13 +112,41 @@ type StaticServer struct {
 	Weight  *int   `json:"weight" yaml:"weight"`
 }
 
+func (o *StaticServer) DeepCopyInto(out *StaticServer) {
+	out.Name = o.Name
+	out.Address = o.Address
+	if o.Weight == nil {
+		out.Weight = nil
+	} else {
+		n := *out.Weight
+		out.Weight = &n
+	}
+}
+
 type ServerInServerGroup struct {
 	Static []StaticServer `json:"static" yaml:"static"`
 }
 
+func (o *ServerInServerGroup) DeepCopyInto(out *ServerInServerGroup) {
+	arr := make([]StaticServer, len(o.Static))
+	for i, x := range o.Static {
+		func(i int, x StaticServer) {
+			o := StaticServer{}
+			x.DeepCopyInto(&o)
+			arr[i] = o
+		}(i, x)
+	}
+	out.Static = arr
+}
+
 type ServerGroupSpec struct {
-	ServerGroupSelfSpec `yaml:",inline"`
+	ServerGroupSelfSpec `json:",inline" yaml:",inline"`
 	Servers             ServerInServerGroup `json:"servers" yaml:"servers"`
+}
+
+func (o *ServerGroupSpec) DeepCopyInto(out *ServerGroupSpec) {
+	o.ServerGroupSelfSpec.DeepCopyInto(&out.ServerGroupSelfSpec)
+	o.Servers.DeepCopyInto(&out.Servers)
 }
 
 type ServerGroupSelfSpec struct {
@@ -128,6 +156,15 @@ type ServerGroupSelfSpec struct {
 	Down     int    `json:"down" yaml:"down"`
 	Protocol string `json:"protocol" yaml:"protocol"`
 	Method   string `json:"method" yaml:"method"`
+}
+
+func (o *ServerGroupSelfSpec) DeepCopyInto(out *ServerGroupSelfSpec) {
+	out.Timeout = o.Timeout
+	out.Period = o.Period
+	out.Up = o.Up
+	out.Down = o.Down
+	out.Protocol = o.Protocol
+	out.Method = o.Method
 }
 
 type ServerStatus struct {
@@ -140,8 +177,30 @@ type ServerStatus struct {
 	DownReason string `json:"downReason" yaml:"downReason"`
 }
 
+func (o *ServerStatus) DeepCopyInto(out *ServerStatus) {
+	out.Name = o.Name
+	out.Address = o.Address
+	out.Weight = o.Weight
+	out.CurrentIp = o.CurrentIp
+	out.Status = o.Status
+	out.Cost = o.Cost
+	out.DownReason = o.DownReason
+}
+
 type ServerGroupStatus struct {
 	Servers []ServerStatus `json:"servers" yaml:"servers"`
+}
+
+func (o *ServerGroupStatus) DeepCopyInto(out *ServerGroupStatus) {
+	arr := make([]ServerStatus, len(o.Servers))
+	for i, x := range o.Servers {
+		func(i int, x ServerStatus) {
+			o := ServerStatus{}
+			x.DeepCopyInto(&o)
+			arr[i] = o
+		}(i, x)
+	}
+	out.Servers = arr
 }
 
 type ServerGroup struct {
