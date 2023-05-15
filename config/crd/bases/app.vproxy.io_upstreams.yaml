@@ -9,9 +9,13 @@ metadata:
 spec:
   group: app.vproxy.io
   names:
+    categories:
+    - all
     kind: Upstream
     listKind: UpstreamList
     plural: upstreams
+    shortNames:
+    - ups
     singular: upstream
   scope: Namespaced
   versions:

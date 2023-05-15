@@ -40,6 +40,7 @@ type DnsServerStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:categories=all,shortName=dns
 
 // DnsServer is the Schema for the dnsservers API
 type DnsServer struct {

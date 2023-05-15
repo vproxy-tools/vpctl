@@ -42,6 +42,7 @@ type CertKeyStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:categories=all,shortName=ck
 
 // CertKey is the Schema for the certkeys API
 type CertKey struct {

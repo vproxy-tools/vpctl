@@ -9,9 +9,13 @@ metadata:
 spec:
   group: app.vproxy.io
   names:
+    categories:
+    - all
     kind: CertKey
     listKind: CertKeyList
     plural: certkeys
+    shortNames:
+    - ck
     singular: certkey
   scope: Namespaced
   versions:

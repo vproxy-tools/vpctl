@@ -40,6 +40,7 @@ type SecurityGroupStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:categories=all,shortName=secg
 
 // SecurityGroup is the Schema for the securitygroups API
 type SecurityGroup struct {

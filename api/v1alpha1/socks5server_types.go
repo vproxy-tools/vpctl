@@ -40,6 +40,7 @@ type Socks5ServerStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:categories=all,shortName=socks5
 
 // Socks5Server is the Schema for the socks5servers API
 type Socks5Server struct {

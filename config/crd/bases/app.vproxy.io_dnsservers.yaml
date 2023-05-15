@@ -9,9 +9,13 @@ metadata:
 spec:
   group: app.vproxy.io
   names:
+    categories:
+    - all
     kind: DnsServer
     listKind: DnsServerList
     plural: dnsservers
+    shortNames:
+    - dns
     singular: dnsserver
   scope: Namespaced
   versions:

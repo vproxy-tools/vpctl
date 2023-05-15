@@ -9,9 +9,13 @@ metadata:
 spec:
   group: app.vproxy.io
   names:
+    categories:
+    - all
     kind: TcpLb
     listKind: TcpLbList
     plural: tcplbs
+    shortNames:
+    - tl
     singular: tcplb
   scope: Namespaced
   versions:

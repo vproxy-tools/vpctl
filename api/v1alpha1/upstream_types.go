@@ -40,6 +40,7 @@ type UpstreamStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:categories=all,shortName=ups
 
 // Upstream is the Schema for the upstreams API
 type Upstream struct {

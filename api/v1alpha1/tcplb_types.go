@@ -40,6 +40,7 @@ type TcpLbStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:categories=all,shortName=tl
 
 // TcpLb is the Schema for the tcplbs API
 type TcpLb struct {

@@ -9,9 +9,13 @@ metadata:
 spec:
   group: app.vproxy.io
   names:
+    categories:
+    - all
     kind: ServerGroup
     listKind: ServerGroupList
     plural: servergroups
+    shortNames:
+    - sg
     singular: servergroup
   scope: Namespaced
   versions:

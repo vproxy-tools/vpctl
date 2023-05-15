@@ -9,9 +9,13 @@ metadata:
 spec:
   group: app.vproxy.io
   names:
+    categories:
+    - all
     kind: Socks5Server
     listKind: Socks5ServerList
     plural: socks5servers
+    shortNames:
+    - socks5
     singular: socks5server
   scope: Namespaced
   versions:

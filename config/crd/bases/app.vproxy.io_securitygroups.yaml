@@ -9,9 +9,13 @@ metadata:
 spec:
   group: app.vproxy.io
   names:
+    categories:
+    - all
     kind: SecurityGroup
     listKind: SecurityGroupList
     plural: securitygroups
+    shortNames:
+    - secg
     singular: securitygroup
   scope: Namespaced
   versions:

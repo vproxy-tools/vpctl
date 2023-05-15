@@ -55,6 +55,7 @@ type ServerGroupStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:categories=all,shortName=sg
 
 // ServerGroup is the Schema for the servergroups API
 type ServerGroup struct {

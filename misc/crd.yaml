@@ -1,362 +1,529 @@
 ---
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: tcp-lb.vproxy.io
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: tcplbs.app.vproxy.io
 spec:
-  group: vproxy.io
-  versions:
-  - name: v1alpha1
-    served: true
-    storage: true
-  scope: Namespaced
+  group: app.vproxy.io
   names:
-    plural: tcp-lb
-    singular: tcp-lb
+    categories:
+    - all
     kind: TcpLb
+    listKind: TcpLbList
+    plural: tcplbs
     shortNames:
     - tl
-  preserveUnknownFields: false
-  validation:
-    openAPIV3Schema:
-      type: object
-      required:
-      - selector
-      - spec
-      properties:
-        selector:
-          type: object
-          additionalProperties:
-            type: string
-        spec:
-          type: object
-          required:
-          - address
-          - backend
-          properties:
-            address:
-              type: string
-            backend:
-              type: string
-            protocol:
-              type: string
-            listOfCertKey:
-              type: array
-              items:
-                type: string
-            securityGroup:
-              type: string
-  additionalPrinterColumns:
-  - name: Address
-    type: string
-    JSONPath: .spec.address
-  - name: Backend
-    type: string
-    JSONPath: .spec.backend
-  - name: Protocol
-    type: string
-    JSONPath: .spec.protocol
-  - name: Security-Group
-    type: string
-    JSONPath: .spec.securityGroup
-    priority: 1
-
----
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
-  name: socks5-server.vproxy.io
-spec:
-  group: vproxy.io
+    singular: tcplb
+  scope: Namespaced
   versions:
   - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: TcpLb is the Schema for the tcplbs API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TcpLbSpec defines the desired state of TcpLb
+            properties:
+              address:
+                type: string
+              backend:
+                type: string
+              listOfCertKey:
+                items:
+                  type: string
+                type: array
+              protocol:
+                type: string
+              securityGroup:
+                type: string
+            required:
+            - address
+            - backend
+            type: object
+          status:
+            description: TcpLbStatus defines the observed state of TcpLb
+            type: object
+        type: object
     served: true
     storage: true
-  scope: Namespaced
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: socks5servers.app.vproxy.io
+spec:
+  group: app.vproxy.io
   names:
-    plural: socks5-server
-    singular: socks5-server
+    categories:
+    - all
     kind: Socks5Server
+    listKind: Socks5ServerList
+    plural: socks5servers
     shortNames:
     - socks5
-  preserveUnknownFields: false
-  validation:
-    openAPIV3Schema:
-      type: object
-      required:
-      - selector
-      - spec
-      properties:
-        selector:
-          type: object
-          additionalProperties:
-            type: string
-        spec:
-          type: object
-          required:
-          - address
-          - backend
-          properties:
-            address:
-              type: string
-            backend:
-              type: string
-            securityGroup:
-              type: string
-            allowNonBackend:
-              type: boolean
-  additionalPrinterColumns:
-  - name: Address
-    type: string
-    JSONPath: .spec.address
-  - name: Backend
-    type: string
-    JSONPath: .spec.backend
-  - name: Security-Group
-    type: string
-    JSONPath: .spec.securityGroup
-    priority: 1
-  - name: Allow-Non-Backend
-    type: boolean
-    JSONPath: .spec.allowNonBackend
-    priority: 1
-
----
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
-  name: dns-server.vproxy.io
-spec:
-  group: vproxy.io
+    singular: socks5server
+  scope: Namespaced
   versions:
   - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Socks5Server is the Schema for the socks5servers API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Socks5ServerSpec defines the desired state of Socks5Server
+            properties:
+              address:
+                type: string
+              allowNonBackend:
+                type: boolean
+              backend:
+                type: string
+              securityGroup:
+                type: string
+            required:
+            - address
+            - backend
+            type: object
+          status:
+            description: Socks5ServerStatus defines the observed state of Socks5Server
+            type: object
+        type: object
     served: true
     storage: true
-  scope: Namespaced
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: dnsservers.app.vproxy.io
+spec:
+  group: app.vproxy.io
   names:
-    plural: dns-server
-    singular: dns-server
+    categories:
+    - all
     kind: DnsServer
+    listKind: DnsServerList
+    plural: dnsservers
     shortNames:
     - dns
-  preserveUnknownFields: false
-  validation:
-    openAPIV3Schema:
-      type: object
-      required:
-      - selector
-      - spec
-      properties:
-        selector:
-          type: object
-          additionalProperties:
-            type: string
-        spec:
-          type: object
-          required:
-          - address
-          - rrsets
-          properties:
-            address:
-              type: string
-            rrsets:
-              type: string
-            ttl:
-              type: integer
-              minimum: 0
-            securityGroup:
-              type: string
-  additionalPrinterColumns:
-  - name: Address
-    type: string
-    JSONPath: .spec.address
-  - name: Rrsets
-    type: string
-    JSONPath: .spec.rrsets
-  - name: TTL
-    type: integer
-    JSONPath: .spec.ttl
-  - name: Security-Group
-    type: string
-    JSONPath: .sepc.securityGroup
-    priority: 1
-
----
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
-  name: upstream.vproxy.io
-spec:
-  group: vproxy.io
+    singular: dnsserver
+  scope: Namespaced
   versions:
   - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: DnsServer is the Schema for the dnsservers API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DnsServerSpec defines the desired state of DnsServer
+            properties:
+              address:
+                type: string
+              rrsets:
+                type: string
+              securityGroup:
+                type: string
+              ttl:
+                type: integer
+            required:
+            - address
+            - rrsets
+            type: object
+          status:
+            description: DnsServerStatus defines the observed state of DnsServer
+            type: object
+        type: object
     served: true
     storage: true
-  scope: Namespaced
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: upstreams.app.vproxy.io
+spec:
+  group: app.vproxy.io
   names:
-    plural: upstream
-    singular: upstream
+    categories:
+    - all
     kind: Upstream
+    listKind: UpstreamList
+    plural: upstreams
     shortNames:
     - ups
-  preserveUnknownFields: false
-  validation:
-    openAPIV3Schema:
-      type: object
-      required:
-      - spec
-      properties:
-        spec:
-          type: object
-          required:
-          - serverGroups
-          properties:
-            serverGroups:
-              type: array
-              items:
-                type: object
-                required:
-                - name
-                properties:
-                  name:
-                    type: string
-                  weight:
-                    type: integer
-                    minimum: 0
-                  annotations:
-                    type: object
-                    additionalProperties:
-                      type: string
-
----
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
-  name: server-group.vproxy.io
-spec:
-  group: vproxy.io
+    singular: upstream
+  scope: Namespaced
   versions:
   - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Upstream is the Schema for the upstreams API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: UpstreamSpec defines the desired state of Upstream
+            properties:
+              serverGroups:
+                items:
+                  properties:
+                    annotations:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    name:
+                      type: string
+                    weight:
+                      type: integer
+                  required:
+                  - name
+                  type: object
+                type: array
+            required:
+            - serverGroups
+            type: object
+          status:
+            description: UpstreamStatus defines the observed state of Upstream
+            type: object
+        type: object
     served: true
     storage: true
-  scope: Namespaced
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: servergroups.app.vproxy.io
+spec:
+  group: app.vproxy.io
   names:
-    plural: server-group
-    singular: server-group
+    categories:
+    - all
     kind: ServerGroup
+    listKind: ServerGroupList
+    plural: servergroups
     shortNames:
     - sg
-  preserveUnknownFields: false
-  validation:
-    openAPIV3Schema:
-      type: object
-      required:
-      - spec
-      properties:
-        spec:
-          type: object
-          required:
-          - timeout
-          - period
-          - up
-          - down
-          - servers
-          properties:
-            timeout:
-              type: integer
-              minimum: 1
-            period:
-              type: integer
-              minimum: 1
-            up:
-              type: integer
-              minimum: 1
-            down:
-              type: integer
-              minimum: 1
-            protocol:
-              type: string
-            method:
-              type: string
-            servers:
-              type: object
-              required:
-              - services
-              properties:
-                services:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                    - name
-                    properties:
-                      name:
-                        type: string
-                      weight:
-                        type: integer
-                        minimum: 0
-
----
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
-  name: security-group.vproxy.io
-spec:
-  group: vproxy.io
+    singular: servergroup
+  scope: Namespaced
   versions:
   - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ServerGroup is the Schema for the servergroups API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ServerGroupSpec defines the desired state of ServerGroup
+            properties:
+              down:
+                type: integer
+              method:
+                type: string
+              period:
+                type: integer
+              protocol:
+                type: string
+              servers:
+                properties:
+                  endpoints:
+                    items:
+                      properties:
+                        name:
+                          type: string
+                        port:
+                          type: integer
+                        weight:
+                          type: integer
+                      required:
+                      - name
+                      - port
+                      type: object
+                    type: array
+                required:
+                - endpoints
+                type: object
+              timeout:
+                type: integer
+              up:
+                type: integer
+            required:
+            - down
+            - period
+            - servers
+            - timeout
+            - up
+            type: object
+          status:
+            description: ServerGroupStatus defines the observed state of ServerGroup
+            properties:
+              servers:
+                items:
+                  properties:
+                    address:
+                      type: string
+                    cost:
+                      type: integer
+                    currentIp:
+                      type: string
+                    downReason:
+                      type: string
+                    name:
+                      type: string
+                    status:
+                      type: string
+                    weight:
+                      type: integer
+                  required:
+                  - address
+                  - cost
+                  - currentIp
+                  - downReason
+                  - name
+                  - status
+                  - weight
+                  type: object
+                type: array
+            required:
+            - servers
+            type: object
+          syncId:
+            type: integer
+        type: object
     served: true
     storage: true
-  scope: Namespaced
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: securitygroups.app.vproxy.io
+spec:
+  group: app.vproxy.io
   names:
-    plural: security-group
-    singular: security-group
+    categories:
+    - all
     kind: SecurityGroup
+    listKind: SecurityGroupList
+    plural: securitygroups
     shortNames:
     - secg
-  preserveUnknownFields: false
-  validation:
-    openAPIV3Schema:
-      type: object
-      required:
-      - spec
-      properties:
-        spec:
-          type: object
-          required:
-          - rules
-          properties:
-            defaultRule:
-              type: string
-            rules:
-              type: array
-              items:
-                type: object
-                required:
-                - name
-                - clientNetwork
-                - protocol
-                - serverPortMin
-                - serverPortMax
-                - rule
+    singular: securitygroup
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: SecurityGroup is the Schema for the securitygroups API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SecurityGroupSpec defines the desired state of SecurityGroup
+            properties:
+              defaultRule:
+                type: string
+              rules:
+                items:
+                  properties:
+                    clientNetwork:
+                      type: string
+                    name:
+                      type: string
+                    protocol:
+                      type: string
+                    rule:
+                      type: string
+                    serverPortMax:
+                      type: integer
+                    serverPortMin:
+                      type: integer
+                  required:
+                  - clientNetwork
+                  - name
+                  - protocol
+                  - rule
+                  - serverPortMax
+                  - serverPortMin
+                  type: object
+                type: array
+            required:
+            - defaultRule
+            - rules
+            type: object
+          status:
+            description: SecurityGroupStatus defines the observed state of SecurityGroup
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: certkeys.app.vproxy.io
+spec:
+  group: app.vproxy.io
+  names:
+    categories:
+    - all
+    kind: CertKey
+    listKind: CertKeyList
+    plural: certkeys
+    shortNames:
+    - ck
+    singular: certkey
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: CertKey is the Schema for the certkeys API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CertKeySpec defines the desired state of CertKey
+            properties:
+              pem:
                 properties:
-                  name:
+                  certs:
+                    items:
+                      type: string
+                    type: array
+                  key:
                     type: string
-                  clientNetwork:
-                    type: string
-                  protocol:
-                    type: string
-                  serverPortMin:
-                    type: integer
-                    minimum: 1
-                    maximum: 65535
-                  serverPortMax:
-                    type: integer
-                    minimum: 1
-                    maximum: 65535
-                  rule:
-                    type: string
-  additionalPrinterColumns:
-  - name: Default-Rule
-    type: string
-    JSONPath: .spec.defaultRule
+                required:
+                - certs
+                - key
+                type: object
+            required:
+            - pem
+            type: object
+          status:
+            description: CertKeyStatus defines the observed state of CertKey
+            properties:
+              certs:
+                items:
+                  type: string
+                type: array
+              key:
+                type: string
+              keySHA1:
+                type: string
+            required:
+            - certs
+            - key
+            - keySHA1
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
