@@ -38,4 +38,13 @@ resources:
   kind: DnsServer
   path: github.com/vproxy-tools/vpctl/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: vproxy.io
+  group: vproxy.io
+  kind: Upstream
+  path: github.com/vproxy-tools/vpctl/api/v1alpha1
+  version: v1alpha1
 version: "3"
