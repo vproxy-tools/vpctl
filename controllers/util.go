@@ -7,10 +7,15 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strings"
 	"sync"
 )
+
+func init() {
+	initControllerName()
+}
 
 func formatResourceName(ns, n string) string {
 	if n == "" {
@@ -171,7 +176,21 @@ var endpointsUsageCache = &ObjectUsageCache{
 	m: map[string]*sets.Set[ObjectName]{},
 }
 
-const finalizer = "vproxy.io/vpctl"
+var controllerName = ""
+var finalizer = "vproxy.io/vpctl"
+
+func initControllerName() {
+	name, ok := os.LookupEnv("VPROXY_CONTROLLER_NAME")
+	if !ok {
+		return
+	}
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return
+	}
+	controllerName = name
+	finalizer = "-" + name
+}
 
 func addFinalizer(ctx context.Context, client client.Client, o client.Object, logger *logr.Logger) error {
 	finalizers := o.GetFinalizers()
