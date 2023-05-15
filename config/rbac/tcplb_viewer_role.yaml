@@ -1,0 +1,27 @@
+# permissions for end users to view tcplbs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: tcplb-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: controller
+    app.kubernetes.io/part-of: controller
+    app.kubernetes.io/managed-by: kustomize
+  name: tcplb-viewer-role
+rules:
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - tcplbs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - tcplbs/status
+  verbs:
+  - get
