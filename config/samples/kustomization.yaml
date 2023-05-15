@@ -2,4 +2,5 @@
 resources:
 - vproxy.io_v1alpha1_tcplb.yaml
 - vproxy.io_v1alpha1_socks5server.yaml
+- vproxy.io_v1alpha1_dnsserver.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
