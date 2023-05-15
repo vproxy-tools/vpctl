@@ -6,4 +6,5 @@ resources:
 - vproxy.io_v1alpha1_upstream.yaml
 - vproxy.io_v1alpha1_servergroup.yaml
 - vproxy.io_v1alpha1_securitygroup.yaml
+- vproxy.io_v1alpha1_certkey.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
