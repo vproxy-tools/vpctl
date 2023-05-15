@@ -2,42 +2,85 @@ package vproxy_config
 
 import (
 	"fmt"
+	"github.com/go-logr/logr"
 	yamllib "gopkg.in/yaml.v2"
 	"reflect"
 	"strconv"
 )
 
 func RunTodoListAndPrint(todo []*Todo) error {
+	return RunTodoList(todo, nil)
+}
+
+func RunTodoList(todo []*Todo, logger *logr.Logger) error {
 	for _, t := range todo {
 		err := t.F(t)
 		if t.Op == OpCreate {
 			if err != nil {
-				return fmt.Errorf("creating %s failed: %s", t.Ref, err.Error())
+				err := fmt.Errorf("creating %s failed: %s", t.Ref, err.Error())
+				if logger != nil {
+					logger.Error(err, err.Error())
+				}
+				return err
 			} else {
-				fmt.Println(t.Ref + " created")
+				if logger == nil {
+					fmt.Println(t.Ref + " created")
+				} else {
+					logger.Info(t.Ref + " created")
+				}
 			}
 		} else if t.Op == OpUpdate {
 			if err != nil {
-				return fmt.Errorf("updating %s failed: %s", t.Ref, err.Error())
+				err := fmt.Errorf("updating %s failed: %s", t.Ref, err.Error())
+				if logger != nil {
+					logger.Error(err, err.Error())
+				}
+				return err
 			} else {
-				fmt.Println(t.Ref + " configured")
+				if logger == nil {
+					fmt.Println(t.Ref + " configured")
+				} else {
+					logger.Info(t.Ref + " configured")
+				}
 			}
 		} else if t.Op == OpDelete {
 			if err != nil {
-				return fmt.Errorf("deleting %s failed: %s", t.Ref, err.Error())
+				err := fmt.Errorf("deleting %s failed: %s", t.Ref, err.Error())
+				if logger != nil {
+					logger.Error(err, err.Error())
+				}
+				return err
 			} else {
-				fmt.Println(t.Ref + " deleted")
+				if logger == nil {
+					fmt.Println(t.Ref + " deleted")
+				} else {
+					logger.Info(t.Ref + " deleted")
+				}
 			}
 		} else {
 			if err != nil {
-				return fmt.Errorf("BUG: should not happen")
+				err := fmt.Errorf("BUG: should not happen")
+				logger.Error(err, err.Error())
+				return err
 			} else {
 				if t.Op == Op404 {
-					fmt.Println(t.Ref + " not found")
+					if logger == nil {
+						fmt.Println(t.Ref + " not found")
+					} else {
+						logger.Info(t.Ref + " not found")
+					}
 				} else if t.Op == OpText {
-					fmt.Println(t.Ref + " unchanged (text)")
+					if logger == nil {
+						fmt.Println(t.Ref + " unchanged (text)")
+					} else {
+						logger.Info(t.Ref + " unchanged (text)")
+					}
 				} else {
-					fmt.Println(t.Ref + " unchanged")
+					if logger == nil {
+						fmt.Println(t.Ref + " unchanged")
+					} else {
+						logger.Info(t.Ref + " unchanged")
+					}
 				}
 			}
 		}

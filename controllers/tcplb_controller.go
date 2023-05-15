@@ -18,19 +18,23 @@ package controllers
 
 import (
 	"context"
+	"github.com/go-logr/logr"
+	v1 "k8s.io/api/core/v1"
+	"k8s.io/client-go/tools/record"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
+	m "github.com/vproxy-tools/vpctl/api/v1alpha1"
+	c "github.com/vproxy-tools/vpctl/pkg/vproxy_config"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	vproxyiov1alpha1 "github.com/vproxy-tools/vpctl/api/v1alpha1"
 )
 
 // TcpLbReconciler reconciles a TcpLb object
 type TcpLbReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme   *runtime.Scheme
+	recorder record.EventRecorder
 }
 
 //+kubebuilder:rbac:groups=vproxy.io.vproxy.io,resources=tcplbs,verbs=get;list;watch;create;update;patch;delete
@@ -46,17 +50,69 @@ type TcpLbReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
-func (r *TcpLbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+func (r *TcpLbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (res ctrl.Result, err error) {
+	logger := log.FromContext(ctx)
+	o := m.TcpLb{}
+	err = r.Get(ctx, req.NamespacedName, &o)
+	if err != nil {
+		return
+	}
+	res, err = r.reconcile(ctx, logger, &o)
+	if err != nil {
+		r.recorder.Eventf(&o, v1.EventTypeWarning, "ReconcileFailed", "reconcile failed: %v", err)
+		return
+	}
+	if !res.Requeue {
+		r.recorder.Eventf(&o, v1.EventTypeNormal, "ReconcileSucceeded", "reconcile succeeded")
+	}
+	return
+}
 
-	// TODO(user): your logic here
+func (r *TcpLbReconciler) reconcile(ctx context.Context, logger logr.Logger, o *m.TcpLb) (res ctrl.Result, err error) {
+	var todo []*c.Todo
 
-	return ctrl.Result{}, nil
+	if o.DeletionTimestamp != nil {
+		// need to be deleted
+		todo, err = c.DeleteByConfig([]c.Config{
+			&c.TcpLb{Base: formatResourceBase(o.ObjectMeta)},
+		})
+	} else {
+		err = addFinalizer(ctx, r.Client, o, &logger)
+		if err != nil {
+			return
+		}
+		apply := &c.TcpLb{
+			Base: formatResourceBase(o.ObjectMeta),
+		}
+		o.Spec.TcpLbSpec.DeepCopyInto(&apply.Spec)
+		addNsToResourceName(o.Namespace, &apply.Spec.Backend)
+		addNsToResourceNameList(o.Namespace, apply.Spec.ListOfCertKey)
+		addNsToResourceName(o.Namespace, &apply.Spec.SecurityGroup)
+		todo, err = c.ApplyByConfig([]c.Config{apply})
+	}
+
+	if err != nil {
+		return
+	}
+	err = c.RunTodoList(todo, &logger)
+	if err != nil {
+		return
+	}
+
+	if o.DeletionTimestamp != nil {
+		err = removeFinalizer(ctx, r.Client, o, &logger)
+		if err != nil {
+			return
+		}
+	}
+
+	return
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *TcpLbReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	r.recorder = mgr.GetEventRecorderFor("vpctl-controller")
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&vproxyiov1alpha1.TcpLb{}).
+		For(&m.Socks5Server{}).
 		Complete(r)
 }
