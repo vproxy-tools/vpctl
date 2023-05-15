@@ -85,6 +85,18 @@ type DnsServerSpec struct {
 	SecurityGroup string `json:"securityGroup" yaml:"securityGroup"`
 }
 
+func (o *DnsServerSpec) DeepCopyInto(out *DnsServerSpec) {
+	out.Address = o.Address
+	out.RRSets = o.RRSets
+	if o.TTL == nil {
+		out.TTL = nil
+	} else {
+		n := *o.TTL
+		out.TTL = &n
+	}
+	out.SecurityGroup = o.SecurityGroup
+}
+
 type DnsServer struct {
 	Base `yaml:",inline"`
 	Spec DnsServerSpec `json:"spec" yaml:"spec"`

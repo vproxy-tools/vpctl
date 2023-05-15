@@ -35,10 +35,19 @@ spec:
           spec:
             description: DnsServerSpec defines the desired state of DnsServer
             properties:
-              foo:
-                description: Foo is an example field of DnsServer. Edit dnsserver_types.go
-                  to remove/update
+              address:
                 type: string
+              rrsets:
+                type: string
+              securityGroup:
+                type: string
+              ttl:
+                type: integer
+            required:
+            - address
+            - rrsets
+            - securityGroup
+            - ttl
             type: object
           status:
             description: DnsServerStatus defines the observed state of DnsServer
