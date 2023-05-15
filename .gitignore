@@ -9,3 +9,4 @@ darwin_amd64
 /misc/dockerfiles/vpctl/controller
 /misc/dockerfiles/vpctl/vpctl
 /bin
+*.out

@@ -18,10 +18,7 @@ clean:
 	rm -f vpctl
 	rm -f vpctl-linux
 	rm -f vpctl_test
-	rm -f controller
-	rm -f controller-linux
 	rm -f misc/dockerfiles/vpctl/vpctl
-	rm -f misc/dockerfiles/vpctl/controller
 	rm -rf ./bin
 
 .PHONY: docker-vproxy-runtime
@@ -49,8 +46,6 @@ docker-vpctl:
 	docker rmi -f vproxyio/vpctl:latest
 	env GOOS=linux GOARCH=amd64 go build -o vpctl-linux cmd/vpctl/main.go
 	cp ./vpctl-linux misc/dockerfiles/vpctl/vpctl
-	env GOOS=linux GOARCH=amd64 go build -o controller-linux cmd/controller/main.go
-	cp ./controller-linux misc/dockerfiles/vpctl/controller
 	docker build --no-cache -t vproxyio/vpctl:latest ./misc/dockerfiles/vpctl
 
 # VERSION defines the project version for the bundle.
@@ -161,7 +156,7 @@ test: manifests generate fmt vet envtest ## Run tests.
 
 .PHONY: build
 build: manifests generate fmt vet ## Build manager binary.
-	go build -o bin/manager main.go
+	GOOS=linux GOARCH=amd64 go build -o bin/manager main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
@@ -171,7 +166,7 @@ run: manifests generate fmt vet ## Run a controller from your host.
 # (i.e. docker build --platform linux/arm64 ). However, you must enable docker buildKit for it.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
 .PHONY: docker-build
-docker-build: test ## Build docker image with the manager.
+docker-build: build test ## Build docker image with the manager.
 	docker build -t ${IMG} .
 
 .PHONY: docker-push
