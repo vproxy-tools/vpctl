@@ -1,9 +1,0 @@
----
-apiVersion: vproxy.io/v1alpha1
-kind: Socks5Server
-metadata:
-  name: socks5-001
-spec:
-  address: 127.0.0.1:50001
-  backend: ups001
-  allowNonBackend: false
