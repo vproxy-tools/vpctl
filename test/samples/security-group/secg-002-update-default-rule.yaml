@@ -1,5 +1,5 @@
 ---
-apiVersion: vproxy.io/v1alpha1
+apiVersion: app.vproxy.io/v1alpha1
 kind: SecurityGroup
 metadata:
   name: secg002
