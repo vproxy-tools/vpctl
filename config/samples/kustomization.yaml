@@ -5,4 +5,5 @@ resources:
 - vproxy.io_v1alpha1_dnsserver.yaml
 - vproxy.io_v1alpha1_upstream.yaml
 - vproxy.io_v1alpha1_servergroup.yaml
+- vproxy.io_v1alpha1_securitygroup.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
