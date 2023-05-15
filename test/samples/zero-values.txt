@@ -117,7 +117,6 @@ spec:
   serverGroups:
   - name: sg001
     weight: 0
-    annotations: {}
 ***********
 apply -f upstream/ups-weight-0.yaml
 Upstream:ups001 unchanged (text)
@@ -136,7 +135,6 @@ spec:
   serverGroups:
   - name: sg001
     weight: 10
-    annotations: {}
 ***********
 apply -f upstream/ups-weight-0.yaml
 Upstream/ServerGroup:ups001/sg001 configured
@@ -152,7 +150,6 @@ spec:
   serverGroups:
   - name: sg001
     weight: 0
-    annotations: {}
 ***********
 # create dns-server with ttl 0
 # update dns-server to ttl 0

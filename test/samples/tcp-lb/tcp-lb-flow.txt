@@ -47,7 +47,6 @@ spec:
   address: 127.0.0.1:50001
   backend: ups001
   protocol: tcp
-  listOfCertKey: []
   securityGroup: secg001
 ***********
 apply -f tcp-lb/tl001.yaml
@@ -125,7 +124,6 @@ spec:
   address: 127.0.0.1:50001
   backend: ups001
   protocol: tcp
-  listOfCertKey: []
   securityGroup: secg001
 
 ---

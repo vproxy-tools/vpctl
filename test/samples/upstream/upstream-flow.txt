@@ -32,7 +32,6 @@ spec:
   serverGroups:
   - name: sg001
     weight: 10
-    annotations: {}
 ***********
 delete ups ups001
 Upstream:ups001 deleted
@@ -60,10 +59,8 @@ spec:
   serverGroups:
   - name: sg001
     weight: 10
-    annotations: {}
   - name: sg002
     weight: 10
-    annotations: {}
 ***********
 apply -f upstream/ups002-update-sg.yaml
 Upstream/ServerGroup:ups002/sg001 configured
@@ -80,7 +77,6 @@ spec:
   serverGroups:
   - name: sg001
     weight: 5
-    annotations: {}
   - name: sg002
     weight: 10
     annotations:
@@ -133,10 +129,8 @@ spec:
   serverGroups:
   - name: sg001
     weight: 10
-    annotations: {}
   - name: sg002
     weight: 10
-    annotations: {}
 
 ---
 apiVersion: app.vproxy.io/v1alpha1
@@ -148,7 +142,6 @@ spec:
   serverGroups:
   - name: sg001
     weight: 10
-    annotations: {}
 ***********
 get ups ups002
 NAME     SERVER-GROUPS

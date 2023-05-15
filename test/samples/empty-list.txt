@@ -170,7 +170,6 @@ spec:
   serverGroups:
   - name: sg001
     weight: 10
-    annotations: {}
 ***********
 apply -f upstream/ups-empty-list.yaml
 Upstream/ServerGroup:ups001/sg001 deleted

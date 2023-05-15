@@ -49,7 +49,6 @@ spec:
   serverGroups:
   - name: sg001
     weight: 10
-    annotations: {}
 ***********
 apply -f upstream/ups-default.yaml
 Upstream:ups001 unchanged (text)
@@ -68,7 +67,6 @@ spec:
   address: 127.0.0.1:50001
   backend: ups001
   protocol: tcp
-  listOfCertKey: []
   securityGroup: (allow-all)
 ***********
 apply -f tcp-lb/tl-default.yaml
