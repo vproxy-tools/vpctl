@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const CurrentVersion = "vproxy.io/v1alpha1"
+const CurrentVersion = "app.vproxy.io/v1alpha1"
 
 var Versions = []string{
 	CurrentVersion,

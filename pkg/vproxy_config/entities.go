@@ -2,7 +2,7 @@ package vproxy_config
 
 import "fmt"
 
-const ApiVersion = "vproxy.io/v1alpha1"
+const ApiVersion = CurrentVersion
 
 type Config interface {
 	GetBase() Base

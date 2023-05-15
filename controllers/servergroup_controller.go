@@ -42,9 +42,9 @@ type ServerGroupReconciler struct {
 	hcChannel chan *c.HealthCheckEventChannelMessage
 }
 
-//+kubebuilder:rbac:groups=vproxy.io.vproxy.io,resources=servergroups,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=vproxy.io.vproxy.io,resources=servergroups/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=vproxy.io.vproxy.io,resources=servergroups/finalizers,verbs=update
+//+kubebuilder:rbac:groups=app.vproxy.io,resources=servergroups,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=app.vproxy.io,resources=servergroups/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=app.vproxy.io,resources=servergroups/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

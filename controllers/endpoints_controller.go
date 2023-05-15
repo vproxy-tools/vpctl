@@ -38,9 +38,9 @@ type EndpointsReconciler struct {
 	cache    *ObjectUsageCache
 }
 
-//+kubebuilder:rbac:groups=vproxy.io,resources=endpoints,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=vproxy.io,resources=endpoints/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=vproxy.io,resources=endpoints/finalizers,verbs=update
+//+kubebuilder:rbac:groups=,resources=endpoints,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=,resources=endpoints/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=,resources=endpoints/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

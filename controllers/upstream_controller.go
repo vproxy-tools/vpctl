@@ -38,9 +38,9 @@ type UpstreamReconciler struct {
 	recorder record.EventRecorder
 }
 
-//+kubebuilder:rbac:groups=vproxy.io.vproxy.io,resources=upstreams,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=vproxy.io.vproxy.io,resources=upstreams/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=vproxy.io.vproxy.io,resources=upstreams/finalizers,verbs=update
+//+kubebuilder:rbac:groups=app.vproxy.io,resources=upstreams,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=app.vproxy.io,resources=upstreams/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=app.vproxy.io,resources=upstreams/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
