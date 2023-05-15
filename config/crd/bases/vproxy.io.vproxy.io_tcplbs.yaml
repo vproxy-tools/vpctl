@@ -35,10 +35,24 @@ spec:
           spec:
             description: TcpLbSpec defines the desired state of TcpLb
             properties:
-              foo:
-                description: Foo is an example field of TcpLb. Edit tcplb_types.go
-                  to remove/update
+              address:
                 type: string
+              backend:
+                type: string
+              listOfCertKey:
+                items:
+                  type: string
+                type: array
+              protocol:
+                type: string
+              securityGroup:
+                type: string
+            required:
+            - address
+            - backend
+            - listOfCertKey
+            - protocol
+            - securityGroup
             type: object
           status:
             description: TcpLbStatus defines the observed state of TcpLb

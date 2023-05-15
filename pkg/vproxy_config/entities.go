@@ -33,6 +33,14 @@ type TcpLbSpec struct {
 	SecurityGroup string   `json:"securityGroup" yaml:"securityGroup"`
 }
 
+func (o *TcpLbSpec) DeepCopyInto(out *TcpLbSpec) {
+	out.Address = o.Address
+	out.Backend = o.Backend
+	out.Protocol = o.Protocol
+	out.ListOfCertKey = append([]string(nil), o.ListOfCertKey...)
+	out.SecurityGroup = o.SecurityGroup
+}
+
 type TcpLb struct {
 	Base `yaml:",inline"`
 	Spec TcpLbSpec `json:"spec" yaml:"spec"`
