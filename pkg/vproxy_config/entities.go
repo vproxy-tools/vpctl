@@ -263,9 +263,30 @@ type SecurityGroupRule struct {
 	Rule          string `json:"rule" yaml:"rule"`
 }
 
+func (o *SecurityGroupRule) DeepCopyInto(out *SecurityGroupRule) {
+	out.Name = o.Name
+	out.ClientNetwork = o.ClientNetwork
+	out.Protocol = o.Protocol
+	out.ServerPortMin = o.ServerPortMin
+	out.ServerPortMax = o.ServerPortMax
+	out.Rule = o.Rule
+}
+
 type SecurityGroupSpec struct {
 	DefaultRule string              `json:"defaultRule" yaml:"defaultRule"`
 	Rules       []SecurityGroupRule `json:"rules" yaml:"rules"`
+}
+
+func (o *SecurityGroupSpec) DeepCopyInto(out *SecurityGroupSpec) {
+	out.DefaultRule = o.DefaultRule
+	arr := make([]SecurityGroupRule, len(o.Rules))
+	for i, x := range o.Rules {
+		func(i int, x SecurityGroupRule) {
+			o := SecurityGroupRule{}
+			x.DeepCopyInto(&o)
+			arr[i] = o
+		}(i, x)
+	}
 }
 
 type SecurityGroup struct {

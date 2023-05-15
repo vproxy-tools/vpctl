@@ -35,10 +35,35 @@ spec:
           spec:
             description: SecurityGroupSpec defines the desired state of SecurityGroup
             properties:
-              foo:
-                description: Foo is an example field of SecurityGroup. Edit securitygroup_types.go
-                  to remove/update
+              defaultRule:
                 type: string
+              rules:
+                items:
+                  properties:
+                    clientNetwork:
+                      type: string
+                    name:
+                      type: string
+                    protocol:
+                      type: string
+                    rule:
+                      type: string
+                    serverPortMax:
+                      type: integer
+                    serverPortMin:
+                      type: integer
+                  required:
+                  - clientNetwork
+                  - name
+                  - protocol
+                  - rule
+                  - serverPortMax
+                  - serverPortMin
+                  type: object
+                type: array
+            required:
+            - defaultRule
+            - rules
             type: object
           status:
             description: SecurityGroupStatus defines the observed state of SecurityGroup
