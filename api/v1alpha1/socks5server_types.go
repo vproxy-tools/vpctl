@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	c "github.com/vproxy-tools/vpctl/pkg/vproxy_config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -28,8 +29,7 @@ type Socks5ServerSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Socks5Server. Edit socks5server_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	c.Socks5ServerSpec `json:",inline" yaml:",inline"`
 }
 
 // Socks5ServerStatus defines the observed state of Socks5Server

@@ -57,6 +57,18 @@ type Socks5ServerSpec struct {
 	AllowNonBackend *bool  `json:"allowNonBackend" yaml:"allowNonBackend"`
 }
 
+func (o *Socks5ServerSpec) DeepCopyInto(out *Socks5ServerSpec) {
+	out.Address = o.Address
+	out.Backend = o.Backend
+	out.SecurityGroup = o.SecurityGroup
+	if o.AllowNonBackend == nil {
+		out.AllowNonBackend = nil
+	} else {
+		b := *o.AllowNonBackend
+		out.AllowNonBackend = &b
+	}
+}
+
 type Socks5Server struct {
 	Base `yaml:",inline"`
 	Spec Socks5ServerSpec `json:"spec" yaml:"spec"`

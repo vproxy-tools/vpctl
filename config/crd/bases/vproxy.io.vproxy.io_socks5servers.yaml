@@ -35,10 +35,19 @@ spec:
           spec:
             description: Socks5ServerSpec defines the desired state of Socks5Server
             properties:
-              foo:
-                description: Foo is an example field of Socks5Server. Edit socks5server_types.go
-                  to remove/update
+              address:
                 type: string
+              allowNonBackend:
+                type: boolean
+              backend:
+                type: string
+              securityGroup:
+                type: string
+            required:
+            - address
+            - allowNonBackend
+            - backend
+            - securityGroup
             type: object
           status:
             description: Socks5ServerStatus defines the observed state of Socks5Server
