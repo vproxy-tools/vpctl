@@ -189,7 +189,7 @@ func initControllerName() {
 		return
 	}
 	controllerName = name
-	finalizer = "-" + name
+	finalizer = finalizer + "-" + name
 }
 
 func addFinalizer(ctx context.Context, client client.Client, o client.Object, logger *logr.Logger) error {

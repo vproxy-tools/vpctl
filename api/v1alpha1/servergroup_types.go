@@ -50,6 +50,13 @@ type ServerGroupStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
+	Instances []ServerGroupStatusEachInstance `json:"instances" yaml:"instances"`
+}
+
+type ServerGroupStatusEachInstance struct {
+	Name         string `json:"name" yaml:"name"`
+	LastUpdateTs int64  `json:"lastUpdateTs" yaml:"lastUpdateTs"`
+
 	c.ServerGroupStatus `json:",inline" yaml:",inline"`
 }
 

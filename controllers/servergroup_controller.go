@@ -141,11 +141,46 @@ func (r *ServerGroupReconciler) reconcile(ctx context.Context, logger logr.Logge
 		if sg == nil {
 			logger.Error(nil, "should not happen: ServerGroup "+name+" does not exist after config applied")
 		} else {
-			sg.Status.DeepCopyInto(&o.Status.ServerGroupStatus)
-			err = r.Client.Status().Update(ctx, o)
-			if err != nil {
-				logger.Error(err, "update status failed for ServerGroup "+o.Namespace+"/"+o.Name)
-				return
+			if controllerName == "" {
+				logger.Error(nil, "controller name is not provided, server group status cannot be updated")
+			} else {
+				// add or update status
+				idx := -1
+				for i := range o.Status.Instances {
+					if o.Status.Instances[i].Name == controllerName {
+						idx = i
+						break
+					}
+				}
+				s := m.ServerGroupStatusEachInstance{}
+				s.Name = controllerName
+				now := time.Now()
+				s.LastUpdateTs = now.UnixMilli()
+				sg.Status.DeepCopyInto(&s.ServerGroupStatus)
+				if idx == -1 {
+					o.Status.Instances = append(o.Status.Instances, s)
+				} else {
+					s.LastUpdateTs = o.Status.Instances[idx].LastUpdateTs
+					o.Status.Instances[idx] = s
+				}
+
+				// remove out-dated status
+				toRemove := []int{}
+				for i, s := range o.Status.Instances {
+					if now.UnixMilli()-s.LastUpdateTs > 24*60*60*1000 {
+						toRemove = append(toRemove, i)
+					}
+				}
+				for i := len(toRemove) - 1; i >= 0; i -= 1 {
+					o.Status.Instances = append(o.Status.Instances[:toRemove[i]], o.Status.Instances[toRemove[i]+1:]...)
+				}
+
+				// update status
+				err = r.Client.Status().Update(ctx, o)
+				if err != nil {
+					logger.Error(err, "update status failed for ServerGroup "+o.Namespace+"/"+o.Name)
+					return
+				}
 			}
 		}
 	}

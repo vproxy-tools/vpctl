@@ -80,35 +80,49 @@ spec:
           status:
             description: ServerGroupStatus defines the observed state of ServerGroup
             properties:
-              servers:
+              instances:
                 items:
                   properties:
-                    address:
-                      type: string
-                    cost:
+                    lastUpdateTs:
+                      format: int64
                       type: integer
-                    currentIp:
-                      type: string
-                    downReason:
-                      type: string
                     name:
                       type: string
-                    status:
-                      type: string
-                    weight:
-                      type: integer
+                    servers:
+                      items:
+                        properties:
+                          address:
+                            type: string
+                          cost:
+                            type: integer
+                          currentIp:
+                            type: string
+                          downReason:
+                            type: string
+                          name:
+                            type: string
+                          status:
+                            type: string
+                          weight:
+                            type: integer
+                        required:
+                        - address
+                        - cost
+                        - currentIp
+                        - downReason
+                        - name
+                        - status
+                        - weight
+                        type: object
+                      type: array
                   required:
-                  - address
-                  - cost
-                  - currentIp
-                  - downReason
+                  - lastUpdateTs
                   - name
-                  - status
-                  - weight
+                  - servers
                   type: object
                 type: array
             required:
-            - servers
+            - instances
             type: object
           syncId:
             type: integer
