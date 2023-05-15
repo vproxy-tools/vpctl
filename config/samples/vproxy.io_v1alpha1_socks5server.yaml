@@ -1,0 +1,12 @@
+apiVersion: vproxy.io.vproxy.io/v1alpha1
+kind: Socks5Server
+metadata:
+  labels:
+    app.kubernetes.io/name: socks5server
+    app.kubernetes.io/instance: socks5server-sample
+    app.kubernetes.io/part-of: controller
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: controller
+  name: socks5server-sample
+spec:
+  # TODO(user): Add fields here
