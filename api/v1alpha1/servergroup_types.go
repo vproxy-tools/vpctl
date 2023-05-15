@@ -29,7 +29,20 @@ type ServerGroupSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	c.ServerGroupSpec `json:",inline" yaml:",inline"`
+	c.ServerGroupSelfSpec `json:",inline" yaml:",inline"`
+	Servers               ServerInServerGroup `json:"servers" yaml:"servers"`
+}
+
+type ServerInServerGroup struct {
+	Endpoints []EndpointsServerConf `json:"endpoints" yaml:"endpoints"`
+}
+
+type EndpointsServerConf struct {
+	Name string `json:"name" yaml:"name"`
+	Port int    `json:"port" yaml:"port"`
+
+	//+optional
+	Weight *int `json:"weight,omitempty" yaml:"weight,omitempty"`
 }
 
 // ServerGroupStatus defines the observed state of ServerGroup
@@ -50,6 +63,9 @@ type ServerGroup struct {
 
 	Spec   ServerGroupSpec   `json:"spec,omitempty"`
 	Status ServerGroupStatus `json:"status,omitempty"`
+
+	//+optional
+	SyncId int `json:"syncId"`
 }
 
 //+kubebuilder:object:root=true

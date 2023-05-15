@@ -21,6 +21,8 @@ import (
 	"github.com/go-logr/logr"
 	c "github.com/vproxy-tools/vpctl/pkg/vproxy_config"
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -36,6 +38,8 @@ type ServerGroupReconciler struct {
 	client.Client
 	Scheme   *runtime.Scheme
 	recorder record.EventRecorder
+
+	hcChannel chan *c.HealthCheckEventChannelMessage
 }
 
 //+kubebuilder:rbac:groups=vproxy.io.vproxy.io,resources=servergroups,verbs=get;list;watch;create;update;patch;delete
@@ -85,8 +89,13 @@ func (r *ServerGroupReconciler) reconcile(ctx context.Context, logger logr.Logge
 		apply := &c.ServerGroup{
 			Base: formatResourceBase(o.ObjectMeta),
 		}
-		o.Spec.ServerGroupSpec.DeepCopyInto(&apply.Spec)
-		// TODO
+		o.Spec.ServerGroupSelfSpec.DeepCopyInto(&apply.Spec.ServerGroupSelfSpec)
+		var ss []c.StaticServer
+		var skip bool
+		if ss, skip, err = r.buildServers(ctx, o); err != nil || skip {
+			return
+		}
+		apply.Spec.Servers.Static = ss
 		todo, err = c.ApplyByConfig([]c.Config{apply})
 	}
 
@@ -103,6 +112,23 @@ func (r *ServerGroupReconciler) reconcile(ctx context.Context, logger logr.Logge
 		if err != nil {
 			return
 		}
+	} else {
+		var sg *c.ServerGroup
+		name := formatResourceName(o.Namespace, o.Name)
+		sg, err = c.GetServerGroup(name)
+		if err != nil {
+			return
+		}
+		if sg == nil {
+			logger.Error(nil, "should not happen: ServerGroup "+name+" does not exist after config applied")
+		} else {
+			sg.Status.DeepCopyInto(&o.Status.ServerGroupStatus)
+			err = r.Client.Status().Update(ctx, o)
+			if err != nil {
+				logger.Error(err, "update status failed for ServerGroup "+o.Namespace+"/"+o.Name)
+				return
+			}
+		}
 	}
 
 	return
@@ -114,4 +140,119 @@ func (r *ServerGroupReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&m.ServerGroup{}).
 		Complete(r)
+}
+
+func (r *ServerGroupReconciler) buildServers(ctx context.Context, o *m.ServerGroup) (ss []c.StaticServer, skip bool, err error) {
+	type tmp struct {
+		ep     *v1.Endpoints
+		port   int
+		weight int
+		size   int
+		addrs  []string
+
+		multiplier int
+	}
+	ls := []tmp{}
+	for _, x := range o.Spec.Servers.Endpoints {
+		ep := &v1.Endpoints{}
+		err = r.Get(ctx, types.NamespacedName{
+			Namespace: o.Namespace,
+			Name:      x.Name,
+		}, ep)
+		if err != nil {
+			if errors.IsNotFound(err) {
+				r.recorder.Eventf(o, v1.EventTypeWarning, "MissingDependentResource", "missing endpoints %s/%s", o.Namespace, x.Name)
+				err = nil
+				skip = true
+				return
+			}
+			return
+		}
+		addrs := []string{}
+		for _, s := range ep.Subsets {
+			for _, a := range s.Addresses {
+				if a.IP != "" {
+					addrs = append(addrs, a.IP)
+					break
+				}
+			}
+		}
+		if len(addrs) == 0 {
+			continue
+		}
+		var w int
+		if x.Weight == nil {
+			w = 1
+		} else {
+			w = *x.Weight
+		}
+		ls = append(ls, tmp{
+			ep:     ep,
+			port:   x.Port,
+			weight: w,
+			size:   len(addrs),
+			addrs:  addrs,
+
+			multiplier: 1,
+		})
+	}
+
+	ss = []c.StaticServer{}
+
+	if len(ls) == 0 {
+		return
+	}
+	if len(ls) == 1 {
+		w := 1
+		for _, a := range ls[0].addrs {
+			ss = append(ss, c.StaticServer{
+				Name:    a,
+				Address: a,
+				Weight:  &w,
+			})
+		}
+		return
+	}
+
+	for idx, x := range ls {
+		for _, y := range ls {
+			if x.ep == y.ep {
+				continue
+			}
+			x.multiplier *= y.size
+		}
+		ls[idx] = x
+	}
+
+	for _, e := range ls {
+		for _, a := range e.addrs {
+			func(w int) {
+				ss = append(ss, c.StaticServer{
+					Name:    a,
+					Address: a,
+					Weight:  &w,
+				})
+			}(e.weight * e.multiplier)
+		}
+	}
+
+	g := -1
+	for _, s := range ss {
+		if *s.Weight == 0 {
+			continue
+		}
+		if g == -1 {
+			g = *s.Weight
+		} else {
+			g = gcd(g, *s.Weight)
+		}
+	}
+	if g != -1 {
+		for idx, s := range ss {
+			func(w int) {
+				ss[idx].Weight = &w
+			}(*s.Weight / g)
+		}
+	}
+	return
 }

@@ -74,4 +74,8 @@ resources:
   kind: CertKey
   path: github.com/vproxy-tools/vpctl/api/v1alpha1
   version: v1alpha1
+- controller: true
+  domain: vproxy.io
+  kind: Endpoints
+  version: v1
 version: "3"

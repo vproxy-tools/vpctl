@@ -45,23 +45,22 @@ spec:
                 type: string
               servers:
                 properties:
-                  static:
+                  endpoints:
                     items:
                       properties:
-                        address:
-                          type: string
                         name:
                           type: string
+                        port:
+                          type: integer
                         weight:
                           type: integer
                       required:
-                      - address
                       - name
-                      - weight
+                      - port
                       type: object
                     type: array
                 required:
-                - static
+                - endpoints
                 type: object
               timeout:
                 type: integer
@@ -109,6 +108,8 @@ spec:
             required:
             - servers
             type: object
+          syncId:
+            type: integer
         type: object
     served: true
     storage: true
