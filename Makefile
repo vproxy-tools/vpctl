@@ -22,6 +22,7 @@ clean:
 	rm -f controller-linux
 	rm -f misc/dockerfiles/vpctl/vpctl
 	rm -f misc/dockerfiles/vpctl/controller
+	rm -rf ./bin
 
 .PHONY: docker-vproxy-runtime
 docker-vproxy-runtime:
