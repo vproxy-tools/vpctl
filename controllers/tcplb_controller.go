@@ -78,9 +78,7 @@ func (r *TcpLbReconciler) reconcile(ctx context.Context, logger logr.Logger, o *
 
 	if o.DeletionTimestamp != nil {
 		// need to be deleted
-		todo, err = c.DeleteByConfig([]c.Config{
-			&c.TcpLb{Base: formatResourceBase(o.ObjectMeta)},
-		})
+		todo, err = c.DeleteOne("CertKey", formatResourceName(o.Namespace, o.Name))
 	} else {
 		err = addFinalizer(ctx, r.Client, o, &logger)
 		if err != nil {
