@@ -1,0 +1,153 @@
+get socks5
+NAME   ADDRESS   BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+***********
+apply -f server-group/sg001-002.yaml
+ServerGroup:sg001 created
+ServerGroup/Server:sg001/svr1 created
+ServerGroup/Server:sg001/svr2 created
+ServerGroup:sg002 created
+ServerGroup/Server:sg002/svr1 created
+ServerGroup/Server:sg002/svr2 created
+***********
+apply -f upstream/ups001-002.yaml
+Upstream:ups001 created
+Upstream/ServerGroup:ups001/sg001 created
+Upstream:ups002 created
+Upstream/ServerGroup:ups002/sg001 created
+Upstream/ServerGroup:ups002/sg002 created
+***********
+apply -f security-group/secg-001-002.yaml
+SecurityGroup:secg001 created
+SecurityGroup/SecurityGroupRule:secg001/r001 created
+SecurityGroup/SecurityGroupRule:secg001/r002 created
+SecurityGroup:secg002 created
+SecurityGroup/SecurityGroupRule:secg002/work-area-http created
+SecurityGroup/SecurityGroupRule:secg002/work-area-https created
+SecurityGroup/SecurityGroupRule:secg002/public-dns created
+***********
+apply -f socks5-server/socks5-001.yaml
+Socks5Server:socks5-001 created
+***********
+get socks5
+NAME         ADDRESS           BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+socks5-001   127.0.0.1:50001   ups001    secg001          FALSE
+***********
+get socks5 socks5-001
+NAME         ADDRESS           BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+socks5-001   127.0.0.1:50001   ups001    secg001          FALSE
+***********
+get socks5 socks5-001 -o yaml
+---
+apiVersion: vproxy.io/v1alpha1
+kind: Socks5Server
+metadata:
+  name: socks5-001
+  annotations: {}
+spec:
+  address: 127.0.0.1:50001
+  backend: ups001
+  securityGroup: secg001
+  allowNonBackend: false
+***********
+delete socks5 socks5-001
+Socks5Server:socks5-001 deleted
+***********
+get socks5
+NAME   ADDRESS   BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+***********
+apply -f socks5-server/socks5-002.yaml
+Socks5Server:socks5-002 created
+***********
+get socks5 socks5-002
+NAME         ADDRESS           BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+socks5-002   127.0.0.1:50002   ups002    secg002          TRUE
+***********
+apply -f socks5-server/socks5-002-update-allow.yaml
+Socks5Server:socks5-002 configured
+***********
+get socks5 socks5-002
+NAME         ADDRESS           BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+socks5-002   127.0.0.1:50002   ups002    secg002          FALSE
+***********
+delete socks5 socks5-002
+Socks5Server:socks5-002 deleted
+***********
+apply -f socks5-server/socks5-002.yaml
+Socks5Server:socks5-002 created
+***********
+apply -f socks5-server/socks5-002-update-secg.yaml
+Socks5Server:socks5-002 configured
+***********
+get socks5 socks5-002
+NAME         ADDRESS           BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+socks5-002   127.0.0.1:50002   ups002    secg001          TRUE
+***********
+delete socks5 socks5-002
+Socks5Server:socks5-002 deleted
+***********
+apply -f socks5-server/socks5-001-002.yaml
+Socks5Server:socks5-001 created
+Socks5Server:socks5-002 created
+***********
+get socks5
+NAME         ADDRESS           BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+socks5-001   127.0.0.1:50001   ups001    secg001          FALSE
+socks5-002   127.0.0.1:50002   ups002    secg002          TRUE
+***********
+get socks5-server
+NAME         ADDRESS           BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+socks5-001   127.0.0.1:50001   ups001    secg001          FALSE
+socks5-002   127.0.0.1:50002   ups002    secg002          TRUE
+***********
+get Socks5Server
+NAME         ADDRESS           BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+socks5-001   127.0.0.1:50001   ups001    secg001          FALSE
+socks5-002   127.0.0.1:50002   ups002    secg002          TRUE
+***********
+get socks5 -o yaml
+---
+apiVersion: vproxy.io/v1alpha1
+kind: Socks5Server
+metadata:
+  name: socks5-001
+  annotations: {}
+spec:
+  address: 127.0.0.1:50001
+  backend: ups001
+  securityGroup: secg001
+  allowNonBackend: false
+
+---
+apiVersion: vproxy.io/v1alpha1
+kind: Socks5Server
+metadata:
+  name: socks5-002
+  annotations: {}
+spec:
+  address: 127.0.0.1:50002
+  backend: ups002
+  securityGroup: secg002
+  allowNonBackend: true
+***********
+delete -f socks5-server/socks5-001-002.yaml
+Socks5Server:socks5-001 deleted
+Socks5Server:socks5-002 deleted
+***********
+delete -f socks5-server/socks5-001-002.yaml
+Socks5Server:socks5-001 not found
+Socks5Server:socks5-002 not found
+***********
+get socks5
+NAME   ADDRESS   BACKEND   SECURITY-GROUP   ALLOW-NON-BACKEND
+***********
+delete -f upstream/ups001-002.yaml
+Upstream:ups001 deleted
+Upstream:ups002 deleted
+***********
+delete -f server-group/sg001-002.yaml
+ServerGroup:sg001 deleted
+ServerGroup:sg002 deleted
+***********
+delete -f security-group/secg-001-002.yaml
+SecurityGroup:secg001 deleted
+SecurityGroup:secg002 deleted

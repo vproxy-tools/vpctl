@@ -1,0 +1,12 @@
+---
+apiVersion: vproxy.io/v1alpha1
+kind: ServerGroup
+metadata:
+  name: sg001
+spec:
+  timeout: 1000
+  period: 5000
+  up: 2
+  down: 3
+  servers:
+    static: []

@@ -1,0 +1,41 @@
+---
+apiVersion: vproxy.io/v1alpha1
+kind: ServerGroup
+metadata:
+  name: sg001
+spec:
+  timeout: 1000
+  period: 5000
+  up: 2
+  down: 3
+  protocol: tcp
+  method: wrr
+  servers:
+    static:
+      - name: svr1
+        address: 127.0.0.1:10001
+        weight: 10
+      - name: svr2
+        address: 127.0.0.1:10002
+        weight: 10
+
+---
+apiVersion: vproxy.io/v1alpha1
+kind: ServerGroup
+metadata:
+  name: sg002
+spec:
+  timeout: 1000
+  period: 5000
+  up: 2
+  down: 3
+  protocol: tcp
+  method: wrr
+  servers:
+    static:
+      - name: svr1
+        address: 127.0.0.1:10001
+        weight: 10
+      - name: svr2
+        address: 127.0.0.1:10002
+        weight: 10

@@ -1,0 +1,10 @@
+---
+apiVersion: vproxy.io/v1alpha1
+kind: TcpLb
+metadata:
+  name: tl001
+spec:
+  address: 127.0.0.1:50001
+  backend: ups001
+  protocol: tcp
+  securityGroup: secg001

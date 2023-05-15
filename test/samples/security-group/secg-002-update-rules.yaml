@@ -1,0 +1,29 @@
+---
+apiVersion: vproxy.io/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: secg002
+spec:
+  defaultRule: deny
+  rules:
+    # removed: work-area-http
+    # unmodified:
+    - name: work-area-https
+      clientNetwork: 69.1.2.0/24
+      protocol: TCP
+      serverPortMin: 443
+      serverPortMax: 443
+      rule: allow
+    - name: public-dns
+      clientNetwork: 0.0.0.0/0
+      protocol: UDP
+      serverPortMin: 53
+      serverPortMax: 54 # updated
+      rule: deny # updated
+    # new:
+    - name: new-rule
+      clientNetwork: 1.2.3.4/32
+      protocol: TCP
+      serverPortMin: 443
+      serverPortMax: 443
+      rule: allow

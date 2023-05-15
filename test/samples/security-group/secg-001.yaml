@@ -1,0 +1,20 @@
+---
+apiVersion: vproxy.io/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: secg001
+spec:
+  defaultRule: allow
+  rules:
+    - name: r001
+      clientNetwork: 127.0.0.0/8
+      protocol: TCP
+      serverPortMin: 80
+      serverPortMax: 80
+      rule: deny
+    - name: r002
+      clientNetwork: 192.168.1.0/24
+      protocol: UDP
+      serverPortMin: 53
+      serverPortMax: 53
+      rule: deny

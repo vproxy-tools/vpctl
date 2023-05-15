@@ -1,0 +1,128 @@
+apply -f server-group/sg-default.yaml
+ServerGroup:sg001 created
+ServerGroup/Server:sg001/svr1 created
+***********
+get sg sg001 -o yaml
+---
+apiVersion: vproxy.io/v1alpha1
+kind: ServerGroup
+metadata:
+  name: sg001
+  annotations: {}
+spec:
+  timeout: 1000
+  period: 5000
+  up: 2
+  down: 3
+  protocol: tcp
+  method: wrr
+  servers:
+    static:
+    - name: svr1
+      address: 127.0.0.1:10001
+      weight: 10
+status:
+  servers:
+  - name: svr1
+    address: 127.0.0.1:10001
+    weight: 10
+    currentIp: 127.0.0.1
+    status: DOWN
+    cost: -1
+    downReason: 'ConnectException: Connection refused'
+***********
+apply -f server-group/sg-default.yaml
+ServerGroup:sg001 unchanged (text)
+***********
+apply -f upstream/ups-default.yaml
+Upstream:ups001 created
+Upstream/ServerGroup:ups001/sg001 created
+***********
+get ups ups001 -o yaml
+---
+apiVersion: vproxy.io/v1alpha1
+kind: Upstream
+metadata:
+  name: ups001
+  annotations: {}
+spec:
+  serverGroups:
+  - name: sg001
+    weight: 10
+    annotations: {}
+***********
+apply -f upstream/ups-default.yaml
+Upstream:ups001 unchanged (text)
+***********
+apply -f tcp-lb/tl-default.yaml
+TcpLb:tl001 created
+***********
+get tl tl001 -o yaml
+---
+apiVersion: vproxy.io/v1alpha1
+kind: TcpLb
+metadata:
+  name: tl001
+  annotations: {}
+spec:
+  address: 127.0.0.1:50001
+  backend: ups001
+  protocol: tcp
+  listOfCertKey: []
+  securityGroup: (allow-all)
+***********
+apply -f tcp-lb/tl-default.yaml
+TcpLb:tl001 unchanged
+***********
+apply -f socks5-server/socks5-default.yaml
+Socks5Server:socks5-001 created
+***********
+get socks5 socks5-001 -o yaml
+---
+apiVersion: vproxy.io/v1alpha1
+kind: Socks5Server
+metadata:
+  name: socks5-001
+  annotations: {}
+spec:
+  address: 127.0.0.1:40001
+  backend: ups001
+  securityGroup: (allow-all)
+  allowNonBackend: false
+***********
+apply -f socks5-server/socks5-default.yaml
+Socks5Server:socks5-001 unchanged
+***********
+apply -f dns-server/dns-default.yaml
+DnsServer:dns001 created
+***********
+get dns dns001 -o yaml
+---
+apiVersion: vproxy.io/v1alpha1
+kind: DnsServer
+metadata:
+  name: dns001
+  annotations: {}
+spec:
+  address: 127.0.0.1:23353
+  rrsets: ups001
+  ttl: 0
+  securityGroup: (allow-all)
+***********
+apply -f dns-server/dns-default.yaml
+DnsServer:dns001 unchanged
+***********
+delete -f tcp-lb/tl-default.yaml
+TcpLb:tl001 deleted
+***********
+delete -f socks5-server/socks5-default.yaml
+Socks5Server:socks5-001 deleted
+***********
+delete -f dns-server/dns-default.yaml
+DnsServer:dns001 deleted
+***********
+delete -f upstream/ups-default.yaml
+Upstream:ups001 deleted
+***********
+delete -f server-group/sg-default.yaml
+ServerGroup:sg001 deleted

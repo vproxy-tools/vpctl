@@ -1,0 +1,13 @@
+---
+apiVersion: vproxy.io/v1alpha1
+kind: Upstream
+metadata:
+  name: ups002
+spec:
+  serverGroups:
+    - name: sg001
+      weight: 5 # change weight
+    - name: sg002
+      weight: 10
+      annotations: # update annotations
+        host: example2.com
