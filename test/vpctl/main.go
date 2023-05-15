@@ -26,7 +26,6 @@ func main() {
 	byteArray, err := ioutil.ReadFile("./test/samples/samples.txt")
 	if err != nil {
 		panic(err)
-		return
 	}
 	fileListStr := string(byteArray)
 	fileList := strings.Split(fileListStr, "\n")
@@ -41,7 +40,6 @@ func main() {
 		byteArray, err = ioutil.ReadFile(path.Join("./test/samples/", filename))
 		if err != nil {
 			panic(err)
-			return
 		}
 		str := string(byteArray)
 		lines := strings.Split(str, "\n")
@@ -61,7 +59,6 @@ func main() {
 					if err != nil {
 						errMsg := fmt.Sprintf("test failed in file: %s, cmd: %s, err: %v", filename, cmd, err)
 						panic(errMsg)
-						return
 					}
 				}
 				state = 0
@@ -84,7 +81,6 @@ func main() {
 				break
 			default:
 				panic("should not reach here: state=" + strconv.FormatInt(int64(state), 10))
-				return
 			}
 		}
 	}
