@@ -1,0 +1,189 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - certkeys
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - certkeys/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - certkeys/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - dnsservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - dnsservers/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - dnsservers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - securitygroups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - securitygroups/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - securitygroups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - servergroups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - servergroups/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - servergroups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - socks5servers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - socks5servers/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - socks5servers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - tcplbs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - tcplbs/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - tcplbs/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - upstreams
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - upstreams/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - vproxy.io.vproxy.io
+  resources:
+  - upstreams/status
+  verbs:
+  - get
+  - patch
+  - update

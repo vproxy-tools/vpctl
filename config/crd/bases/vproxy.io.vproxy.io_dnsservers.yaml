@@ -1,0 +1,50 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: dnsservers.vproxy.io.vproxy.io
+spec:
+  group: vproxy.io.vproxy.io
+  names:
+    kind: DnsServer
+    listKind: DnsServerList
+    plural: dnsservers
+    singular: dnsserver
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: DnsServer is the Schema for the dnsservers API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DnsServerSpec defines the desired state of DnsServer
+            properties:
+              foo:
+                description: Foo is an example field of DnsServer. Edit dnsserver_types.go
+                  to remove/update
+                type: string
+            type: object
+          status:
+            description: DnsServerStatus defines the observed state of DnsServer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
