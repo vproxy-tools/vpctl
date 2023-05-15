@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	c "github.com/vproxy-tools/vpctl/pkg/vproxy_config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -28,8 +29,7 @@ type UpstreamSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Upstream. Edit upstream_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	c.UpstreamSpec `json:",inline" yaml:",inline"`
 }
 
 // UpstreamStatus defines the observed state of Upstream

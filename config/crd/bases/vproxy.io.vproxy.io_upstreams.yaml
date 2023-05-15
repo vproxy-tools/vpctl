@@ -35,10 +35,25 @@ spec:
           spec:
             description: UpstreamSpec defines the desired state of Upstream
             properties:
-              foo:
-                description: Foo is an example field of Upstream. Edit upstream_types.go
-                  to remove/update
-                type: string
+              serverGroups:
+                items:
+                  properties:
+                    annotations:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    name:
+                      type: string
+                    weight:
+                      type: integer
+                  required:
+                  - annotations
+                  - name
+                  - weight
+                  type: object
+                type: array
+            required:
+            - serverGroups
             type: object
           status:
             description: UpstreamStatus defines the observed state of Upstream

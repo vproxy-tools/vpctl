@@ -219,8 +219,30 @@ type ServerGroupInUpstream struct {
 	Annotations map[string]string `json:"annotations" yaml:"annotations"`
 }
 
+func (o *ServerGroupInUpstream) DeepCopyInto(out *ServerGroupInUpstream) {
+	out.Name = o.Name
+	out.Weight = o.Weight
+	m := map[string]string{}
+	for k, v := range o.Annotations {
+		m[k] = v
+	}
+	out.Annotations = m
+}
+
 type UpstreamSpec struct {
 	ServerGroups []ServerGroupInUpstream `json:"serverGroups" yaml:"serverGroups"`
+}
+
+func (o *UpstreamSpec) DeepCopyInto(out *UpstreamSpec) {
+	arr := make([]ServerGroupInUpstream, len(o.ServerGroups))
+	for i, x := range o.ServerGroups {
+		func(i int, x ServerGroupInUpstream) {
+			o := ServerGroupInUpstream{}
+			x.DeepCopyInto(&o)
+			arr[i] = o
+		}(i, x)
+	}
+	out.ServerGroups = arr
 }
 
 type Upstream struct {
