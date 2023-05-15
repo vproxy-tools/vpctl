@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	c "github.com/vproxy-tools/vpctl/pkg/vproxy_config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -28,14 +29,15 @@ type CertKeySpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of CertKey. Edit certkey_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	c.CertKeySpec `json:",inline" yaml:",inline"`
 }
 
 // CertKeyStatus defines the observed state of CertKey
 type CertKeyStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	c.CertKeyStatus `json:",inline" yaml:",inline"`
 }
 
 //+kubebuilder:object:root=true

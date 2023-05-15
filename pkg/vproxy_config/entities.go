@@ -303,14 +303,37 @@ type PemCertKey struct {
 	Key   string   `json:"key" yaml:"key"`
 }
 
+func (o *PemCertKey) DeepCopyInto(out *PemCertKey) {
+	arr := make([]string, len(o.Certs))
+	for i, s := range o.Certs {
+		arr[i] = s
+	}
+	out.Certs = arr
+	out.Key = o.Key
+}
+
 type CertKeySpec struct {
 	Pem PemCertKey `json:"pem" yaml:"pem"`
+}
+
+func (o *CertKeySpec) DeepCopyInto(out *CertKeySpec) {
+	o.Pem.DeepCopyInto(&out.Pem)
 }
 
 type CertKeyStatus struct {
 	CertFiles []string `json:"certs" yaml:"certs"`
 	KeyFile   string   `json:"key" yaml:"key"`
 	KeySHA1   string   `json:"keySHA1" yaml:"keySHA1"`
+}
+
+func (o *CertKeyStatus) DeepCopyInto(out *CertKeyStatus) {
+	arr := make([]string, len(o.CertFiles))
+	for i, s := range o.CertFiles {
+		arr[i] = s
+	}
+	out.CertFiles = arr
+	out.KeyFile = o.KeyFile
+	out.KeySHA1 = o.KeySHA1
 }
 
 type CertKey struct {

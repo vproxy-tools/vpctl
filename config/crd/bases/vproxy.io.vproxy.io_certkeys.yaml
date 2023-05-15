@@ -35,13 +35,36 @@ spec:
           spec:
             description: CertKeySpec defines the desired state of CertKey
             properties:
-              foo:
-                description: Foo is an example field of CertKey. Edit certkey_types.go
-                  to remove/update
-                type: string
+              pem:
+                properties:
+                  certs:
+                    items:
+                      type: string
+                    type: array
+                  key:
+                    type: string
+                required:
+                - certs
+                - key
+                type: object
+            required:
+            - pem
             type: object
           status:
             description: CertKeyStatus defines the observed state of CertKey
+            properties:
+              certs:
+                items:
+                  type: string
+                type: array
+              key:
+                type: string
+              keySHA1:
+                type: string
+            required:
+            - certs
+            - key
+            - keySHA1
             type: object
         type: object
     served: true
