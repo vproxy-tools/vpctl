@@ -66,6 +66,10 @@ func (r *ServerGroupReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	o := m.ServerGroup{}
 	err = r.Get(ctx, req.NamespacedName, &o)
 	if err != nil {
+		if errors.IsNotFound(err) {
+			err = nil
+			return
+		}
 		return
 	}
 	res, err = r.reconcile(ctx, logger, &o)

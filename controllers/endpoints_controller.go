@@ -21,6 +21,7 @@ import (
 	"github.com/go-logr/logr"
 	m "github.com/vproxy-tools/vpctl/api/v1alpha1"
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 
@@ -56,6 +57,10 @@ func (r *EndpointsReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	o := v1.Endpoints{}
 	err = r.Get(ctx, req.NamespacedName, &o)
 	if err != nil {
+		if errors.IsNotFound(err) {
+			err = nil
+			return
+		}
 		return
 	}
 	res, err = r.reconcile(ctx, logger, &o)

@@ -20,6 +20,7 @@ import (
 	"context"
 	"github.com/go-logr/logr"
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
@@ -55,6 +56,10 @@ func (r *TcpLbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (res 
 	o := m.TcpLb{}
 	err = r.Get(ctx, req.NamespacedName, &o)
 	if err != nil {
+		if errors.IsNotFound(err) {
+			err = nil
+			return
+		}
 		return
 	}
 	res, err = r.reconcile(ctx, logger, &o)

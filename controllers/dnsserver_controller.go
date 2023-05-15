@@ -21,6 +21,7 @@ import (
 	"github.com/go-logr/logr"
 	c "github.com/vproxy-tools/vpctl/pkg/vproxy_config"
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/client-go/tools/record"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -56,6 +57,10 @@ func (r *DnsServerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	o := m.DnsServer{}
 	err = r.Get(ctx, req.NamespacedName, &o)
 	if err != nil {
+		if errors.IsNotFound(err) {
+			err = nil
+			return
+		}
 		return
 	}
 	res, err = r.reconcile(ctx, logger, &o)
