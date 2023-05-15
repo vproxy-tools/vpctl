@@ -16,7 +16,7 @@ resources:
     namespaced: true
   controller: true
   domain: vproxy.io
-  group: vproxy.io
+  group: app
   kind: TcpLb
   path: github.com/vproxy-tools/vpctl/api/v1alpha1
   version: v1alpha1
@@ -25,7 +25,7 @@ resources:
     namespaced: true
   controller: true
   domain: vproxy.io
-  group: vproxy.io
+  group: app
   kind: Socks5Server
   path: github.com/vproxy-tools/vpctl/api/v1alpha1
   version: v1alpha1
@@ -34,7 +34,7 @@ resources:
     namespaced: true
   controller: true
   domain: vproxy.io
-  group: vproxy.io
+  group: app
   kind: DnsServer
   path: github.com/vproxy-tools/vpctl/api/v1alpha1
   version: v1alpha1
@@ -43,7 +43,7 @@ resources:
     namespaced: true
   controller: true
   domain: vproxy.io
-  group: vproxy.io
+  group: app
   kind: Upstream
   path: github.com/vproxy-tools/vpctl/api/v1alpha1
   version: v1alpha1
@@ -52,7 +52,7 @@ resources:
     namespaced: true
   controller: true
   domain: vproxy.io
-  group: vproxy.io
+  group: app
   kind: ServerGroup
   path: github.com/vproxy-tools/vpctl/api/v1alpha1
   version: v1alpha1
@@ -61,7 +61,7 @@ resources:
     namespaced: true
   controller: true
   domain: vproxy.io
-  group: vproxy.io
+  group: app
   kind: SecurityGroup
   path: github.com/vproxy-tools/vpctl/api/v1alpha1
   version: v1alpha1
@@ -70,7 +70,7 @@ resources:
     namespaced: true
   controller: true
   domain: vproxy.io
-  group: vproxy.io
+  group: app
   kind: CertKey
   path: github.com/vproxy-tools/vpctl/api/v1alpha1
   version: v1alpha1

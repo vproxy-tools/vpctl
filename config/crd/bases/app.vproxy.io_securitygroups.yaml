@@ -5,20 +5,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.1
   creationTimestamp: null
-  name: certkeys.vproxy.io.vproxy.io
+  name: securitygroups.app.vproxy.io
 spec:
-  group: vproxy.io.vproxy.io
+  group: app.vproxy.io
   names:
-    kind: CertKey
-    listKind: CertKeyList
-    plural: certkeys
-    singular: certkey
+    kind: SecurityGroup
+    listKind: SecurityGroupList
+    plural: securitygroups
+    singular: securitygroup
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: CertKey is the Schema for the certkeys API
+        description: SecurityGroup is the Schema for the securitygroups API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,38 +33,40 @@ spec:
           metadata:
             type: object
           spec:
-            description: CertKeySpec defines the desired state of CertKey
+            description: SecurityGroupSpec defines the desired state of SecurityGroup
             properties:
-              pem:
-                properties:
-                  certs:
-                    items:
+              defaultRule:
+                type: string
+              rules:
+                items:
+                  properties:
+                    clientNetwork:
                       type: string
-                    type: array
-                  key:
-                    type: string
-                required:
-                - certs
-                - key
-                type: object
+                    name:
+                      type: string
+                    protocol:
+                      type: string
+                    rule:
+                      type: string
+                    serverPortMax:
+                      type: integer
+                    serverPortMin:
+                      type: integer
+                  required:
+                  - clientNetwork
+                  - name
+                  - protocol
+                  - rule
+                  - serverPortMax
+                  - serverPortMin
+                  type: object
+                type: array
             required:
-            - pem
+            - defaultRule
+            - rules
             type: object
           status:
-            description: CertKeyStatus defines the observed state of CertKey
-            properties:
-              certs:
-                items:
-                  type: string
-                type: array
-              key:
-                type: string
-              keySHA1:
-                type: string
-            required:
-            - certs
-            - key
-            - keySHA1
+            description: SecurityGroupStatus defines the observed state of SecurityGroup
             type: object
         type: object
     served: true

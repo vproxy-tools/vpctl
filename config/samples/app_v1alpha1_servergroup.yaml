@@ -1,12 +1,12 @@
-apiVersion: vproxy.io.vproxy.io/v1alpha1
-kind: CertKey
+apiVersion: app.vproxy.io/v1alpha1
+kind: ServerGroup
 metadata:
   labels:
-    app.kubernetes.io/name: certkey
-    app.kubernetes.io/instance: certkey-sample
+    app.kubernetes.io/name: servergroup
+    app.kubernetes.io/instance: servergroup-sample
     app.kubernetes.io/part-of: controller
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: controller
-  name: certkey-sample
+  name: servergroup-sample
 spec:
   # TODO(user): Add fields here

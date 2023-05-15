@@ -5,9 +5,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.1
   creationTimestamp: null
-  name: servergroups.vproxy.io.vproxy.io
+  name: servergroups.app.vproxy.io
 spec:
-  group: vproxy.io.vproxy.io
+  group: app.vproxy.io
   names:
     kind: ServerGroup
     listKind: ServerGroupList

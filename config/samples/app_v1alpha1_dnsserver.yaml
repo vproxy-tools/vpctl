@@ -1,12 +1,12 @@
-apiVersion: vproxy.io.vproxy.io/v1alpha1
-kind: TcpLb
+apiVersion: app.vproxy.io/v1alpha1
+kind: DnsServer
 metadata:
   labels:
-    app.kubernetes.io/name: tcplb
-    app.kubernetes.io/instance: tcplb-sample
+    app.kubernetes.io/name: dnsserver
+    app.kubernetes.io/instance: dnsserver-sample
     app.kubernetes.io/part-of: controller
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: controller
-  name: tcplb-sample
+  name: dnsserver-sample
 spec:
   # TODO(user): Add fields here

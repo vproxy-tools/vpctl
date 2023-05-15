@@ -5,20 +5,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.1
   creationTimestamp: null
-  name: securitygroups.vproxy.io.vproxy.io
+  name: socks5servers.app.vproxy.io
 spec:
-  group: vproxy.io.vproxy.io
+  group: app.vproxy.io
   names:
-    kind: SecurityGroup
-    listKind: SecurityGroupList
-    plural: securitygroups
-    singular: securitygroup
+    kind: Socks5Server
+    listKind: Socks5ServerList
+    plural: socks5servers
+    singular: socks5server
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SecurityGroup is the Schema for the securitygroups API
+        description: Socks5Server is the Schema for the socks5servers API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,40 +33,24 @@ spec:
           metadata:
             type: object
           spec:
-            description: SecurityGroupSpec defines the desired state of SecurityGroup
+            description: Socks5ServerSpec defines the desired state of Socks5Server
             properties:
-              defaultRule:
+              address:
                 type: string
-              rules:
-                items:
-                  properties:
-                    clientNetwork:
-                      type: string
-                    name:
-                      type: string
-                    protocol:
-                      type: string
-                    rule:
-                      type: string
-                    serverPortMax:
-                      type: integer
-                    serverPortMin:
-                      type: integer
-                  required:
-                  - clientNetwork
-                  - name
-                  - protocol
-                  - rule
-                  - serverPortMax
-                  - serverPortMin
-                  type: object
-                type: array
+              allowNonBackend:
+                type: boolean
+              backend:
+                type: string
+              securityGroup:
+                type: string
             required:
-            - defaultRule
-            - rules
+            - address
+            - allowNonBackend
+            - backend
+            - securityGroup
             type: object
           status:
-            description: SecurityGroupStatus defines the observed state of SecurityGroup
+            description: Socks5ServerStatus defines the observed state of Socks5Server
             type: object
         type: object
     served: true

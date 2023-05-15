@@ -2,13 +2,13 @@
 # since it depends on service name and namespace that are out of this kustomize package.
 # It should be run by config/default
 resources:
-- bases/vproxy.io.vproxy.io_tcplbs.yaml
-- bases/vproxy.io.vproxy.io_socks5servers.yaml
-- bases/vproxy.io.vproxy.io_dnsservers.yaml
-- bases/vproxy.io.vproxy.io_upstreams.yaml
-- bases/vproxy.io.vproxy.io_servergroups.yaml
-- bases/vproxy.io.vproxy.io_securitygroups.yaml
-- bases/vproxy.io.vproxy.io_certkeys.yaml
+- bases/app.vproxy.io_tcplbs.yaml
+- bases/app.vproxy.io_socks5servers.yaml
+- bases/app.vproxy.io_dnsservers.yaml
+- bases/app.vproxy.io_upstreams.yaml
+- bases/app.vproxy.io_servergroups.yaml
+- bases/app.vproxy.io_securitygroups.yaml
+- bases/app.vproxy.io_certkeys.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
 patchesStrategicMerge:

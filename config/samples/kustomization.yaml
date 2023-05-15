@@ -1,10 +1,10 @@
 ## Append samples you want in your CSV to this file as resources ##
 resources:
-- vproxy.io_v1alpha1_tcplb.yaml
-- vproxy.io_v1alpha1_socks5server.yaml
-- vproxy.io_v1alpha1_dnsserver.yaml
-- vproxy.io_v1alpha1_upstream.yaml
-- vproxy.io_v1alpha1_servergroup.yaml
-- vproxy.io_v1alpha1_securitygroup.yaml
-- vproxy.io_v1alpha1_certkey.yaml
+- app_v1alpha1_tcplb.yaml
+- app_v1alpha1_socks5server.yaml
+- app_v1alpha1_dnsserver.yaml
+- app_v1alpha1_upstream.yaml
+- app_v1alpha1_servergroup.yaml
+- app_v1alpha1_securitygroup.yaml
+- app_v1alpha1_certkey.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

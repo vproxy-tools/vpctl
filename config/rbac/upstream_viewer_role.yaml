@@ -12,7 +12,7 @@ metadata:
   name: upstream-viewer-role
 rules:
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - upstreams
   verbs:
@@ -20,7 +20,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - upstreams/status
   verbs:

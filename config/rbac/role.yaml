@@ -5,9 +5,7 @@ metadata:
   creationTimestamp: null
   name: manager-role
 rules:
-- apiGroups:
-  - ""
-  resources:
+- resources:
   - endpoints
   verbs:
   - create
@@ -17,22 +15,18 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-  - ""
-  resources:
+- resources:
   - endpoints/finalizers
   verbs:
   - update
-- apiGroups:
-  - ""
-  resources:
+- resources:
   - endpoints/status
   verbs:
   - get
   - patch
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - certkeys
   verbs:
@@ -44,13 +38,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - certkeys/finalizers
   verbs:
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - certkeys/status
   verbs:
@@ -58,7 +52,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - dnsservers
   verbs:
@@ -70,13 +64,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - dnsservers/finalizers
   verbs:
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - dnsservers/status
   verbs:
@@ -84,7 +78,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - securitygroups
   verbs:
@@ -96,13 +90,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - securitygroups/finalizers
   verbs:
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - securitygroups/status
   verbs:
@@ -110,7 +104,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - servergroups
   verbs:
@@ -122,13 +116,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - servergroups/finalizers
   verbs:
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - servergroups/status
   verbs:
@@ -136,7 +130,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - socks5servers
   verbs:
@@ -148,13 +142,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - socks5servers/finalizers
   verbs:
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - socks5servers/status
   verbs:
@@ -162,7 +156,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - tcplbs
   verbs:
@@ -174,13 +168,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - tcplbs/finalizers
   verbs:
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - tcplbs/status
   verbs:
@@ -188,7 +182,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - upstreams
   verbs:
@@ -200,13 +194,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - upstreams/finalizers
   verbs:
   - update
 - apiGroups:
-  - vproxy.io.vproxy.io
+  - app.vproxy.io
   resources:
   - upstreams/status
   verbs:

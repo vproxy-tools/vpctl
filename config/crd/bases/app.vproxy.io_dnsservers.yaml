@@ -5,9 +5,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.1
   creationTimestamp: null
-  name: dnsservers.vproxy.io.vproxy.io
+  name: dnsservers.app.vproxy.io
 spec:
-  group: vproxy.io.vproxy.io
+  group: app.vproxy.io
   names:
     kind: DnsServer
     listKind: DnsServerList

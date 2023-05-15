@@ -2,7 +2,7 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: socks5servers.vproxy.io.vproxy.io
+  name: socks5servers.app.vproxy.io
 spec:
   conversion:
     strategy: Webhook
