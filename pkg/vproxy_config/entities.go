@@ -2,6 +2,8 @@ package vproxy_config
 
 import "fmt"
 
+const ApiVersion = "vproxy.io/v1alpha1"
+
 type Config interface {
 	GetBase() Base
 	Validate() error
@@ -47,7 +49,10 @@ type TcpLb struct {
 }
 
 func (o *TcpLb) GetBase() Base {
-	return o.Base
+	ret := o.Base
+	ret.ApiVersion = ApiVersion
+	ret.Kind = "TcpLb"
+	return ret
 }
 
 type Socks5ServerSpec struct {
@@ -75,7 +80,10 @@ type Socks5Server struct {
 }
 
 func (o *Socks5Server) GetBase() Base {
-	return o.Base
+	ret := o.Base
+	ret.ApiVersion = ApiVersion
+	ret.Kind = "Socks5Server"
+	return ret
 }
 
 type DnsServerSpec struct {
@@ -103,7 +111,10 @@ type DnsServer struct {
 }
 
 func (o *DnsServer) GetBase() Base {
-	return o.Base
+	ret := o.Base
+	ret.ApiVersion = ApiVersion
+	ret.Kind = "DnsServer"
+	return ret
 }
 
 type StaticServer struct {
@@ -210,7 +221,10 @@ type ServerGroup struct {
 }
 
 func (o *ServerGroup) GetBase() Base {
-	return o.Base
+	ret := o.Base
+	ret.ApiVersion = ApiVersion
+	ret.Kind = "ServerGroup"
+	return ret
 }
 
 type ServerGroupInUpstream struct {
@@ -251,7 +265,10 @@ type Upstream struct {
 }
 
 func (o *Upstream) GetBase() Base {
-	return o.Base
+	ret := o.Base
+	ret.ApiVersion = ApiVersion
+	ret.Kind = "Upstream"
+	return ret
 }
 
 type SecurityGroupRule struct {
@@ -295,7 +312,10 @@ type SecurityGroup struct {
 }
 
 func (o *SecurityGroup) GetBase() Base {
-	return o.Base
+	ret := o.Base
+	ret.ApiVersion = ApiVersion
+	ret.Kind = "SecurityGroup"
+	return ret
 }
 
 type PemCertKey struct {
@@ -343,7 +363,10 @@ type CertKey struct {
 }
 
 func (o *CertKey) GetBase() Base {
-	return o.Base
+	ret := o.Base
+	ret.ApiVersion = ApiVersion
+	ret.Kind = "CertKey"
+	return ret
 }
 
 func NewEntity(kind string) (Config, error) {
