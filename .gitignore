@@ -10,3 +10,5 @@ darwin_amd64
 /misc/dockerfiles/vpctl/vpctl
 /bin
 *.out
+
+!misc/dockerfiles/vproxy-compile/modify-gradle-compiler-args-agent.jar
