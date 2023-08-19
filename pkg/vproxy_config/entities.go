@@ -446,7 +446,12 @@ func idxInTypeOrder(kind string) int {
 func (arr ConfigSortingArrayForApplying) Less(i, j int) bool {
 	a := arr[i]
 	b := arr[j]
-	return idxInTypeOrder(a.GetBase().Kind) < idxInTypeOrder(b.GetBase().Kind)
+	if idxInTypeOrder(a.GetBase().Kind) < idxInTypeOrder(b.GetBase().Kind) {
+		return true
+	} else if idxInTypeOrder(a.GetBase().Kind) > idxInTypeOrder(b.GetBase().Kind) {
+		return false
+	}
+	return a.GetBase().Metadata.Name < b.GetBase().Metadata.Name
 }
 
 func (arr ConfigSortingArrayForApplying) Swap(i, j int) {
