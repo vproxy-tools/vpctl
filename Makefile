@@ -10,6 +10,9 @@ all: clean main vpctl_test docker-vpctl docker-vproxy build
 .PHONY: vpctl
 vpctl:
 	go build -o vpctl cmd/vpctl/main.go
+.PHONY: vpctl-linux
+vpctl-linux:
+	GOOS="linux" go build -o vpctl-linux cmd/vpctl/main.go
 .PHONY: vpctl_test
 vpctl_test: vpctl
 	go build -o vpctl_test test/vpctl/main.go
@@ -163,7 +166,7 @@ docker-clean:
 # (i.e. docker build --platform linux/arm64 ). However, you must enable docker buildKit for it.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
 .PHONY: docker-build
-docker-build: docker-clean build ## Build docker image with the manager.
+docker-build: docker-clean build vpctl-linux ## Build docker image with the manager.
 	docker build -t ${IMG} .
 
 .PHONY: docker-push
