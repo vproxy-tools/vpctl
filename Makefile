@@ -18,7 +18,6 @@ clean:
 	rm -f vpctl
 	rm -f vpctl-linux
 	rm -f vpctl_test
-	rm -f misc/dockerfiles/vpctl/vpctl
 	rm -rf ./bin
 
 .PHONY: docker-vproxy-runtime
@@ -40,13 +39,6 @@ docker-vproxy-compile:
 docker-vproxy-test:
 	docker rmi -f vproxyio/test:latest
 	docker build --no-cache -t vproxyio/test:latest ./misc/dockerfiles/vproxy-test
-
-.PHONY: docker-vpctl
-docker-vpctl:
-	docker rmi -f vproxyio/vpctl:latest
-	env GOOS=linux GOARCH=amd64 go build -o vpctl-linux cmd/vpctl/main.go
-	cp ./vpctl-linux misc/dockerfiles/vpctl/vpctl
-	docker build --no-cache -t vproxyio/vpctl:latest ./misc/dockerfiles/vpctl
 
 # VERSION defines the project version for the bundle.
 # Update this value when you upgrade the version of your project.

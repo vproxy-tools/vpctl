@@ -6,8 +6,6 @@
 /controller-linux
 darwin_amd64
 .DS_Store
-/misc/dockerfiles/vpctl/controller
-/misc/dockerfiles/vpctl/vpctl
 /bin
 *.out
 
