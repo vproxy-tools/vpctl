@@ -4,10 +4,12 @@ This is a tool for controlling the local vproxy instance both on command line an
 
 ## compile
 
+You need at least Go 1.19 to compile the project.
+
 ```bash
 make clean
-make vpctl   # command line
-make build   # k8s controller
+make vpctl        # command line
+make docker-build # k8s controller
 ```
 
 ## usage
@@ -50,6 +52,9 @@ After the configuration, you may use various ways to access the vproxy gateway:
 kubectl -n vproxy-system exec -it --container=controller `kubectl -n vproxy-system get pod | grep vproxy-gateway | grep Running | awk '{print $1}'` /bin/bash
 # inside the container, you can run these commands multiple times:
 /vpctl get TcpLb
+
+# you can attach a debug container into the vproxy-gateway pod:
+# kubectl debug -n vproxy-system -it --image="$IMAGE" `kubectl -n vproxy-system get pod | grep vproxy-gateway | grep Running | awk '{print $1}'` -- sh
 curl 127.0.0.1
 curl -H 'Host: example.com' 127.0.0.1
 curl -H 'Host: example2.com' 127.0.0.1
@@ -119,7 +124,7 @@ We defined a few CRDs (Custom Resource Definitions) to integrate vproxy into Kub
 
 1. The pods may change at any time, so the static address configuration for `ServerGroup` would be useless. As a result, we let users to set k8s `Endpoints` in the `ServerGroup` resource, you may refer to the [cr-example.yaml#L54](https://github.com/vproxy-tools/vpctl/blob/master/misc/cr-example.yaml#L54). Addresses are dynamically updated according to the `Endpoints` resources. You can create a `Service` resource with the `selectors` field to let k8s automatically find pods based on their labels.
 
-When using the vproxy gateway, you must put the gateway pods inside namespace `vproxy` and add labels `vproxy-app: controller` to it. Also the env variable `VPROXY_CONTROLLER_NAME` of the controller container must be set to the pod name. Finalizers will be added and removed based on the env variable and existing controller pods.
+When using the vproxy gateway, you must put the gateway pods inside namespace `vproxy-system` and add labels `vproxy-app: controller` to it. Also the env variable `VPROXY_CONTROLLER_NAME` of the controller container must be set to the pod name. Finalizers will be added and removed based on the env variable and existing controller pods.
 
 ## examples
 
