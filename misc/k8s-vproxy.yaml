@@ -294,7 +294,7 @@ spec:
         image: vproxyio/controller:latest
         imagePullPolicy: IfNotPresent
         args:
-        - --leader-elect
+        - --leader-elect=false
         env:
         - name: VPROXY_CONTROLLER_NAME
           valueFrom:
