@@ -8,5 +8,3 @@ darwin_amd64
 .DS_Store
 /bin
 *.out
-
-!misc/dockerfiles/vproxy-compile/modify-gradle-compiler-args-agent.jar
