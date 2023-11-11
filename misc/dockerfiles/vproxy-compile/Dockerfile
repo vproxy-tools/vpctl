@@ -1,9 +1,19 @@
 FROM vproxyio/base:latest
 
-RUN wget https://download.java.net/java/GA/jdk21/fd2272bbf8e04c3dbaee13770090416c/35/GPL/openjdk-21_linux-x64_bin.tar.gz && tar zxf openjdk-21_linux-x64_bin.tar.gz && rm -f openjdk-21_linux-x64_bin.tar.gz
+RUN apt update
+RUN apt install -y wget apt-transport-https
+RUN mkdir -p /etc/apt/keyrings
+RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
+RUN echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+RUN apt update
+RUN apt install -y temurin-21-jdk
 
-ENV JAVA_HOME="/jdk-21"
-ENV PATH="${PATH}:/jdk-21/bin"
+ENV JAVA_HOME="/usr/lib/jvm/temurin-21-jdk-amd64"
+
+RUN apt-get install -y software-properties-common
+RUN apt-add-repository -y ppa:lttng/stable-2.13
+RUN apt-get update
+RUN apt-get install -y cmake build-essential liblttng-ust-dev lttng-tools
 
 RUN mkdir -p /gradle/gradle/wrapper
 ADD gradlew                   /gradle/gradlew
@@ -12,4 +22,5 @@ ADD gradle-wrapper.properties /gradle/gradle/wrapper/gradle-wrapper.properties
 RUN cd /gradle && chmod +x ./gradlew && ./gradlew --version
 
 RUN mkdir /vproxy
+RUN mkdir /msquic
 WORKDIR /vproxy
