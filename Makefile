@@ -2,6 +2,7 @@ SHELL := /bin/bash
 .DEFAULT: main
 
 OS := $(shell uname)
+ARCH := $(shell uname -m)
 
 .PHONY: main
 main: vpctl build
@@ -24,9 +25,15 @@ clean:
 	rm -rf ./bin
 
 .PHONY: docker-vproxy-runtime
+ifeq ($(ARCH),x86_64)
 docker-vproxy-runtime:
 	docker rmi -f vproxyio/runtime:latest
 	docker build --no-cache -t vproxyio/runtime:latest ./misc/dockerfiles/vproxy-runtime
+else
+docker-vproxy-runtime:
+	docker rmi -f vproxyio/runtime:latest
+	docker build --no-cache -t vproxyio/runtime:latest ./misc/dockerfiles/vproxy-runtime-arm
+endif
 
 .PHONY: docker-vproxy-base
 docker-vproxy-base:
@@ -34,9 +41,15 @@ docker-vproxy-base:
 	docker build --no-cache -t vproxyio/base:latest ./misc/dockerfiles/vproxy-base
 
 .PHONY: docker-vproxy-compile
+ifeq ($(ARCH),x86_64)
 docker-vproxy-compile:
 	docker rmi -f vproxyio/compile:latest
 	docker build --no-cache -t vproxyio/compile:latest ./misc/dockerfiles/vproxy-compile
+else
+docker-vproxy-compile:
+	docker rmi -f vproxyio/compile:latest
+	docker build --no-cache -t vproxyio/compile:latest ./misc/dockerfiles/vproxy-compile-arm
+endif
 
 .PHONY: docker-vproxy-test
 docker-vproxy-test:
