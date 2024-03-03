@@ -21,6 +21,9 @@ ADD gradle-wrapper.jar        /gradle/gradle/wrapper/gradle-wrapper.jar
 ADD gradle-wrapper.properties /gradle/gradle/wrapper/gradle-wrapper.properties
 RUN cd /gradle && chmod +x ./gradlew && ./gradlew --version
 
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --verbose
+ENV PATH="$PATH:/root/.cargo/bin"
+
 RUN mkdir /vproxy
 RUN mkdir /msquic
 WORKDIR /vproxy
