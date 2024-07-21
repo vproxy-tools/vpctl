@@ -1,0 +1,23 @@
+FROM ubuntu:20.04
+
+RUN apt update
+RUN apt install -y wget ca-certificates build-essential zlib1g zlib1g-dev locales
+
+# configure locales first
+RUN locale-gen zh_CN
+RUN locale-gen zh_CN.utf8
+
+ENV LANG zh_CN.UTF-8
+ENV LC_ALL zh_CN.UTF-8
+ENV LANGUAGE zh_CN.UTF-8
+
+RUN update-locale LANG=$LANG LC_ALL=$LC_ALL LANGUAGE=$LANGUAGE
+
+# graal
+RUN wget https://download.oracle.com/graalvm/22/latest/graalvm-jdk-22_linux-aarch64_bin.tar.gz && tar zxf graalvm-jdk-22_linux-aarch64_bin.tar.gz && rm graalvm-jdk-22_linux-aarch64_bin.tar.gz && mv graalvm-jdk-22.0.1+8.1 graalvm-jdk-22
+
+ENV JAVA_HOME /graalvm-jdk-22
+ENV PATH="$PATH:/$JAVA_HOME/bin"
+
+RUN mkdir -p /workdir
+WORKDIR /workdir

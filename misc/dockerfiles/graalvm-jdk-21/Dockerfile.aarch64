@@ -1,0 +1,23 @@
+FROM ubuntu:20.04
+
+RUN apt update
+RUN apt install -y wget ca-certificates build-essential zlib1g zlib1g-dev locales
+
+# configure locales first
+RUN locale-gen zh_CN
+RUN locale-gen zh_CN.utf8
+
+ENV LANG zh_CN.UTF-8
+ENV LC_ALL zh_CN.UTF-8
+ENV LANGUAGE zh_CN.UTF-8
+
+RUN update-locale LANG=$LANG LC_ALL=$LC_ALL LANGUAGE=$LANGUAGE
+
+# graal
+RUN wget https://download.oracle.com/graalvm/21/latest/graalvm-jdk-21_linux-aarch64_bin.tar.gz && tar zxf graalvm-jdk-21_linux-aarch64_bin.tar.gz && rm graalvm-jdk-21_linux-aarch64_bin.tar.gz && mv graalvm-jdk-21.0.1+12.1 graalvm-jdk-21
+
+ENV JAVA_HOME /graalvm-jdk-21
+ENV PATH="$PATH:/$JAVA_HOME/bin"
+
+RUN mkdir -p /workdir
+WORKDIR /workdir

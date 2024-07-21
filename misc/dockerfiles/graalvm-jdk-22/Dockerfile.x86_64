@@ -1,0 +1,44 @@
+FROM ubuntu:20.04
+
+RUN apt update
+RUN apt install -y wget ca-certificates build-essential zlib1g zlib1g-dev locales git gawk bison python3 python-is-python3
+
+# configure locales first
+RUN locale-gen zh_CN
+RUN locale-gen zh_CN.utf8
+
+ENV LANG zh_CN.UTF-8
+ENV LC_ALL zh_CN.UTF-8
+ENV LANGUAGE zh_CN.UTF-8
+
+RUN update-locale LANG=$LANG LC_ALL=$LC_ALL LANGUAGE=$LANGUAGE
+
+# graal
+RUN wget https://download.oracle.com/graalvm/22/latest/graalvm-jdk-22_linux-x64_bin.tar.gz && tar zxf graalvm-jdk-22_linux-x64_bin.tar.gz && rm graalvm-jdk-22_linux-x64_bin.tar.gz && mv graalvm-jdk-22.0.1+8.1 graalvm-jdk-22
+
+ENV JAVA_HOME /graalvm-jdk-22
+ENV PATH="$PATH:/$JAVA_HOME/bin"
+
+# to build static native-image:
+RUN mkdir -p /toolchain
+WORKDIR /toolchain
+RUN git clone https://sourceware.org/git/glibc.git --branch='release/2.38/master' --depth=1 glibc-2.38
+RUN mkdir glibc-2.38-build
+RUN mkdir glibc-2.38-install
+WORKDIR /toolchain/glibc-2.38-build
+RUN ../glibc-2.38/configure --prefix="$(realpath '../glibc-2.38-install')"
+RUN make
+RUN make install
+ENV TOOLCHAIN_DIR /toolchain/glibc-2.38-install
+ENV CC /usr/bin/gcc
+ENV PATH="$PATH:$TOOLCHAIN_DIR/bin"
+
+WORKDIR /toolchain
+RUN wget https://zlib.net/zlib-1.3.1.tar.gz && tar zxf zlib-1.3.1.tar.gz && rm zlib-1.3.1.tar.gz
+WORKDIR /toolchain/zlib-1.3.1
+RUN ./configure --prefix=$TOOLCHAIN_DIR --static
+RUN make && make install
+
+WORKDIR /
+RUN mkdir -p /workdir
+WORKDIR /workdir
