@@ -1,6 +1,9 @@
 FROM vproxyio/base:latest
 
 RUN apt update
+RUN apt install -y \
+	libelf-dev zlib1g-dev libpcap-dev
+
 RUN apt install -y wget apt-transport-https
 RUN mkdir -p /etc/apt/keyrings
 RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
@@ -13,7 +16,7 @@ ENV JAVA_HOME="/usr/lib/jvm/temurin-22-jdk-arm64"
 RUN apt-get install -y software-properties-common
 RUN apt-add-repository -y ppa:lttng/stable-2.13
 RUN apt-get update
-RUN apt-get install -y cmake build-essential liblttng-ust-dev lttng-tools
+RUN apt-get install -y liblttng-ust-dev lttng-tools
 
 RUN mkdir -p /gradle/gradle/wrapper
 ADD gradlew                   /gradle/gradlew
@@ -25,5 +28,4 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --defau
 ENV PATH="$PATH:/root/.cargo/bin"
 
 RUN mkdir /vproxy
-RUN mkdir /msquic
 WORKDIR /vproxy
