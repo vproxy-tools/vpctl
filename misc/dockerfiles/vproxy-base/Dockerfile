@@ -8,6 +8,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt install -y \
 	openssl libssl-dev \
 	build-essential pkg-config autoconf \
 	cmake binutils clang llvm m4 gdb lldb \
-	vim tzdata uuid python3 python-is-python3 htop git
+	vim tzdata uuid python3 python-is-python3 htop git \
+	zip lzip
 ENV TZ="Asia/Shanghai"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
